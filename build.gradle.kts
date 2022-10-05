@@ -17,6 +17,7 @@ dependencies {
     implementation("org.http4k:http4k-core")
     implementation("org.http4k:http4k-server-undertow")
     implementation("org.http4k:http4k-client-apache")
+    implementation("org.http4k:http4k-format-jackson")
 }
 
 tasks.test {
