@@ -1,9 +1,9 @@
 import config.DATA_LOC
 import dao.ReferenceData
-import http.handlers.categoriesHandler
-import org.http4k.core.*
+import http.routes.referenceRoutes
+import org.http4k.core.HttpHandler
+import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters.PrintRequestAndResponse
-import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
@@ -11,10 +11,7 @@ import org.http4k.server.asServer
 val referenceData = ReferenceData(DATA_LOC)
 
 val app: HttpHandler = routes(
-    "/ping" bind Method.GET to {
-        Response(Status.OK).body("pong")
-    },
-    categoriesHandler(referenceData::categories)
+    referenceRoutes
 )
 
 fun main() {
