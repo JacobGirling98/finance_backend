@@ -1,5 +1,7 @@
 package dao
 
+import domain.Description
+import http.MyJackson
 import java.io.File
 
 class ReferenceData(private val dataDirectory: String) {
@@ -7,7 +9,7 @@ class ReferenceData(private val dataDirectory: String) {
     var categories: List<String> = emptyList()
     var accounts: List<String> = emptyList()
     var sources: List<String> = emptyList()
-    var descriptions: List<String> = emptyList()
+    var descriptions: List<Description> = emptyList()
     var payees: List<String> = emptyList()
 
     fun initialise() {
@@ -15,6 +17,7 @@ class ReferenceData(private val dataDirectory: String) {
         accounts = readAccounts()
         sources = readSources()
         payees = readPayees()
+        descriptions = readDescriptions()
     }
 
     private fun read(file: String): List<String> = File("$dataDirectory/$file").readLines()
@@ -26,4 +29,9 @@ class ReferenceData(private val dataDirectory: String) {
     private fun readSources(): List<String> = read("income_source.txt").sorted()
 
     private fun readPayees(): List<String> = read("payees.txt").sorted()
+
+    private fun readDescriptions(): List<Description> = MyJackson.mapper.readValue(
+        File("$dataDirectory/description_mappings.json").readText(),
+        Array<Description>::class.java
+    ).toList().sortedBy { it.shortDescription.value }
 }

@@ -1,8 +1,9 @@
-package http.lense
+package http
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import domain.Category
+import domain.FullDescription
+import domain.ShortDescription
 import org.http4k.format.ConfigurableJackson
 import org.http4k.format.asConfigurable
 import org.http4k.format.text
@@ -12,7 +13,8 @@ object MyJackson : ConfigurableJackson(
     KotlinModule.Builder().build()
         .asConfigurable()
         .withStandardMappings()
-        .text(::Category, Category::value)
+        .text(::FullDescription, FullDescription::value)
+        .text(::ShortDescription, ShortDescription::value)
         .done()
         .deactivateDefaultTyping()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
