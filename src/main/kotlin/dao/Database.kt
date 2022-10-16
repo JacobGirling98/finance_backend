@@ -6,12 +6,14 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 
-class Database(private val dataDirectory: String) {
+class Database(dataDirectory: String) {
 
     var data = mutableListOf<Transaction>()
 
+    private val file = File("$dataDirectory/data.csv")
+
     fun read() {
-        val lines = File("$dataDirectory/data.csv").readLines()
+        val lines = file.readLines()
         val columns = columnIndicesFrom(lines[0].split(","))
         data = lines
             .subList(1, lines.size).map { row ->
@@ -34,19 +36,22 @@ class Database(private val dataDirectory: String) {
     }
 
     fun flush() {
-        val file = File("$dataDirectory/data.csv")
         file.writeHeaders()
-        data.forEach { file.appendTransaction(it) }
+        save(data)
+    }
+
+    fun save(transaction: Transaction) {
+        file.appendText("${transaction.date.value},${transaction.outgoing.asString()},${transaction.value.value},${transaction.type.type},${transaction.outbound?.value.valueOrBlank()},${transaction.inbound?.value.valueOrBlank()},${transaction.recipient?.value.valueOrBlank()},${transaction.source?.value.valueOrBlank()},${transaction.description.value.valueOrNull()},${transaction.category.value},${transaction.quantity.value}\n")
+    }
+
+    fun save(transactions: List<Transaction>) {
+        transactions.forEach { save(it) }
     }
 
 }
 
 private fun File.writeHeaders() {
     writeText("date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
-}
-
-private fun File.appendTransaction(transaction: Transaction) {
-    appendText("${transaction.date.value},${transaction.outgoing.asString()},${transaction.value.value},${transaction.type.type},${transaction.outbound?.value.valueOrBlank()},${transaction.inbound?.value.valueOrBlank()},${transaction.recipient?.value.valueOrBlank()},${transaction.source?.value.valueOrBlank()},${transaction.description.value.valueOrNull()},${transaction.category.value},${transaction.quantity.value}\n")
 }
 
 private data class Columns(

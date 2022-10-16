@@ -204,5 +204,87 @@ class DatabaseTest {
         )
     }
 
+    @Test
+    fun `can save a transaction`() {
+        file().writeText(
+            """
+                date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
+                2020-10-29,True,45.50,Credit,,,,,Row 1,Tech,1
+                2020-10-30,True,19.75,Credit,,,,,Row 2,Tech,2
+                
+            """.trimIndent()
+        )
+        table.read()
+
+        table.save(
+            Transaction(
+                Date(LocalDate.of(2020, 1, 1)),
+                Category("Coffee"),
+                Value(BigDecimal("3.00")),
+                Description("Latte"),
+                CREDIT,
+                true,
+                Quantity(1)
+            )
+        )
+
+        assertEquals(
+            """
+                date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
+                2020-10-29,True,45.50,Credit,,,,,Row 1,Tech,1
+                2020-10-30,True,19.75,Credit,,,,,Row 2,Tech,2
+                2020-01-01,True,3.00,Credit,,,,,Latte,Coffee,1
+                
+            """.trimIndent(),
+            file().readText()
+        )
+    }
+
+    @Test
+    fun `can save multiple transactions`() {
+        file().writeText(
+            """
+                date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
+                2020-10-29,True,45.50,Credit,,,,,Row 1,Tech,1
+                2020-10-30,True,19.75,Credit,,,,,Row 2,Tech,2
+                
+            """.trimIndent()
+        )
+        table.read()
+
+        table.save(listOf(
+            Transaction(
+                Date(LocalDate.of(2020, 1, 1)),
+                Category("Coffee"),
+                Value(BigDecimal("3.00")),
+                Description("Latte"),
+                CREDIT,
+                true,
+                Quantity(1)
+            ),
+            Transaction(
+                Date(LocalDate.of(2020, 1, 2)),
+                Category("Food"),
+                Value(BigDecimal("1.00")),
+                Description("Banana"),
+                DEBIT,
+                true,
+                Quantity(5)
+            )
+        ))
+
+        assertEquals(
+            """
+                date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
+                2020-10-29,True,45.50,Credit,,,,,Row 1,Tech,1
+                2020-10-30,True,19.75,Credit,,,,,Row 2,Tech,2
+                2020-01-01,True,3.00,Credit,,,,,Latte,Coffee,1
+                2020-01-02,True,1.00,Debit,,,,,Banana,Food,5
+                
+            """.trimIndent(),
+            file().readText()
+        )
+    }
+
     private fun file() = File("$tmp/$filePath")
 }
