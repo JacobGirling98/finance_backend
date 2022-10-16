@@ -8,7 +8,7 @@ data class ShortDescription(
     val value: String
 )
 
-data class Description(
+data class DescriptionMapping(
     val fullDescription: FullDescription,
     val shortDescription: ShortDescription
 )
