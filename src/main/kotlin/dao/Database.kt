@@ -4,4 +4,5 @@ import domain.Transaction
 
 interface Database {
     fun save(transaction: Transaction)
+    fun save(transactions: List<Transaction>)
 }

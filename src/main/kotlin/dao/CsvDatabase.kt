@@ -44,7 +44,7 @@ class CsvDatabase(dataDirectory: String) : Database {
         file.appendText("${transaction.date.value},${transaction.outgoing.asString()},${transaction.value.value},${transaction.type.type},${transaction.outbound?.value.valueOrBlank()},${transaction.inbound?.value.valueOrBlank()},${transaction.recipient?.value.valueOrBlank()},${transaction.source?.value.valueOrBlank()},${transaction.description.value.valueOrNull()},${transaction.category.value},${transaction.quantity.value}\n")
     }
 
-    fun save(transactions: List<Transaction>) {
+    override fun save(transactions: List<Transaction>) {
         transactions.forEach { save(it) }
     }
 

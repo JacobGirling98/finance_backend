@@ -2,6 +2,7 @@ import config.DATA_LOC
 import dao.CsvDatabase
 import dao.ReferenceData
 import http.routes.referenceRoutes
+import http.routes.transactionRoutes
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.then
@@ -17,7 +18,8 @@ import org.http4k.server.asServer
 val referenceData = ReferenceData(DATA_LOC)
 
 val app: HttpHandler = routes(
-    referenceRoutes(CsvDatabase(DATA_LOC))
+    referenceRoutes,
+    transactionRoutes(CsvDatabase(DATA_LOC))
 )
 
 fun main() {
