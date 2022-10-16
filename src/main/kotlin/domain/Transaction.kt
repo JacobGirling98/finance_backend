@@ -7,7 +7,7 @@ data class Transaction(
     val value: Value,
     val description: Description,
     val type: TransactionType,
-    val outgoing: Boolean,
+    val outgoing: Outgoing,
     val quantity: Quantity = Quantity(1),
     val recipient: Recipient? = null,
     val inbound: Inbound? = null,

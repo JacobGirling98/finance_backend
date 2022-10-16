@@ -38,3 +38,7 @@ data class Outbound(
 data class Source(
     val value: String
 )
+
+data class Outgoing(
+    val value: Boolean
+)

@@ -10,10 +10,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
-class DatabaseTest {
+class CsvDatabaseTest {
     private val tmp: String = "tmp"
     private val filePath = "data.csv"
-    private val table = Database(tmp)
+    private val table = CsvDatabase(tmp)
 
 
     @BeforeEach
@@ -48,7 +48,7 @@ class DatabaseTest {
                     Value(BigDecimal("45.50")),
                     Description("Row 1"),
                     CREDIT,
-                    true,
+                    Outgoing(true),
                     quantity = Quantity(1),
                 ),
                 Transaction(
@@ -57,7 +57,7 @@ class DatabaseTest {
                     Value(BigDecimal("19.75")),
                     Description("Row 2"),
                     CREDIT,
-                    true,
+                    Outgoing(true),
                     quantity = Quantity(2),
                 )
             ),
@@ -85,7 +85,7 @@ class DatabaseTest {
                     Value(BigDecimal("45.50")),
                     Description("Row 1"),
                     DEBIT,
-                    true,
+                    Outgoing(true),
                     quantity = Quantity(1),
                 ),
             ),
@@ -113,7 +113,7 @@ class DatabaseTest {
                     Value(BigDecimal("123.00")),
                     Description("Flat Rent"),
                     BANK_TRANSFER,
-                    true,
+                    Outgoing(true),
                     quantity = Quantity(1),
                     recipient = Recipient("Friend")
                 ),
@@ -142,7 +142,7 @@ class DatabaseTest {
                     Value(BigDecimal("100.00")),
                     Description("Savings"),
                     PERSONAL_TRANSFER,
-                    false,
+                    Outgoing(false),
                     quantity = Quantity(1),
                     outbound = Outbound("Current"),
                     inbound = Inbound("Saver Account")
@@ -188,7 +188,7 @@ class DatabaseTest {
                 Value(BigDecimal("3.00")),
                 Description("Latte"),
                 CREDIT,
-                true,
+                Outgoing(true),
                 Quantity(1)
             )
         )
@@ -223,7 +223,7 @@ class DatabaseTest {
                 Value(BigDecimal("3.00")),
                 Description("Latte"),
                 CREDIT,
-                true,
+                Outgoing(true),
                 Quantity(1)
             )
         )
@@ -259,7 +259,7 @@ class DatabaseTest {
                 Value(BigDecimal("3.00")),
                 Description("Latte"),
                 CREDIT,
-                true,
+                Outgoing(true),
                 Quantity(1)
             ),
             Transaction(
@@ -268,7 +268,7 @@ class DatabaseTest {
                 Value(BigDecimal("1.00")),
                 Description("Banana"),
                 DEBIT,
-                true,
+                Outgoing(true),
                 Quantity(5)
             )
         ))

@@ -1,5 +1,5 @@
 import config.DATA_LOC
-import dao.Database
+import dao.CsvDatabase
 import dao.ReferenceData
 import http.routes.referenceRoutes
 import org.http4k.core.HttpHandler
@@ -17,15 +17,11 @@ import org.http4k.server.asServer
 val referenceData = ReferenceData(DATA_LOC)
 
 val app: HttpHandler = routes(
-    referenceRoutes
+    referenceRoutes(CsvDatabase(DATA_LOC))
 )
 
 fun main() {
     referenceData.initialise()
-
-    val table = Database(DATA_LOC)
-    table.read()
-    table.flush()
 
     val printingApp: HttpHandler = PrintRequestAndResponse()
         .then(Cors(CorsPolicy(OriginPolicy.AllowAll(), listOf("Authorization"), Method.values().toList(), true)))
