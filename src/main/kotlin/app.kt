@@ -26,7 +26,7 @@ fun main() {
     referenceData.initialise()
 
     val printingApp: HttpHandler = PrintRequestAndResponse()
-        .then(Cors(CorsPolicy(OriginPolicy.AllowAll(), listOf("Authorization"), Method.values().toList(), true)))
+        .then(Cors(CorsPolicy(OriginPolicy.AllowAll(), listOf("Authorization", "Accept", "content-type"), Method.values().toList(), true)))
         .then(app)
 
     val server = printingApp.asServer(SunHttp(9000)).start()

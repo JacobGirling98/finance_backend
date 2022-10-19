@@ -51,15 +51,19 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            CREDIT,
-            Outgoing(true),
-            Quantity(2)
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    CREDIT,
+                    Outgoing(true),
+                    Quantity(2)
+                )
+            )
+        )
     }
 
     @Test
@@ -82,16 +86,20 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            BANK_TRANSFER,
-            Outgoing(true),
-            Quantity(1),
-            Recipient("Friend")
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    BANK_TRANSFER,
+                    Outgoing(true),
+                    Quantity(1),
+                    Recipient("Friend")
+                )
+            )
+        )
     }
 
     @Test
@@ -114,17 +122,21 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            PERSONAL_TRANSFER,
-            Outgoing(false),
-            Quantity(1),
-            outbound = Outbound("Current"),
-            inbound = Inbound("Savings")
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    PERSONAL_TRANSFER,
+                    Outgoing(false),
+                    Quantity(1),
+                    outbound = Outbound("Current"),
+                    inbound = Inbound("Savings")
+                )
+            )
+        )
     }
 
     @Test
@@ -146,16 +158,20 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            INCOME,
-            Outgoing(false),
-            Quantity(1),
-            source = Source("Work")
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    INCOME,
+                    Outgoing(false),
+                    Quantity(1),
+                    source = Source("Work")
+                )
+            )
+        )
     }
 
     @Test
@@ -186,24 +202,32 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            CREDIT,
-            Outgoing(true),
-            Quantity(2)
-        )))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 15)),
-            Category("Tech"),
-            Value(BigDecimal("500.00")),
-            Description("Speaker"),
-            CREDIT,
-            Outgoing(true),
-            Quantity(1)
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    CREDIT,
+                    Outgoing(true),
+                    Quantity(2)
+                )
+            )
+        )
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 15)),
+                    Category("Tech"),
+                    Value(BigDecimal("500.00")),
+                    Description("Speaker"),
+                    CREDIT,
+                    Outgoing(true),
+                    Quantity(1)
+                )
+            )
+        )
     }
 
     @Test
@@ -236,26 +260,34 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            BANK_TRANSFER,
-            Outgoing(true),
-            Quantity(1),
-            Recipient("Friend")
-        )))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 15)),
-            Category("Tech"),
-            Value(BigDecimal("500.00")),
-            Description("Speaker"),
-            BANK_TRANSFER,
-            Outgoing(true),
-            Quantity(1),
-            Recipient("Family")
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    BANK_TRANSFER,
+                    Outgoing(true),
+                    Quantity(1),
+                    Recipient("Friend")
+                )
+            )
+        )
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 15)),
+                    Category("Tech"),
+                    Value(BigDecimal("500.00")),
+                    Description("Speaker"),
+                    BANK_TRANSFER,
+                    Outgoing(true),
+                    Quantity(1),
+                    Recipient("Family")
+                )
+            )
+        )
     }
 
     @Test
@@ -288,28 +320,36 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            PERSONAL_TRANSFER,
-            Outgoing(false),
-            Quantity(1),
-            outbound = Outbound("Current"),
-            inbound = Inbound("Savings")
-        )))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 15)),
-            Category("Tech"),
-            Value(BigDecimal("500.00")),
-            Description("Speaker"),
-            PERSONAL_TRANSFER,
-            Outgoing(false),
-            Quantity(1),
-            outbound = Outbound("Current"),
-            inbound = Inbound("Credit")
-        )))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    PERSONAL_TRANSFER,
+                    Outgoing(false),
+                    Quantity(1),
+                    outbound = Outbound("Current"),
+                    inbound = Inbound("Savings")
+                )
+            )
+        )
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 15)),
+                    Category("Tech"),
+                    Value(BigDecimal("500.00")),
+                    Description("Speaker"),
+                    PERSONAL_TRANSFER,
+                    Outgoing(false),
+                    Quantity(1),
+                    outbound = Outbound("Current"),
+                    inbound = Inbound("Credit")
+                )
+            )
+        )
     }
 
     @Test
@@ -340,24 +380,32 @@ class TransactionHandlerTest {
         )
 
         assertThat(response, hasStatus(OK))
-        assertThat(database.arguments, hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            INCOME,
-            Outgoing(false),
-            Quantity(1),
-            source = Source("Work")
-        )).and(hasElement(Transaction(
-            Date(LocalDate.of(2020, 10, 15)),
-            Category("Wages"),
-            Value(BigDecimal("500.00")),
-            Description("Wages"),
-            INCOME,
-            Outgoing(false),
-            Quantity(1),
-            source = Source("Work")
-        ))))
+        assertThat(
+            database.arguments, hasElement(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    INCOME,
+                    Outgoing(false),
+                    Quantity(1),
+                    source = Source("Work")
+                )
+            ).and(
+                hasElement(
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 15)),
+                        Category("Wages"),
+                        Value(BigDecimal("500.00")),
+                        Description("Wages"),
+                        INCOME,
+                        Outgoing(false),
+                        Quantity(1),
+                        source = Source("Work")
+                    )
+                )
+            )
+        )
     }
 }
