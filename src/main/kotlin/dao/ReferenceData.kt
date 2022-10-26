@@ -1,15 +1,15 @@
 package dao
 
-import domain.DescriptionMapping
 import config.CustomJackson
+import domain.DescriptionMapping
 import java.io.File
 
-class ReferenceData(private val dataDirectory: String) {
+class ReferenceData(private val dataDirectory: String) : Database<DescriptionMapping> {
 
     var categories: List<String> = emptyList()
     var accounts: List<String> = emptyList()
     var sources: List<String> = emptyList()
-    var descriptions: List<DescriptionMapping> = emptyList()
+    var descriptions: MutableList<DescriptionMapping> = mutableListOf()
     var payees: List<String> = emptyList()
 
     fun initialise() {
@@ -30,8 +30,18 @@ class ReferenceData(private val dataDirectory: String) {
 
     private fun readPayees(): List<String> = read("payees.txt").sorted()
 
-    private fun readDescriptions(): List<DescriptionMapping> = CustomJackson.mapper.readValue(
-        File("$dataDirectory/description_mappings.json").readText(),
-        Array<DescriptionMapping>::class.java
-    ).toList().sortedBy { it.shortDescription.value }
+    fun readDescriptions(): MutableList<DescriptionMapping> = read("description_mappings.txt").map {
+        CustomJackson.mapper.readValue(it, DescriptionMapping::class.java)
+    }.sortedBy { it.shortDescription.value }.toMutableList()
+
+    override fun save(data: DescriptionMapping) {
+        descriptions.add(data)
+        File("$dataDirectory/description_mappings.txt").writeLine(
+            CustomJackson.mapper.writeValueAsString(data)
+        )
+    }
+
+    override fun save(data: List<DescriptionMapping>) {
+        data.forEach { save(it) }
+    }
 }

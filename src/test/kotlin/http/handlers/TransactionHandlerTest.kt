@@ -14,16 +14,16 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 
-private class TestDatabase : Database {
+private class TestDatabase : Database<Transaction> {
 
     var arguments = mutableListOf<Transaction>()
 
-    override fun save(transaction: Transaction) {
-        arguments.add(transaction)
+    override fun save(data: Transaction) {
+        arguments.add(data)
     }
 
-    override fun save(transactions: List<Transaction>) {
-        transactions.forEach { arguments.add(it) }
+    override fun save(data: List<Transaction>) {
+        data.forEach { arguments.add(it) }
     }
 
 }

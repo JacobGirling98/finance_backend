@@ -1,8 +1,6 @@
 package dao
 
-import domain.Transaction
-
-interface Database {
-    fun save(transaction: Transaction)
-    fun save(transactions: List<Transaction>)
+interface Database<T> {
+    fun save(data: T)
+    fun save(data: List<T>)
 }

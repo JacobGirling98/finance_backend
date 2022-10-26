@@ -1,6 +1,7 @@
 package http.routes
 
 import dao.Database
+import domain.Transaction
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
 import http.handlers.*
@@ -8,7 +9,7 @@ import org.http4k.core.Method.POST
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 
-fun transactionRoutes(database: Database) = routes(
+fun transactionRoutes(database: Database<Transaction>) = routes(
     "/transaction" bind routes(
         "/credit" bind POST to postCreditDebitHandler(CREDIT) { database.save(it) },
         "/debit" bind POST to postCreditDebitHandler(DEBIT) { database.save(it) },

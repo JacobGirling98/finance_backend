@@ -16,10 +16,11 @@ import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 
 val referenceData = ReferenceData(DATA_LOC)
+val transactionsDatabase = CsvDatabase(DATA_LOC)
 
 val app: HttpHandler = routes(
-    referenceRoutes,
-    transactionRoutes(CsvDatabase(DATA_LOC))
+    referenceRoutes(referenceData),
+    transactionRoutes(transactionsDatabase)
 )
 
 fun main() {

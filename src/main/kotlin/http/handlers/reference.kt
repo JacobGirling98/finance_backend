@@ -15,3 +15,8 @@ fun referenceHandler(referenceFunc: () -> List<String>): HttpHandler = {
 fun descriptionsHandler(getDescriptions: () -> List<DescriptionMapping>): HttpHandler = {
     Response(Status.OK).with(descriptionsLens of getDescriptions())
 }
+
+fun postDescriptionsHandler(save: (descriptions: List<DescriptionMapping>) -> Unit): HttpHandler = { request ->
+    save(descriptionsLens.extract(request))
+    Response(Status.OK)
+}

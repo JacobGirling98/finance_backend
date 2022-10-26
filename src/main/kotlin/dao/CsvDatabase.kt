@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 
-class CsvDatabase(dataDirectory: String) : Database {
+class CsvDatabase(dataDirectory: String) : Database<Transaction> {
 
     var data = mutableListOf<Transaction>()
 
@@ -40,12 +40,12 @@ class CsvDatabase(dataDirectory: String) : Database {
         save(data)
     }
 
-    override fun save(transaction: Transaction) {
-        file.appendText("${transaction.date.value},${transaction.outgoing.asString()},${transaction.value.value},${transaction.type.type},${transaction.outbound?.value.valueOrBlank()},${transaction.inbound?.value.valueOrBlank()},${transaction.recipient?.value.valueOrBlank()},${transaction.source?.value.valueOrBlank()},${transaction.description.value.valueOrNull()},${transaction.category.value},${transaction.quantity.value}\n")
+    override fun save(data: Transaction) {
+        file.writeLine("${data.date.value},${data.outgoing.asString()},${data.value.value},${data.type.type},${data.outbound?.value.valueOrBlank()},${data.inbound?.value.valueOrBlank()},${data.recipient?.value.valueOrBlank()},${data.source?.value.valueOrBlank()},${data.description.value.valueOrNull()},${data.category.value},${data.quantity.value}")
     }
 
-    override fun save(transactions: List<Transaction>) {
-        transactions.forEach { save(it) }
+    override fun save(data: List<Transaction>) {
+        data.forEach { save(it) }
     }
 
 }
