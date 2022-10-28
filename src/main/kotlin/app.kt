@@ -1,8 +1,10 @@
 import config.DATA_LOC
-import dao.CsvDatabase
+import dao.LoginDatabase
 import dao.ReferenceData
-import http.routes.referenceRoutes
-import http.routes.transactionRoutes
+import dao.TransactionsDatabase
+import http.filter.lastLoginFilter
+import http.route.referenceRoutes
+import http.route.transactionRoutes
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.then
@@ -16,7 +18,8 @@ import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 
 val referenceData = ReferenceData(DATA_LOC)
-val transactionsDatabase = CsvDatabase(DATA_LOC)
+val transactionsDatabase = TransactionsDatabase(DATA_LOC)
+val loginDatabase = LoginDatabase(DATA_LOC)
 
 val app: HttpHandler = routes(
     referenceRoutes(referenceData),
@@ -25,9 +28,20 @@ val app: HttpHandler = routes(
 
 fun main() {
     referenceData.initialise()
+    loginDatabase.initialise()
 
     val printingApp: HttpHandler = PrintRequestAndResponse()
-        .then(Cors(CorsPolicy(OriginPolicy.AllowAll(), listOf("Authorization", "Accept", "content-type"), Method.values().toList(), true)))
+        .then(
+            Cors(
+                CorsPolicy(
+                    OriginPolicy.AllowAll(),
+                    listOf("Authorization", "Accept", "content-type"),
+                    Method.values().toList(),
+                    true
+                )
+            )
+        )
+        .then(lastLoginFilter { loginDatabase.save(it) })
         .then(app)
 
     val server = printingApp.asServer(SunHttp(9000)).start()

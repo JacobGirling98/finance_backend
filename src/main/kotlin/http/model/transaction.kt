@@ -1,4 +1,4 @@
-package http.models
+package http.model
 
 import domain.*
 

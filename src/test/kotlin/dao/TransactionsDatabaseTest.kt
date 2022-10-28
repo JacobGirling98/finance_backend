@@ -10,10 +10,10 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
-class CsvDatabaseTest {
+class TransactionsDatabaseTest {
     private val tmp: String = "tmp"
     private val filePath = "data.csv"
-    private val table = CsvDatabase(tmp)
+    private val table = TransactionsDatabase(tmp)
 
 
     @BeforeEach

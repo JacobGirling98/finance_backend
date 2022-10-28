@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 
-class CsvDatabase(dataDirectory: String) : Database<Transaction> {
+class TransactionsDatabase(dataDirectory: String) : Database<Transaction> {
 
     var data = mutableListOf<Transaction>()
 

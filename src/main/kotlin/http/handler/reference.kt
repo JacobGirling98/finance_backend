@@ -1,4 +1,4 @@
-package http.handlers
+package http.handler
 
 import domain.DescriptionMapping
 import http.lense.descriptionsLens

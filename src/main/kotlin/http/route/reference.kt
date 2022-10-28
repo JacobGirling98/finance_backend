@@ -1,9 +1,9 @@
-package http.routes
+package http.route
 
 import dao.ReferenceData
-import http.handlers.descriptionsHandler
-import http.handlers.postDescriptionsHandler
-import http.handlers.referenceHandler
+import http.handler.descriptionsHandler
+import http.handler.postDescriptionsHandler
+import http.handler.referenceHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.routing.bind

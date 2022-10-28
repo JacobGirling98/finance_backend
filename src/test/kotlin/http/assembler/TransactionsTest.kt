@@ -4,10 +4,10 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import domain.*
 import domain.TransactionType.*
-import http.models.BankTransfer
-import http.models.CreditDebit
-import http.models.Income
-import http.models.PersonalTransfer
+import http.model.BankTransfer
+import http.model.CreditDebit
+import http.model.Income
+import http.model.PersonalTransfer
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate

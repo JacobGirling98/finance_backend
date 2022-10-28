@@ -1,10 +1,10 @@
-package http.routes
+package http.route
 
 import dao.Database
 import domain.Transaction
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
-import http.handlers.*
+import http.handler.*
 import org.http4k.core.Method.POST
 import org.http4k.routing.bind
 import org.http4k.routing.routes

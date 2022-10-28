@@ -1,14 +1,14 @@
 package utils
 
 import config.DATA_LOC
-import dao.CsvDatabase
+import dao.TransactionsDatabase
 import dao.ReferenceData
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
 
 private val referenceData = ReferenceData(DATA_LOC)
-private val database = CsvDatabase(DATA_LOC)
+private val database = TransactionsDatabase(DATA_LOC)
 
 fun main() {
     referenceData.initialise()

@@ -2,10 +2,10 @@ package http.lense
 
 import config.CustomJackson.auto
 import domain.DescriptionMapping
-import http.models.BankTransfer
-import http.models.CreditDebit
-import http.models.Income
-import http.models.PersonalTransfer
+import http.model.BankTransfer
+import http.model.CreditDebit
+import http.model.Income
+import http.model.PersonalTransfer
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
 

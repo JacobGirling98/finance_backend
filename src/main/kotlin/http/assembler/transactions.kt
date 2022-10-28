@@ -5,10 +5,10 @@ import domain.Quantity
 import domain.Transaction
 import domain.TransactionType
 import domain.TransactionType.*
-import http.models.BankTransfer
-import http.models.CreditDebit
-import http.models.Income
-import http.models.PersonalTransfer
+import http.model.BankTransfer
+import http.model.CreditDebit
+import http.model.Income
+import http.model.PersonalTransfer
 
 fun transactionFrom(transaction: CreditDebit, transactionType: TransactionType) = Transaction(
     transaction.date,
