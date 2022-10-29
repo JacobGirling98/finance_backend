@@ -31,6 +31,8 @@ class LoginDatabase(
 
     override fun save(data: List<Login>) {}
 
+    fun lastLogin() = logins.last()
+
     private fun File.clear() {
         writeText("")
     }

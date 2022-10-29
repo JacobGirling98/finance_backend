@@ -3,6 +3,7 @@ import dao.LoginDatabase
 import dao.ReferenceData
 import dao.TransactionsDatabase
 import http.filter.lastLoginFilter
+import http.route.loginRoutes
 import http.route.referenceRoutes
 import http.route.transactionRoutes
 import org.http4k.core.HttpHandler
@@ -23,7 +24,8 @@ val loginDatabase = LoginDatabase(DATA_LOC)
 
 val app: HttpHandler = routes(
     referenceRoutes(referenceData),
-    transactionRoutes(transactionsDatabase)
+    transactionRoutes(transactionsDatabase),
+    loginRoutes(loginDatabase)
 )
 
 fun main() {

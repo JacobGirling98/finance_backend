@@ -1,6 +1,7 @@
 package http.lense
 
 import config.CustomJackson.auto
+import dao.Login
 import domain.DescriptionMapping
 import http.model.BankTransfer
 import http.model.CreditDebit
@@ -29,3 +30,5 @@ val bankTransferListLens: BiDiBodyLens<List<BankTransfer>> = Body.auto<List<Bank
 val personalTransferListLens: BiDiBodyLens<List<PersonalTransfer>> = Body.auto<List<PersonalTransfer>>().toLens()
 
 val incomeListLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLens()
+
+val loginLens: BiDiBodyLens<Login> = Body.auto<Login>().toLens()
