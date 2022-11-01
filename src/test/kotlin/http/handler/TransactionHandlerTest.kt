@@ -14,19 +14,6 @@ import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 
-private class TestDatabase : Database<Transaction> {
-
-    var arguments = mutableListOf<Transaction>()
-
-    override fun save(data: Transaction) {
-        arguments.add(data)
-    }
-
-    override fun save(data: List<Transaction>) {
-        data.forEach { arguments.add(it) }
-    }
-
-}
 
 class TransactionHandlerTest {
 

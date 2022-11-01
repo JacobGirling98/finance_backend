@@ -20,6 +20,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("com.natpryce:hamkrest:1.8.0.1")
     testImplementation("org.http4k:http4k-testing-hamkrest")
+    testImplementation("org.http4k:http4k-testing-kotest")
     testImplementation("io.kotest:kotest-runner-junit5:5.5.3")
     testImplementation("io.kotest:kotest-assertions-core:5.5.3")
 }

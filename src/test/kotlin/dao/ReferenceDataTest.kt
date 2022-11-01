@@ -1,36 +1,28 @@
 package dao
 
-import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.hasElement
 import config.CustomJackson
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContain
 import java.io.File
 
-class ReferenceDataTest {
+class ReferenceDataTest : FunSpec({
 
-    private val tmp: String = "tmp"
-    private val filePath = "description_mappings.txt"
-    private val referenceData = ReferenceData(tmp)
 
-    @BeforeEach
-    fun setup() {
+    val referenceData = ReferenceData(tmp)
+
+    beforeEach {
         File(tmp).deleteRecursively()
         File(tmp).mkdirs()
     }
 
-    @AfterEach
-    fun teardown() {
+    afterEach {
         File(tmp).deleteRecursively()
     }
 
-    @Test
-    fun `can add description mapping`() {
+    test("can add description mapping") {
         val existingDescription = DescriptionMapping(
             FullDescription("Tomato Soup"),
             ShortDescription("Soup")
@@ -43,20 +35,13 @@ class ReferenceDataTest {
 
         referenceData.save(newDescription)
 
-        assertThat(referenceData.descriptions, hasElement(newDescription))
-        assertThat(
-            referenceData.readDescriptions(),
-            hasElement(newDescription)
-                .and(
-                    hasElement(
-                        existingDescription
-                    )
-                )
-        )
+        referenceData.descriptions.shouldContain(newDescription)
+        referenceData.readDescriptions()
+            .shouldContain(newDescription)
+            .shouldContain(existingDescription)
     }
 
-    @Test
-    fun `can add multiple description mappings`() {
+    test("can add multiple description mappings") {
         val existingDescription = DescriptionMapping(
             FullDescription("Tomato Soup"),
             ShortDescription("Soup")
@@ -73,22 +58,16 @@ class ReferenceDataTest {
 
         referenceData.save(listOf(newDescription, newerDescription))
 
-        assertThat(referenceData.descriptions, hasElement(newDescription).and(hasElement(newerDescription)))
-        assertThat(
-            referenceData.readDescriptions(),
-            hasElement(newDescription)
-                .and(
-                    hasElement(
-                        existingDescription
-                    )
-                )
-                .and(
-                    hasElement(
-                        newerDescription
-                    )
-                )
-        )
+        referenceData.descriptions
+            .shouldContain(newDescription)
+            .shouldContain(newerDescription)
+        referenceData.readDescriptions()
+            .shouldContain(newDescription)
+            .shouldContain(existingDescription)
+            .shouldContain(newerDescription)
     }
+})
 
-    private fun file() = File("$tmp/$filePath")
-}
+private const val tmp = "tmp"
+private const val filePath = "description_mappings.txt"
+private fun file() = File("$tmp/$filePath")
