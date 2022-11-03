@@ -3,6 +3,8 @@ import dao.LoginDatabase
 import dao.ReferenceData
 import dao.TransactionsDatabase
 import http.filter.lastLoginFilter
+import http.git.GitClient
+import http.route.gitRoutes
 import http.route.loginRoutes
 import http.route.referenceRoutes
 import http.route.transactionRoutes
@@ -25,7 +27,8 @@ val loginDatabase = LoginDatabase(DATA_LOC)
 val app: HttpHandler = routes(
     referenceRoutes(referenceData),
     transactionRoutes(transactionsDatabase),
-    loginRoutes(loginDatabase)
+    loginRoutes(loginDatabase),
+    gitRoutes(GitClient("$DATA_LOC/.."))
 )
 
 fun main() {

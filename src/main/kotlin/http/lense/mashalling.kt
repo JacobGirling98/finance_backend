@@ -3,10 +3,7 @@ package http.lense
 import config.CustomJackson.auto
 import dao.Login
 import domain.DescriptionMapping
-import http.model.BankTransfer
-import http.model.CreditDebit
-import http.model.Income
-import http.model.PersonalTransfer
+import http.model.*
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
 

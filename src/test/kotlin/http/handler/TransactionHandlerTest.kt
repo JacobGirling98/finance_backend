@@ -1,30 +1,25 @@
 package http.handler
 
-import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.hasElement
 import dao.Database
 import domain.*
-import domain.TransactionType.*
-import org.http4k.core.Method.POST
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldHaveSingleElement
+import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
-import org.http4k.hamkrest.hasStatus
-import org.junit.jupiter.api.Test
+import org.http4k.kotest.shouldHaveStatus
 import java.math.BigDecimal
 import java.time.LocalDate
 
+class TransactionHandlerTest : FunSpec({
+    val database = TestDatabase()
 
-class TransactionHandlerTest {
-
-    private val database = TestDatabase()
-
-    @Test
-    fun `can post a credit-debit transaction`() {
-        val handler = postCreditDebitHandler(CREDIT) { database.save(it) }
+    test("can post a credit-debit transaction") {
+        val handler = postCreditDebitHandler(TransactionType.CREDIT) { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 {
                     "date": "2020-10-12",
@@ -37,28 +32,23 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    CREDIT,
-                    Outgoing(true),
-                    Quantity(2)
-                )
-            )
+        response shouldHaveStatus OK
+        database.arguments shouldHaveSingleElement Transaction(
+            Date(LocalDate.of(2020, 10, 12)),
+            Category("Food"),
+            Value(BigDecimal("12.50")),
+            Description("Cake"),
+            TransactionType.CREDIT,
+            Outgoing(true),
+            Quantity(2)
         )
     }
 
-    @Test
-    fun `can post a bank transfer transaction`() {
+    test("can post a bank transfer transaction") {
         val handler = postBankTransferHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 {
                     "date": "2020-10-12",
@@ -72,29 +62,24 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    BANK_TRANSFER,
-                    Outgoing(true),
-                    Quantity(1),
-                    Recipient("Friend")
-                )
-            )
+        response shouldHaveStatus OK
+        database.arguments shouldHaveSingleElement Transaction(
+            Date(LocalDate.of(2020, 10, 12)),
+            Category("Food"),
+            Value(BigDecimal("12.50")),
+            Description("Cake"),
+            TransactionType.BANK_TRANSFER,
+            Outgoing(true),
+            Quantity(1),
+            Recipient("Friend")
         )
     }
 
-    @Test
-    fun `can post a personal transfer transaction`() {
+    test("can post a personal transfer transaction") {
         val handler = postPersonalTransferHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 {
                     "date": "2020-10-12",
@@ -108,30 +93,25 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    PERSONAL_TRANSFER,
-                    Outgoing(false),
-                    Quantity(1),
-                    outbound = Outbound("Current"),
-                    inbound = Inbound("Savings")
-                )
-            )
+        response shouldHaveStatus OK
+        database.arguments shouldHaveSingleElement Transaction(
+            Date(LocalDate.of(2020, 10, 12)),
+            Category("Food"),
+            Value(BigDecimal("12.50")),
+            Description("Cake"),
+            TransactionType.PERSONAL_TRANSFER,
+            Outgoing(false),
+            Quantity(1),
+            outbound = Outbound("Current"),
+            inbound = Inbound("Savings")
         )
     }
 
-    @Test
-    fun `can post an income transaction`() {
+    test("can post an income transaction") {
         val handler = postIncomeHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 {
                     "date": "2020-10-12",
@@ -144,29 +124,24 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    INCOME,
-                    Outgoing(false),
-                    Quantity(1),
-                    source = Source("Work")
-                )
-            )
+        response shouldHaveStatus OK
+        database.arguments shouldHaveSingleElement Transaction(
+            Date(LocalDate.of(2020, 10, 12)),
+            Category("Food"),
+            Value(BigDecimal("12.50")),
+            Description("Cake"),
+            TransactionType.INCOME,
+            Outgoing(false),
+            Quantity(1),
+            source = Source("Work")
         )
     }
 
-    @Test
-    fun `can post multiple credit-debit transactions`() {
-        val handler = postCreditDebitListHandler(CREDIT) { database.save(it) }
+    test("can post multiple credit-debit transactions") {
+        val handler = postCreditDebitListHandler(TransactionType.CREDIT) { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 [
                     {
@@ -188,41 +163,37 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
+        response shouldHaveStatus OK
+        database.arguments
+            .shouldContain(
                 Transaction(
                     Date(LocalDate.of(2020, 10, 12)),
                     Category("Food"),
                     Value(BigDecimal("12.50")),
                     Description("Cake"),
-                    CREDIT,
+                    TransactionType.CREDIT,
                     Outgoing(true),
                     Quantity(2)
                 )
             )
-        )
-        assertThat(
-            database.arguments, hasElement(
+            .shouldContain(
                 Transaction(
                     Date(LocalDate.of(2020, 10, 15)),
                     Category("Tech"),
                     Value(BigDecimal("500.00")),
                     Description("Speaker"),
-                    CREDIT,
+                    TransactionType.CREDIT,
                     Outgoing(true),
                     Quantity(1)
                 )
             )
-        )
     }
 
-    @Test
-    fun `can post multiple bank transfer transactions`() {
+    test("can post multiple bank transfer transactions") {
         val handler = postBankTransferListHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 [
                     {
@@ -246,43 +217,37 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    BANK_TRANSFER,
-                    Outgoing(true),
-                    Quantity(1),
-                    Recipient("Friend")
-                )
+        response shouldHaveStatus OK
+        database.arguments.shouldContain(
+            Transaction(
+                Date(LocalDate.of(2020, 10, 12)),
+                Category("Food"),
+                Value(BigDecimal("12.50")),
+                Description("Cake"),
+                TransactionType.BANK_TRANSFER,
+                Outgoing(true),
+                Quantity(1),
+                Recipient("Friend")
             )
-        )
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 15)),
-                    Category("Tech"),
-                    Value(BigDecimal("500.00")),
-                    Description("Speaker"),
-                    BANK_TRANSFER,
-                    Outgoing(true),
-                    Quantity(1),
-                    Recipient("Family")
-                )
+        ).shouldContain(
+            Transaction(
+                Date(LocalDate.of(2020, 10, 15)),
+                Category("Tech"),
+                Value(BigDecimal("500.00")),
+                Description("Speaker"),
+                TransactionType.BANK_TRANSFER,
+                Outgoing(true),
+                Quantity(1),
+                Recipient("Family")
             )
         )
     }
 
-    @Test
-    fun `can post multiple personal transfer transactions`() {
+    test("can post multiple personal transfer transations") {
         val handler = postPersonalTransferListHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 [
                     {
@@ -306,45 +271,43 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
+        response shouldHaveStatus OK
+
+        database.arguments
+            .shouldContain(
                 Transaction(
                     Date(LocalDate.of(2020, 10, 12)),
                     Category("Food"),
                     Value(BigDecimal("12.50")),
                     Description("Cake"),
-                    PERSONAL_TRANSFER,
+                    TransactionType.PERSONAL_TRANSFER,
                     Outgoing(false),
                     Quantity(1),
                     outbound = Outbound("Current"),
                     inbound = Inbound("Savings")
                 )
-            )
-        )
-        assertThat(
-            database.arguments, hasElement(
+
+            ).shouldContain(
                 Transaction(
                     Date(LocalDate.of(2020, 10, 15)),
                     Category("Tech"),
                     Value(BigDecimal("500.00")),
                     Description("Speaker"),
-                    PERSONAL_TRANSFER,
+                    TransactionType.PERSONAL_TRANSFER,
                     Outgoing(false),
                     Quantity(1),
                     outbound = Outbound("Current"),
                     inbound = Inbound("Credit")
                 )
+
             )
-        )
     }
 
-    @Test
-    fun `can post multiple income transactions`() {
+    test("can post multiple income transactions") {
         val handler = postIncomeListHandler { database.save(it) }
 
         val response = handler(
-            Request(POST, "/").body(
+            Request(Method.POST, "/").body(
                 """
                 [
                     {
@@ -366,33 +329,43 @@ class TransactionHandlerTest {
             )
         )
 
-        assertThat(response, hasStatus(OK))
-        assertThat(
-            database.arguments, hasElement(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    INCOME,
-                    Outgoing(false),
-                    Quantity(1),
-                    source = Source("Work")
-                )
-            ).and(
-                hasElement(
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 15)),
-                        Category("Wages"),
-                        Value(BigDecimal("500.00")),
-                        Description("Wages"),
-                        INCOME,
-                        Outgoing(false),
-                        Quantity(1),
-                        source = Source("Work")
-                    )
-                )
+        response shouldHaveStatus OK
+        database.arguments.shouldContain(
+            Transaction(
+                Date(LocalDate.of(2020, 10, 12)),
+                Category("Food"),
+                Value(BigDecimal("12.50")),
+                Description("Cake"),
+                TransactionType.INCOME,
+                Outgoing(false),
+                Quantity(1),
+                source = Source("Work")
+            )
+        ).shouldContain(
+            Transaction(
+                Date(LocalDate.of(2020, 10, 15)),
+                Category("Wages"),
+                Value(BigDecimal("500.00")),
+                Description("Wages"),
+                TransactionType.INCOME,
+                Outgoing(false),
+                Quantity(1),
+                source = Source("Work")
             )
         )
     }
+})
+
+private class TestDatabase : Database<Transaction> {
+
+    var arguments = mutableListOf<Transaction>()
+
+    override fun save(data: Transaction) {
+        arguments.add(data)
+    }
+
+    override fun save(data: List<Transaction>) {
+        data.forEach { arguments.add(it) }
+    }
+
 }
