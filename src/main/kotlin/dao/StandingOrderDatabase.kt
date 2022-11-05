@@ -5,17 +5,17 @@ import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
 
+class StandingOrderDatabase(dataDirectory: String) : Database<StandingOrder>,
+    CsvDatabase<StandingOrder, StandingOrderColumns>() {
 
-class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
-    CsvDatabase<Transaction, TransactionColumns>() {
-
-    override var data = mutableListOf<Transaction>()
-    override val file = File("$dataDirectory/data.csv")
+    override var data = mutableListOf<StandingOrder>()
+    override val file = File("$dataDirectory/standing_orders.csv")
 
     override fun read() {
         read { data, columns ->
-            Transaction(
-                Date(LocalDate.parse(data[columns.dateColumn])),
+            StandingOrder(
+                Date(LocalDate.parse(data[columns.nextDateColumn])),
+                frequencyFrom(data[columns.frequencyColumn]),
                 Category(data[columns.categoryColumn]),
                 Value(BigDecimal(data[columns.valueColumn])),
                 Description(data[columns.descriptionColumn]),
@@ -30,12 +30,9 @@ class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
         }
     }
 
-    override fun save(data: Transaction) {
-        file.writeLine("${data.date.value},${data.outgoing.asString()},${data.value.value},${data.type.type},${data.outbound?.value.valueOrBlank()},${data.inbound?.value.valueOrBlank()},${data.recipient?.value.valueOrBlank()},${data.source?.value.valueOrBlank()},${data.description.value.valueOrNull()},${data.category.value},${data.quantity.value}")
-    }
-
-    override fun columnIndicesFrom(columns: List<String>) = TransactionColumns(
-        columns.indexOf("date"),
+    override fun columnIndicesFrom(columns: List<String>) = StandingOrderColumns(
+        columns.indexOf("next_date"),
+        columns.indexOf("frequency"),
         columns.indexOf("category"),
         columns.indexOf("value"),
         columns.indexOf("quantity"),
@@ -49,10 +46,10 @@ class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
     )
 
     override fun File.writeHeaders() {
-        writeText("date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
+        writeText("next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
+    }
+
+    override fun save(data: StandingOrder) {
+        file.writeLine("${data.nextDate.value},${data.frequency.value},,${data.outgoing.asString()},${data.value.value},${data.type.type},${data.outbound?.value.valueOrBlank()},${data.inbound?.value.valueOrBlank()},${data.recipient?.value.valueOrBlank()},${data.source?.value.valueOrBlank()},${data.description.value.valueOrNull()},${data.category.value},${data.quantity.value}")
     }
 }
-
-
-
-
