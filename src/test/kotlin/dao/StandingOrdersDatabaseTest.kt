@@ -1,8 +1,11 @@
 package dao
 
+import common.Factory
 import domain.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
+import io.kotest.matchers.collections.shouldHaveSingleElement
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import java.io.File
 import java.math.BigDecimal
@@ -107,6 +110,21 @@ class StandingOrdersDatabaseTest : FunSpec({
         database.flush()
 
         file().readText() shouldBe initialContents
+    }
+    
+    test("can update a standing order") {
+        val id = UUID.randomUUID()
+        val otherStandingOrder = Factory(id = UUID.randomUUID()).standingOrder()
+        database.data = mutableListOf(Factory(id = id).standingOrder(), otherStandingOrder)
+
+        val updated = Factory(id = id, date = Date(LocalDate.of(2020, 2, 1))).standingOrder()
+
+        database.update(updated)
+
+        database.data
+            .shouldHaveSize(2)
+            .shouldContain(otherStandingOrder)
+            .shouldContain(updated)
     }
 })
 

@@ -53,7 +53,9 @@ open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingO
     }
 
     override fun update(data: StandingOrder) {
-
+        this.data = this.data.map {
+            if (it.id == data.id) data else it
+        }.toMutableList()
     }
 
     override fun save(data: StandingOrder) {
