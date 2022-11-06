@@ -7,10 +7,15 @@ import io.kotest.matchers.shouldBe
 import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 class StandingOrdersDatabaseTest : FunSpec({
 
     val database = StandingOrdersDatabase(tmp)
+
+    val firstId = UUID.randomUUID()
+    val secondId = UUID.randomUUID()
+    val thirdId = UUID.randomUUID()
 
     beforeEach {
         File(tmp).deleteRecursively()
@@ -24,10 +29,10 @@ class StandingOrdersDatabaseTest : FunSpec({
     test("can read from csv") {
         file().writeText(
             """
-                next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
-                2022-11-01,monthly,,True,5.00,Bank Transfer,,,Recipient,,Spotify,Spotify,1
-                2022-11-16,weekly,,False,200.00,Personal Transfer,Current,Savings,,,Savings,Savings,1
-                2022-11-01,monthly,,True,13.00,Debit,,,,,Bill,Food,1
+                next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,id
+                2022-11-01,monthly,,True,5.00,Bank Transfer,,,Recipient,,Spotify,Spotify,1,$firstId
+                2022-11-16,weekly,,False,200.00,Personal Transfer,Current,Savings,,,Savings,Savings,1,$secondId
+                2022-11-01,monthly,,True,13.00,Debit,,,,,Bill,Food,1,$thirdId
                 
             """.trimIndent()
         )
@@ -45,6 +50,7 @@ class StandingOrdersDatabaseTest : FunSpec({
                     TransactionType.BANK_TRANSFER,
                     Outgoing(true),
                     Quantity(1),
+                    firstId,
                     Recipient("Recipient"),
                     null,
                     null,
@@ -61,6 +67,7 @@ class StandingOrdersDatabaseTest : FunSpec({
                     TransactionType.PERSONAL_TRANSFER,
                     Outgoing(false),
                     Quantity(1),
+                    secondId,
                     null,
                     Inbound("Savings"),
                     Outbound("Current"),
@@ -77,6 +84,7 @@ class StandingOrdersDatabaseTest : FunSpec({
                     TransactionType.DEBIT,
                     Outgoing(true),
                     Quantity(1),
+                    thirdId,
                     null,
                     null,
                     null,
@@ -87,10 +95,10 @@ class StandingOrdersDatabaseTest : FunSpec({
 
     test("can flush to file without changes") {
         val initialContents = """
-                next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity
-                2022-11-01,monthly,,True,5.00,Bank Transfer,,,Recipient,,Spotify,Spotify,1
-                2022-11-16,weekly,,False,200.00,Personal Transfer,Current,Savings,,,Savings,Savings,1
-                2022-11-01,monthly,,True,13.00,Debit,,,,,Bill,Food,1
+                next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,id
+                2022-11-01,monthly,,True,5.00,Bank Transfer,,,Recipient,,Spotify,Spotify,1,$firstId
+                2022-11-16,weekly,,False,200.00,Personal Transfer,Current,Savings,,,Savings,Savings,1,$secondId
+                2022-11-01,monthly,,True,13.00,Debit,,,,,Bill,Food,1,$thirdId
                 
             """.trimIndent()
         file().writeText(initialContents)

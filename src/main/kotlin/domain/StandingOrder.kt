@@ -1,5 +1,7 @@
 package domain
 
+import java.util.UUID
+
 data class StandingOrder(
     val nextDate: Date,
     val frequency: Frequency,
@@ -9,6 +11,7 @@ data class StandingOrder(
     val type: TransactionType,
     val outgoing: Outgoing,
     val quantity: Quantity = Quantity(1),
+    val id: UUID,
     val recipient: Recipient? = null,
     val inbound: Inbound? = null,
     val outbound: Outbound? = null,

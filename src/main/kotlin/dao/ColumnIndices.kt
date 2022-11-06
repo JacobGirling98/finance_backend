@@ -14,7 +14,8 @@ data class StandingOrderColumns(
     val inboundColumn: Int,
     val outboundColumn: Int,
     val sourceColumn: Int,
-    val outgoingColumn: Int
+    val outgoingColumn: Int,
+    val idColumn: Int
 ): ColumnIndices
 
 data class TransactionColumns(

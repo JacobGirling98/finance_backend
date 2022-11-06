@@ -3,6 +3,7 @@ package common
 import domain.*
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.UUID
 
 class Factory(
     private val date: Date = Date(LocalDate.of(2020, 1, 1)),
@@ -16,7 +17,8 @@ class Factory(
     private val recipient: Recipient? = null,
     private val inbound: Inbound? = null,
     private val outbound: Outbound? = null,
-    private val source: Source? = null
+    private val source: Source? = null,
+    private val id: UUID = UUID.randomUUID()
 ) {
     fun standingOrder() = StandingOrder(
         date,
@@ -27,6 +29,7 @@ class Factory(
         type,
         outgoing,
         quantity,
+        id,
         recipient,
         inbound,
         outbound,

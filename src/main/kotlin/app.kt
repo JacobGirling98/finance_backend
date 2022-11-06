@@ -24,7 +24,7 @@ val referenceData = ReferenceData(DATA_LOC)
 val transactionsDatabase = TransactionsDatabase(DATA_LOC)
 val loginDatabase = LoginDatabase(DATA_LOC)
 
-val app: HttpHandler = routes(
+val routes: HttpHandler = routes(
     referenceRoutes(referenceData),
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
@@ -47,7 +47,7 @@ fun main() {
             )
         )
         .then(lastLoginFilter { loginDatabase.save(it) })
-        .then(app)
+        .then(routes)
 
     val server = printingApp.asServer(SunHttp(9000)).start()
 

@@ -7,7 +7,10 @@ import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
 import domain.StandingOrder
 import domain.Transaction
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
+import java.util.*
 
 class StandingOrderProcessor(
     private val standingOrdersDatabase: StandingOrdersDatabase,
@@ -27,13 +30,28 @@ class StandingOrderProcessor(
                     WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(1))
                 }
             )
-            standingOrdersDatabase.update(1, standingOrderToChange)
+            standingOrdersDatabase.update(standingOrderToChange)
         }
     }
 
     fun processAll(standingOrders: List<StandingOrder>) {
         standingOrders.forEach { process(it) }
         standingOrdersDatabase.flush()
+    }
+
+    fun schedule() {
+        val now = java.util.Date.from(Instant.now())
+        val day = Duration.ofDays(1).toMillis()
+
+        Timer().schedule(
+            object : TimerTask() {
+                override fun run() {
+                    standingOrdersDatabase.read()
+                    processAll(standingOrdersDatabase.data)
+                }
+            },
+            now, day
+        )
     }
 
     private fun StandingOrder.toTransaction() = Transaction(

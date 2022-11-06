@@ -14,6 +14,7 @@ import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
+import java.util.UUID
 
 class StandingOrderProcessorTest : FunSpec({
 
@@ -21,6 +22,8 @@ class StandingOrderProcessorTest : FunSpec({
     val monthBeforeNow = LocalDate.of(2019, 12, 2)
     val monthAfterNow = LocalDate.of(2020, 1, 31)
     val weekBeforeNow = LocalDate.of(2019, 12, 27)
+
+    val uuid = UUID.randomUUID()
 
     val standingOrdersDatabase = StandingOrdersDatabaseTestDouble()
     val transactionsDatabase = TransactionsDatabaseTestDouble()
@@ -33,8 +36,8 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process monthly standing order if current date is after standing order date") {
-        val factory = Factory(date = Date(monthBeforeNow))
-        val expected = Factory(date = Date(monthBeforeNow.plusMonths(1))).standingOrder()
+        val factory = Factory(date = Date(monthBeforeNow), id = uuid)
+        val expected = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid).standingOrder()
 
         processor.process(factory.standingOrder())
 
@@ -43,8 +46,8 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process standing order if current date is equal to standing order date") {
-        val factory = Factory(date = Date(now))
-        val expected = Factory(date = Date(now.plusMonths(1))).standingOrder()
+        val factory = Factory(date = Date(now), id = uuid)
+        val expected = Factory(date = Date(now.plusMonths(1)), id = uuid).standingOrder()
 
         processor.process(factory.standingOrder())
 
@@ -53,9 +56,9 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process monthly standing order multiple times if current date is multiple time periods after standing order date") {
-        val firstFactory = Factory(date = Date(monthBeforeNow.minusMonths(1)))
-        val secondFactory = Factory(date = Date(monthBeforeNow))
-        val thirdFactory = Factory(date = Date(monthBeforeNow.plusMonths(1)))
+        val firstFactory = Factory(date = Date(monthBeforeNow.minusMonths(1)), id = uuid)
+        val secondFactory = Factory(date = Date(monthBeforeNow), id = uuid)
+        val thirdFactory = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid)
 
         processor.process(firstFactory.standingOrder())
 
@@ -70,8 +73,8 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process weekly standing order if current date is after standing order date") {
-        val factory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY)
-        val expected = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY).standingOrder()
+        val factory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
+        val expected = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid).standingOrder()
 
         processor.process(factory.standingOrder())
 
@@ -80,9 +83,9 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process weekly standing order multiple times if current date is multiple time periods after standing order date") {
-        val firstFactory = Factory(date = Date(weekBeforeNow.minusWeeks(1)), frequency = Frequency.WEEKLY)
-        val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY)
-        val thirdFactory = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY)
+        val firstFactory = Factory(date = Date(weekBeforeNow.minusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid)
+        val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
+        val thirdFactory = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid)
 
         processor.process(firstFactory.standingOrder())
 
@@ -121,10 +124,11 @@ class StandingOrderProcessorTest : FunSpec({
 })
 
 private class StandingOrdersDatabaseTestDouble : StandingOrdersDatabase("tmp") {
+
     val ordersUpdated = mutableListOf<StandingOrder>()
     var flushes = 0
 
-    override fun update(id: Int, data: StandingOrder) {
+    override fun update(data: StandingOrder) {
         ordersUpdated.add(data)
     }
 

@@ -1,6 +1,7 @@
 package dao
 
 import domain.*
+import domain.Date
 import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -52,7 +53,7 @@ open class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
         writeText("date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
     }
 
-    override fun update(id: Int, data: Transaction) {
+    override fun update(data: Transaction) {
 
     }
 }

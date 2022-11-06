@@ -1,9 +1,11 @@
 package dao
 
 import domain.*
+import domain.Date
 import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.*
 
 open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingOrder, StandingOrderColumns>() {
 
@@ -20,7 +22,8 @@ open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingO
                 Description(data[columns.descriptionColumn]),
                 transactionTypeFrom(data[columns.transactionTypeColumn]),
                 Outgoing(data[columns.outgoingColumn].toBoolean()),
-                quantity = Quantity(data[columns.quantityColumn].toInt()),
+                Quantity(data[columns.quantityColumn].toInt()),
+                UUID.fromString(data[columns.idColumn]),
                 recipient = data[columns.recipientColumn].valueOrNull()?.let { Recipient(it) },
                 outbound = data[columns.outboundColumn].valueOrNull()?.let { Outbound(it) },
                 inbound = data[columns.inboundColumn].valueOrNull()?.let { Inbound(it) },
@@ -41,18 +44,19 @@ open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingO
         columns.indexOf("inbound_account"),
         columns.indexOf("outbound_account"),
         columns.indexOf("source"),
-        columns.indexOf("outgoing")
+        columns.indexOf("outgoing"),
+        columns.indexOf("id")
     )
 
     override fun File.writeHeaders() {
-        writeText("next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
+        writeText("next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,id\n")
     }
 
-    override fun update(id: Int, data: StandingOrder) {
+    override fun update(data: StandingOrder) {
 
     }
 
     override fun save(data: StandingOrder) {
-        file.writeLine("${data.nextDate.value},${data.frequency.value},,${data.outgoing.asString()},${data.value.value},${data.type.type},${data.outbound?.value.valueOrBlank()},${data.inbound?.value.valueOrBlank()},${data.recipient?.value.valueOrBlank()},${data.source?.value.valueOrBlank()},${data.description.value.valueOrNull()},${data.category.value},${data.quantity.value}")
+        file.writeLine("${data.nextDate.value},${data.frequency.value},,${data.outgoing.asString()},${data.value.value},${data.type.type},${data.outbound?.value.valueOrBlank()},${data.inbound?.value.valueOrBlank()},${data.recipient?.value.valueOrBlank()},${data.source?.value.valueOrBlank()},${data.description.value.valueOrNull()},${data.category.value},${data.quantity.value},${data.id}")
     }
 }
