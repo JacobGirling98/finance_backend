@@ -10,7 +10,7 @@ class Factory(
     private val frequency: Frequency = Frequency.MONTHLY,
     private val category: Category = Category("Food"),
     private val value: Value = Value(BigDecimal("20.00")),
-    private val description: Description = Description("Mi;l"),
+    private val description: Description = Description("Milk"),
     private val type: TransactionType = TransactionType.BANK_TRANSFER,
     private val outgoing: Outgoing = Outgoing(true),
     private val quantity: Quantity = Quantity(1),

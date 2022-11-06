@@ -1,5 +1,6 @@
 package resource
 
+import config.logger
 import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
 import domain.Date
@@ -23,6 +24,7 @@ class StandingOrderProcessor(
         }
         var standingOrderToChange: StandingOrder = standingOrder.copy()
         while (standingOrderToChange.nextDate.value <= now) {
+            logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.nextDate.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
             standingOrderToChange = standingOrderToChange.copy(
                 nextDate = when (standingOrderToChange.frequency) {
@@ -35,6 +37,7 @@ class StandingOrderProcessor(
     }
 
     fun processAll(standingOrders: List<StandingOrder>) {
+        logger.info { "Processing standing orders..." }
         standingOrders.forEach { process(it) }
         standingOrdersDatabase.flush()
     }
@@ -43,14 +46,15 @@ class StandingOrderProcessor(
         val now = java.util.Date.from(Instant.now())
         val day = Duration.ofDays(1).toMillis()
 
-        Timer().schedule(
+        Timer().scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
                     standingOrdersDatabase.read()
                     processAll(standingOrdersDatabase.data)
                 }
             },
-            now, day
+            now,
+            day
         )
     }
 
