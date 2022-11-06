@@ -10,8 +10,9 @@ abstract class CsvDatabase<T, U : ColumnIndices> : Database<T> {
     abstract fun read()
     protected abstract fun columnIndicesFrom(columns: List<String>): U
     protected abstract fun File.writeHeaders()
+    abstract fun update(id: Int, data: T)
 
-    fun flush() {
+    open fun flush() {
         file.writeHeaders()
         save(data)
     }

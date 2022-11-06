@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 
 
-class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
+open class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
     CsvDatabase<Transaction, TransactionColumns>() {
 
     override var data = mutableListOf<Transaction>()
@@ -50,6 +50,10 @@ class TransactionsDatabase(dataDirectory: String) : Database<Transaction>,
 
     override fun File.writeHeaders() {
         writeText("date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
+    }
+
+    override fun update(id: Int, data: Transaction) {
+
     }
 }
 

@@ -1,0 +1,52 @@
+package resource
+
+import dao.StandingOrdersDatabase
+import dao.TransactionsDatabase
+import domain.Date
+import domain.Frequency.MONTHLY
+import domain.Frequency.WEEKLY
+import domain.StandingOrder
+import domain.Transaction
+import java.time.LocalDate
+
+class StandingOrderProcessor(
+    private val standingOrdersDatabase: StandingOrdersDatabase,
+    private val transactionsDatabase: TransactionsDatabase,
+    private val now: LocalDate = LocalDate.now()
+) {
+    fun process(standingOrder: StandingOrder) {
+        if (standingOrder.nextDate.value > now) {
+            return
+        }
+        var standingOrderToChange: StandingOrder = standingOrder.copy()
+        while (standingOrderToChange.nextDate.value <= now) {
+            transactionsDatabase.save(standingOrderToChange.toTransaction())
+            standingOrderToChange = standingOrderToChange.copy(
+                nextDate = when (standingOrderToChange.frequency) {
+                    MONTHLY -> Date(standingOrderToChange.nextDate.value.plusMonths(1))
+                    WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(1))
+                }
+            )
+            standingOrdersDatabase.update(1, standingOrderToChange)
+        }
+    }
+
+    fun processAll(standingOrders: List<StandingOrder>) {
+        standingOrders.forEach { process(it) }
+        standingOrdersDatabase.flush()
+    }
+
+    private fun StandingOrder.toTransaction() = Transaction(
+        nextDate,
+        category,
+        value,
+        description,
+        type,
+        outgoing,
+        quantity,
+        recipient,
+        inbound,
+        outbound,
+        source
+    )
+}

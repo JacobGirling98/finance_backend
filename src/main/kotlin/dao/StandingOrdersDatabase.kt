@@ -5,8 +5,7 @@ import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class StandingOrderDatabase(dataDirectory: String) : Database<StandingOrder>,
-    CsvDatabase<StandingOrder, StandingOrderColumns>() {
+open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingOrder, StandingOrderColumns>() {
 
     override var data = mutableListOf<StandingOrder>()
     override val file = File("$dataDirectory/standing_orders.csv")
@@ -47,6 +46,10 @@ class StandingOrderDatabase(dataDirectory: String) : Database<StandingOrder>,
 
     override fun File.writeHeaders() {
         writeText("next_date,frequency,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity\n")
+    }
+
+    override fun update(id: Int, data: StandingOrder) {
+
     }
 
     override fun save(data: StandingOrder) {

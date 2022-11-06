@@ -8,9 +8,9 @@ import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
 
-class StandingOrderDatabaseTest : FunSpec({
+class StandingOrdersDatabaseTest : FunSpec({
 
-    val database = StandingOrderDatabase(tmp)
+    val database = StandingOrdersDatabase(tmp)
 
     beforeEach {
         File(tmp).deleteRecursively()
