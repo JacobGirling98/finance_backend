@@ -34,16 +34,21 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
 }
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
-}
-
-sourceSets {
-    main {
-        java.srcDir("src/main/kotlin")
-    }
-}
-
 application {
     mainClass.set("AppKt")
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "AppKt"
+    }
+    from(sourceSets.main.get().output)
+
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+
 }
