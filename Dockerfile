@@ -1,16 +1,14 @@
-# syntax=docker/dockerfile:1
+FROM gradle:jdk11-alpine AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon
 
-FROM eclipse-temurin:11-jdk-jammy
+FROM openjdk:11.0.9-jre-slim
 
-WORKDIR /app
+RUN mkdir /app
+EXPOSE 9000
+COPY --from=build /home/gradle/src/build/libs/ /app/
 
-COPY gradle/ gradle
-COPY build.gradle.kts build.gradle.kts
-COPY gradlew gradlew
-COPY gradlew.bat gradlew.bat
+ENTRYPOINT ["java","-jar","/app/finance_backend-1.0-SNAPSHOT.jar"]
 
-RUN ./gradlew clean installDist
-
-COPY build/install/ install
-
-ENTRYPOINT ["./install/finance_backend/bin/finance_backend"]
+# sample command docker run -e DATA_LOC=/app/data -v <directory location>:/app/data -p 9000:9000 -t v1
