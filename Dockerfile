@@ -11,4 +11,4 @@ COPY --from=build /home/gradle/src/build/libs/ /app/
 
 ENTRYPOINT ["java","-jar","/app/finance_backend-1.0-SNAPSHOT.jar"]
 
-# sample command docker run -e DATA_LOC=/app/data -v <directory location>:/app/data -p 9000:9000 -t v1
+# sample command docker run -e DATA_LOC=/app/data -v $DATA_LOC:/app/data -p 9000:9000 -t v1
