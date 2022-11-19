@@ -1,5 +1,5 @@
-import config.DATA_LOC
 import config.logger
+import config.properties
 import dao.LoginDatabase
 import dao.ReferenceData
 import dao.StandingOrdersDatabase
@@ -23,10 +23,10 @@ import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import resource.StandingOrderProcessor
 
-val referenceData = ReferenceData(DATA_LOC)
-val transactionsDatabase = TransactionsDatabase(DATA_LOC)
-val loginDatabase = LoginDatabase(DATA_LOC)
-val standingOrderDatabase = StandingOrdersDatabase(DATA_LOC)
+val referenceData = ReferenceData(properties.dataLocation)
+val transactionsDatabase = TransactionsDatabase(properties.dataLocation)
+val loginDatabase = LoginDatabase(properties.dataLocation)
+val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
 
 val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase)
 
@@ -35,7 +35,7 @@ val routes: HttpHandler = routes(
     referenceRoutes(referenceData),
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
-    gitRoutes(GitClient("$DATA_LOC/.."))
+    gitRoutes(GitClient("/.."))
 )
 
 fun main() {

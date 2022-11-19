@@ -20,6 +20,7 @@ dependencies {
     implementation("org.http4k:http4k-format-jackson")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.3")
     implementation("ch.qos.logback:logback-classic:1.4.4")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
     testImplementation(kotlin("test"))
     testImplementation("org.http4k:http4k-testing-kotest")
     testImplementation("io.kotest:kotest-runner-junit5:5.5.3")

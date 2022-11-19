@@ -31,7 +31,7 @@ class LoginDatabase(
 
     override fun save(data: List<Login>) {}
 
-    fun lastLogin(now: Login) = this.logins.sortedByDescending { it.value }.first { it != now }
+    fun lastLogin(now: Login) = logins.sortedByDescending { it.value }.first { it != now }
 
     private fun File.clear() {
         writeText("")

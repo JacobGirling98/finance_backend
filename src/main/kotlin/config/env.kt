@@ -1,3 +1,3 @@
 package config
 
-val DATA_LOC: String = System.getenv("DATA_LOC")
+val properties = readProperties(System.getenv("PROFILE"))
