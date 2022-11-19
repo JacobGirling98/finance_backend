@@ -1,11 +1,11 @@
 package dao
 
-import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.shouldBe
 import java.io.File
 import java.time.LocalDate
 
@@ -76,6 +76,20 @@ class LoginDatabaseTest : FunSpec({
             .shouldContain(thirdDate.toString())
             .shouldContain(fourthDate.toString())
             .shouldNotContain(firstDate.toString())
+    }
+
+    test("getting the last login returns a different day") {
+        val firstDate = LocalDate.of(2019, 1, 1)
+        val secondDate = LocalDate.of(2020, 1, 1)
+        val thirdDate = LocalDate.of(2021, 1, 1)
+        listOf(
+            firstDate,
+            secondDate,
+            thirdDate
+        ).forEach { file().writeLine(it.toString()) }
+        logins.initialise()
+
+        logins.lastLogin(Login(thirdDate)) shouldBe Login(secondDate)
     }
 })
 
