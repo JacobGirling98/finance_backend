@@ -10,8 +10,9 @@ data class Properties(
 )
 
 fun readProperties(profile: String): Properties {
+    val resourcesLocation = if (profile != "docker") "src/main/" else ""
     val targetFile =
-        File("src/main/resources/properties").listFiles()?.first { it.nameWithoutExtension == profile }
+        File("${resourcesLocation}resources/properties").listFiles()?.first { it.nameWithoutExtension == profile }
             ?: error("Can't find properties files")
     val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
     return yamlMapper.readValue(targetFile, Properties::class.java)
