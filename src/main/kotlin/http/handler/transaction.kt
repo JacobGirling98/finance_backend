@@ -33,29 +33,29 @@ fun postIncomeHandler(save: (transaction: Transaction) -> Unit): HttpHandler = {
 
 fun postCreditDebitListHandler(
     transactionType: TransactionType,
-    save: (transaction: List<Transaction>) -> Unit
+    save: (transaction: List<Transaction>) -> Int
 ): HttpHandler = {request ->
-    save(creditDebitListLens.extract(request).map { transactionFrom(it, transactionType) })
-    Response(Status.OK)
+    val numberSaved = save(creditDebitListLens.extract(request).map { transactionFrom(it, transactionType) })
+    Response(Status.OK).body(numberSaved.toString())
 }
 
 fun postBankTransferListHandler(
-    save: (transaction: List<Transaction>) -> Unit
+    save: (transaction: List<Transaction>) -> Int
 ): HttpHandler = {request ->
-    save(bankTransferListLens.extract(request).map { transactionFrom(it) })
-    Response(Status.OK)
+    val numberSaved = save(bankTransferListLens.extract(request).map { transactionFrom(it) })
+    Response(Status.OK).body(numberSaved.toString())
 }
 
 fun postPersonalTransferListHandler(
-    save: (transaction: List<Transaction>) -> Unit
+    save: (transaction: List<Transaction>) -> Int
 ): HttpHandler = {request ->
-    save(personalTransferListLens.extract(request).map { transactionFrom(it) })
-    Response(Status.OK)
+    val numberSaved = save(personalTransferListLens.extract(request).map { transactionFrom(it) })
+    Response(Status.OK).body(numberSaved.toString())
 }
 
 fun postIncomeListHandler(
-    save: (transaction: List<Transaction>) -> Unit
+    save: (transaction: List<Transaction>) -> Int
 ): HttpHandler = {request ->
-    save(incomeListLens.extract(request).map { transactionFrom(it) })
-    Response(Status.OK)
+    val numberSaved = save(incomeListLens.extract(request).map { transactionFrom(it) })
+    Response(Status.OK).body(numberSaved.toString())
 }

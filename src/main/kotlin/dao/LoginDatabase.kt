@@ -12,24 +12,26 @@ class LoginDatabase(
 ) : Database<Login> {
 
     private val file = File("$filePath/logins.txt")
-    private val logins = ArrayDeque<Login>()
+    private var logins = mutableSetOf<Login>()
 
     fun initialise() {
         file.readLines().forEach { logins.add(Login(LocalDate.parse(it))) }
     }
 
     override fun save(data: Login) {
-        if (data !in logins) {
+        if (!logins.contains(data)) {
             logins.add(data)
             if (logins.size > 3) {
-                logins.removeFirst()
+                logins = logins.sortedBy { it.value }.takeLast(3).toMutableSet()
             }
             file.clear()
             logins.forEach { file.writeLine(it.value.toString()) }
         }
     }
 
-    override fun save(data: List<Login>) {}
+    override fun save(data: List<Login>): Int {
+        return 0
+    }
 
     fun lastLogin(now: Login) = logins.sortedByDescending { it.value }.first { it != now }
 

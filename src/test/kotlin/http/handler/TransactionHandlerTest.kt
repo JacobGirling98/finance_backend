@@ -364,8 +364,9 @@ private class TestDatabase : Database<Transaction> {
         arguments.add(data)
     }
 
-    override fun save(data: List<Transaction>) {
+    override fun save(data: List<Transaction>): Int {
         data.forEach { arguments.add(it) }
+        return data.size
     }
 
 }

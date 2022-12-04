@@ -1,10 +1,7 @@
 package dao
 
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldHaveSingleElement
-import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.collections.shouldNotContain
+import io.kotest.matchers.collections.*
 import io.kotest.matchers.shouldBe
 import java.io.File
 import java.time.LocalDate
@@ -90,6 +87,28 @@ class LoginDatabaseTest : FunSpec({
         logins.initialise()
 
         logins.lastLogin(Login(thirdDate)) shouldBe Login(secondDate)
+    }
+
+    test("saving a login to a file in a random order removes the oldest") {
+        val firstDate = LocalDate.of(2019, 1, 1)
+        val secondDate = LocalDate.of(2020, 1, 1)
+        val thirdDate = LocalDate.of(2021, 1, 1)
+        val fourthDate = LocalDate.of(2022, 1, 1)
+        listOf(
+            thirdDate,
+            secondDate,
+            firstDate
+        ).forEach { file().writeLine(it.toString()) }
+        logins.initialise()
+
+        logins.save(Login(fourthDate))
+
+        file().readLines()
+            .shouldContainExactlyInAnyOrder(listOf(
+                secondDate.toString(),
+                thirdDate.toString(),
+                fourthDate.toString()
+            ))
     }
 })
 

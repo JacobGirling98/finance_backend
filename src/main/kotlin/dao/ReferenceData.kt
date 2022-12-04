@@ -41,7 +41,8 @@ class ReferenceData(private val dataDirectory: String) : Database<DescriptionMap
         )
     }
 
-    override fun save(data: List<DescriptionMapping>) {
+    override fun save(data: List<DescriptionMapping>): Int {
         data.forEach { save(it) }
+        return data.size
     }
 }
