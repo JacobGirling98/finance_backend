@@ -35,3 +35,8 @@ data class Income(
     val description: Description,
     val source: Source
 )
+
+data class TransactionConfirmation(
+    val transactionCount: Int,
+    val value: Float
+)

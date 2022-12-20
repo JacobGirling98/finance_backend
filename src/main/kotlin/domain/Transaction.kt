@@ -15,3 +15,5 @@ data class Transaction(
     val source: Source? = null
 )
 
+fun List<Transaction>.totalValue() = map { it.value.value }.reduce { total, value -> total.add(value) }.toFloat()
+
