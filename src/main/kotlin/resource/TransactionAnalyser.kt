@@ -4,9 +4,8 @@ import domain.*
 import java.time.LocalDate
 
 class TransactionAnalyser {
-    fun monthsOf(transactions: List<Transaction>): List<DateRange> {
-        val distinctDatesBy = transactions.distinctDatesBy { it.value.monthValue }
-        return distinctDatesBy.map {
+    fun monthsOf(transactions: List<Transaction>): List<DateRange> =
+        transactions.distinctDatesBy { it.value.monthValue }.map {
             StartDate(it.value.year, it.value.monthValue, 1).let { startDate ->
                 DateRange(
                     startDate,
@@ -14,7 +13,6 @@ class TransactionAnalyser {
                 )
             }
         }
-    }
 
     fun yearsOf(transactions: List<Transaction>): List<DateRange> =
         transactions.distinctDatesBy { it.value.year }.map {
@@ -32,13 +30,7 @@ class TransactionAnalyser {
         transactions.wageDates()
             .fillMissingFiscalMonths()
             .sortedBy { it.value }
-            .forEach { date ->
-                val startDate = StartDate(date.value.year, date.value.monthValue, date.value.dayOfMonth)
-                if (dateRanges.isNotEmpty() && startDate.value.dayOfMonth != 15) {
-                    dateRanges[dateRanges.size - 1] = dateRanges.last().withEndDateDayOf(startDate.value.dayOfMonth)
-                }
-                dateRanges.add(DateRange(startDate, startDate.nextFiscalMonth()))
-            }
+            .forEach { dateRanges.add(it, StartDate::nextFiscalMonth) }
 
         val transactionsWithoutWages = transactions.filterNot { it.category.value == "Wages" }
         while (transactionsWithoutWages.afterOrEqual(dateRanges.latest()).isNotEmpty()) {
@@ -59,15 +51,17 @@ class TransactionAnalyser {
                 transactions.wageOfMonth(4, it.value.year)?.date
                     ?: Date(LocalDate.of(it.value.year, 4, 15))
             }
-            .forEach { date ->
-                val startDate = StartDate(date.value.year, date.value.monthValue, date.value.dayOfMonth)
-                if (dateRanges.isNotEmpty() && startDate.value.dayOfMonth != 15) {
-                    dateRanges[dateRanges.size - 1] = dateRanges.last().withEndDateDayOf(startDate.value.dayOfMonth)
-                }
-                dateRanges.add(DateRange(startDate, startDate.nextFiscalYear()))
-            }
+            .forEach { dateRanges.add(it, StartDate::nextFiscalYear) }
 
         return dateRanges
+    }
+
+    private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndDate) {
+        val startDate = StartDate(date.value.year, date.value.monthValue, date.value.dayOfMonth)
+        if (isNotEmpty() && startDate.value.dayOfMonth != 15) {
+            this[size - 1] = last().withEndDateDayOf(startDate.value.dayOfMonth)
+        }
+        add(DateRange(startDate, nextDate(startDate)))
     }
 
     private fun previousDateRange(earliestDateRange: DateRange): DateRange =
