@@ -352,13 +352,63 @@ class TransactionAnalyserTest : DescribeSpec({
     describe("date ranges per fiscal year") {
         it("single year") {
             val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 5, 1)
+                aDebitTransaction().withADateOf(2020, 5, 1)
             )
 
             analyser.fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 15),
                     EndDate(2021, 4, 15)
+                )
+            )
+        }
+
+        it("multiple years") {
+            val transactions = listOf(
+                aDebitTransaction().withADateOf(2020, 5, 1),
+                aDebitTransaction().withADateOf(2021, 6, 10)
+            )
+
+            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+                DateRange(
+                    StartDate(2020, 4, 15),
+                    EndDate(2021, 4, 15)
+                ),
+                DateRange(
+                    StartDate(2021, 4, 15),
+                    EndDate(2022, 4, 15)
+                )
+            )
+        }
+
+        it("april transaction on irregular date") {
+            val transactions = listOf(
+                aWagesIncome().withADateOf(2020, 4, 14),
+                aDebitTransaction().withADateOf(2020, 6, 10)
+            )
+
+            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+                DateRange(
+                    StartDate(2020, 4, 14),
+                    EndDate(2021, 4, 15)
+                )
+            )
+        }
+
+        it("two wages on an irregular date") {
+            val transactions = listOf(
+                aWagesIncome().withADateOf(2020, 4, 14),
+                aWagesIncome().withADateOf(2021, 4, 13)
+            )
+
+            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+                DateRange(
+                    StartDate(2020, 4, 14),
+                    EndDate(2021, 4, 13)
+                ),
+                DateRange(
+                    StartDate(2021, 4, 13),
+                    EndDate(2022, 4, 15)
                 )
             )
         }

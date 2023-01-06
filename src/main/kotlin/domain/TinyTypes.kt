@@ -54,8 +54,9 @@ data class StartDate(
 
     fun nextMonth(): EndDate = value.plusMonths(1).let { EndDate(it.year, it.monthValue, it.dayOfMonth) }
     fun nextYear(): EndDate = value.plusYears(1).let { EndDate(it.year, it.monthValue, it.dayOfMonth) }
-
     fun nextFiscalMonth(): EndDate = value.plusMonths(1).let { EndDate(it.year, it.monthValue, 15) }
+    fun nextFiscalYear(): EndDate = EndDate(value.plusYears(1).year, 4, 15)
+
 }
 
 data class EndDate(
