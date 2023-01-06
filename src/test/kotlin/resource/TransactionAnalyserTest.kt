@@ -11,8 +11,6 @@ import io.kotest.matchers.shouldBe
 
 class TransactionAnalyserTest : DescribeSpec({
 
-    val analyser = TransactionAnalyser()
-
     describe("date ranges per calendar month") {
         it("can extract single date range") {
             val transactions = listOf(
@@ -20,7 +18,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 1, 20),
             )
 
-            analyser.monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2020, 2, 1)
@@ -34,7 +32,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 2, 20),
             )
 
-            analyser.monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2020, 2, 1)
@@ -52,7 +50,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2021, 1, 10),
             )
 
-            analyser.monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 12, 1),
                     EndDate(2021, 1, 1)
@@ -72,7 +70,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 2, 20),
             )
 
-            analyser.yearsOf(transactions) shouldBe listOf(
+            yearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2021, 1, 1)
@@ -87,7 +85,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2022, 3, 20),
             )
 
-            analyser.yearsOf(transactions) shouldBe listOf(
+            yearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2021, 1, 1)
@@ -110,7 +108,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 1, 15),
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -124,7 +122,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 1, 20)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -138,7 +136,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 2, 15)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -156,7 +154,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 2, 15)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 14),
                     EndDate(2020, 2, 15)
@@ -174,7 +172,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 2, 14)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 14)
@@ -193,7 +191,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 3, 14),
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 13)
@@ -216,7 +214,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 3, 12)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -235,7 +233,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 3, 20)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -258,7 +256,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 3, 15)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 2, 15),
                     EndDate(2020, 3, 15)
@@ -276,7 +274,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2020, 3, 13),
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 14),
                     EndDate(2020, 2, 15)
@@ -298,7 +296,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 2, 15)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -320,7 +318,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 7, 15)
             )
 
-            analyser.fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 2, 15),
                     EndDate(2020, 3, 14)
@@ -355,7 +353,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 5, 1)
             )
 
-            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 15),
                     EndDate(2021, 4, 15)
@@ -369,7 +367,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2021, 6, 10)
             )
 
-            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 15),
                     EndDate(2021, 4, 15)
@@ -387,7 +385,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aDebitTransaction().withADateOf(2020, 6, 10)
             )
 
-            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 14),
                     EndDate(2021, 4, 15)
@@ -401,7 +399,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 aWagesIncome().withADateOf(2021, 4, 13)
             )
 
-            analyser.fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 14),
                     EndDate(2021, 4, 13)
