@@ -2,9 +2,13 @@ package http.handler
 
 import dao.Database
 import domain.*
+import domain.TransactionType.DEBIT
+import fixtures.toObject
+import http.model.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSingleElement
+import io.kotest.matchers.shouldBe
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
@@ -243,7 +247,7 @@ class TransactionHandlerTest : FunSpec({
         )
     }
 
-    test("can post multiple personal transfer transations") {
+    test("can post multiple personal transfer transactions") {
         val handler = postPersonalTransferListHandler { database.save(it) }
 
         val response = handler(
@@ -352,6 +356,138 @@ class TransactionHandlerTest : FunSpec({
                 Quantity(1),
                 source = Source("Work")
             )
+        )
+    }
+
+    test("posting debit/credit transactions returns number saved and total value") {
+        val handler = postCreditDebitListHandler(DEBIT) { transactions -> transactions.size }
+
+        val response = handler(
+            Request(Method.POST, "/").body(
+                """
+                [
+                    {
+                        "date": "2020-10-12",
+                        "category": "Food",
+                        "value": 12.50,
+                        "description": "Cake",
+                        "quantity": 2
+                    },
+                    {
+                        "date": "2020-10-15",
+                        "category": "Tech",
+                        "value": 500.00,
+                        "description": "Speaker",
+                        "quantity": 1
+                    }
+                ]
+            """.trimIndent()
+            )
+        )
+
+        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+            transactionCount = 2,
+            value = 512.50f
+        )
+    }
+
+    test("posting bank transfer transactions returns number saved and total value") {
+        val handler = postBankTransferListHandler { transactions -> transactions.size }
+
+        val response = handler(
+            Request(Method.POST, "/").body(
+                """
+                [
+                    {
+                        "date": "2020-10-12",
+                        "category": "Food",
+                        "value": 12.50,
+                        "description": "Cake",
+                        "quantity": 1,
+                        "recipient": "Friend"
+                    },
+                    {
+                        "date": "2020-10-15",
+                        "category": "Tech",
+                        "value": 500.00,
+                        "description": "Speaker",
+                        "quantity": 1,
+                        "recipient": "Family"
+                    }
+                ]
+            """.trimIndent()
+            )
+        )
+
+        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+            transactionCount = 2,
+            value = 512.50f
+        )
+    }
+
+    test("posting personal transfer transactions returns number saved and total value") {
+        val handler = postPersonalTransferListHandler { transactions -> transactions.size }
+
+        val response = handler(
+            Request(Method.POST, "/").body(
+                """
+                [
+                    {
+                        "date": "2020-10-12",
+                        "category": "Food",
+                        "value": 12.50,
+                        "description": "Cake",
+                        "outbound": "Current",
+                        "inbound": "Savings"
+                    },
+                    {   
+                        "date": "2020-10-15",
+                        "category": "Tech",
+                        "value": 500.00,
+                        "description": "Speaker",
+                        "outbound": "Current",
+                        "inbound": "Credit"
+                    }
+                ]
+            """.trimIndent()
+            )
+        )
+
+        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+            transactionCount = 2,
+            value = 512.50f
+        )
+    }
+
+    test("posting income transactions returns number saved and total value") {
+        val handler = postIncomeListHandler { transactions -> transactions.size }
+
+        val response = handler(
+            Request(Method.POST, "/").body(
+                """
+                [
+                    {
+                        "date": "2020-10-12",
+                        "category": "Food",
+                        "value": 12.50,
+                        "description": "Cake",
+                        "source": "Work"
+                    },
+                    {
+                        "date": "2020-10-15",
+                        "category": "Wages",
+                        "value": 500.00,
+                        "description": "Wages",
+                        "source": "Work"
+                    }
+                ]
+            """.trimIndent()
+            )
+        )
+
+        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+            transactionCount = 2,
+            value = 512.50f
         )
     }
 })

@@ -1,0 +1,11 @@
+package fixtures
+
+import domain.*
+import java.math.BigDecimal
+import java.time.LocalDate
+
+val date = Date(LocalDate.of(2020, 1, 1))
+val category = Category("Food")
+val value = Value(BigDecimal.valueOf(1L))
+val description = Description("Bananas")
+val quantity = Quantity(1)

@@ -2,6 +2,7 @@ package dao
 
 import java.io.File
 import java.time.LocalDate
+import java.util.concurrent.locks.ReentrantLock
 
 data class Login(
     val value: LocalDate
@@ -12,10 +13,11 @@ class LoginDatabase(
 ) : Database<Login> {
 
     private val file = File("$filePath/logins.txt")
-    private var logins = mutableSetOf<Login>()
+    private var logins: MutableSet<Login> = mutableSetOf()
+    private val lock = ReentrantLock()
 
     fun initialise() {
-        file.readLines().forEach { logins.add(Login(LocalDate.parse(it))) }
+        logins.addAll(file.readLines().map { Login(LocalDate.parse(it)) })
     }
 
     override fun save(data: Login) {
@@ -24,8 +26,13 @@ class LoginDatabase(
             if (logins.size > 3) {
                 logins = logins.sortedBy { it.value }.takeLast(3).toMutableSet()
             }
-            file.clear()
-            logins.forEach { file.writeLine(it.value.toString()) }
+            try {
+                lock.tryLock()
+                file.clear()
+                logins.forEach { file.writeLine(it.value.toString()) }
+            } finally {
+                lock.unlock()
+            }
         }
     }
 

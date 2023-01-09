@@ -29,3 +29,5 @@ val personalTransferListLens: BiDiBodyLens<List<PersonalTransfer>> = Body.auto<L
 val incomeListLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLens()
 
 val loginLens: BiDiBodyLens<Login> = Body.auto<Login>().toLens()
+
+val transactionConfirmationLens: BiDiBodyLens<TransactionConfirmation> = Body.auto<TransactionConfirmation>().toLens()
