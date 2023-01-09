@@ -1,3 +1,5 @@
+//import config.environmentVariables
+import config.environmentVariables
 import config.logger
 import config.properties
 import dao.LoginDatabase
@@ -30,12 +32,11 @@ val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
 
 val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase)
 
-
 val routes: HttpHandler = routes(
     referenceRoutes(referenceData),
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
-    gitRoutes(GitClient("${properties.dataLocation}/.."))
+    gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken))
 )
 
 fun main() {
@@ -47,7 +48,7 @@ fun main() {
     val printingApp: HttpHandler = Cors(
         CorsPolicy(
             OriginPolicy.AllowAll(),
-            listOf("Authorization", "Accept", "content-type"),
+            listOf("Authorization", "Accept", "content-type", "Access-Control-Allow-Origin"),
             Method.values().toList(),
             true
         )
