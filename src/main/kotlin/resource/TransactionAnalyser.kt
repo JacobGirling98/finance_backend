@@ -4,7 +4,7 @@ import domain.*
 import java.time.LocalDate
 
 fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
-    transactions().distinctDatesBy { it.value.monthValue }.map {
+    transactions().distinctDatesBy { it.monthAndYear }.map {
         StartDate(it.value.year, it.value.monthValue, 1).let { startDate ->
             DateRange(
                 startDate,
@@ -123,7 +123,10 @@ private fun Date.isMoreThanAMonthAfter(other: Date): Boolean {
     return if (this.value.isBefore(other.value)) false else newDate.monthValue != this.value.monthValue
 }
 
-private fun List<Transaction>.distinctDatesBy(field: (Date) -> Int): List<Date> = map { it.date }.distinctBy(field)
+private fun <T> List<Transaction>.distinctDatesBy(field: (Date) -> T): List<Date> = map { it.date }.distinctBy(field)
 
 private fun List<Transaction>.wageDates() =
     filter { it.category.value == "Wages" }.map { it.date }
+
+private val Date.monthAndYear: Pair<Int, Int>
+    get() = Pair(value.monthValue, value.year)

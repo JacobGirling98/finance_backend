@@ -7,6 +7,7 @@ import fixtures.aDebitTransaction
 import fixtures.aWagesIncome
 import fixtures.withADateOf
 import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
 
 class TransactionAnalyserTest : DescribeSpec({
@@ -20,7 +21,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2020, 2, 1)
@@ -36,7 +37,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2020, 2, 1)
@@ -56,7 +57,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            monthsOf(transactions) shouldBe listOf(
+            monthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 12, 1),
                     EndDate(2021, 1, 1)
@@ -64,6 +65,26 @@ class TransactionAnalyserTest : DescribeSpec({
                 DateRange(
                     StartDate(2021, 1, 1),
                     EndDate(2021, 2, 1)
+                )
+            )
+        }
+
+        it("can handle same month in different years") {
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 12, 10),
+                    aDebitTransaction().withADateOf(2021, 12, 10),
+                )
+            }
+
+            monthsOf(transactions)() shouldContainAll listOf(
+                DateRange(
+                    StartDate(2020, 12, 1),
+                    EndDate(2021, 1, 1)
+                ),
+                DateRange(
+                    StartDate(2021, 12, 1),
+                    EndDate(2022, 1, 1)
                 )
             )
         }
@@ -78,7 +99,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            yearsOf(transactions) shouldBe listOf(
+            yearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2021, 1, 1)
@@ -95,7 +116,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            yearsOf(transactions) shouldBe listOf(
+            yearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 1),
                     EndDate(2021, 1, 1)
@@ -120,7 +141,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -136,7 +157,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -152,7 +173,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -172,7 +193,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 14),
                     EndDate(2020, 2, 15)
@@ -192,7 +213,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 14)
@@ -213,7 +234,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 13)
@@ -238,7 +259,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -259,7 +280,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -284,7 +305,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 2, 15),
                     EndDate(2020, 3, 15)
@@ -304,7 +325,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 14),
                     EndDate(2020, 2, 15)
@@ -328,7 +349,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 1, 15),
                     EndDate(2020, 2, 15)
@@ -352,7 +373,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalMonthsOf(transactions) shouldBe listOf(
+            fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 2, 15),
                     EndDate(2020, 3, 14)
@@ -389,7 +410,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 15),
                     EndDate(2021, 4, 15)
@@ -405,7 +426,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 15),
                     EndDate(2021, 4, 15)
@@ -425,7 +446,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 14),
                     EndDate(2021, 4, 15)
@@ -441,7 +462,7 @@ class TransactionAnalyserTest : DescribeSpec({
                 )
             }
 
-            fiscalYearsOf(transactions) shouldBe listOf(
+            fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
                     StartDate(2020, 4, 14),
                     EndDate(2021, 4, 13)
