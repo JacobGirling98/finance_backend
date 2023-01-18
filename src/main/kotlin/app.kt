@@ -1,4 +1,3 @@
-//import config.environmentVariables
 import config.environmentVariables
 import config.logger
 import config.properties
@@ -9,10 +8,7 @@ import dao.TransactionsDatabase
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import http.git.GitClient
-import http.route.gitRoutes
-import http.route.loginRoutes
-import http.route.referenceRoutes
-import http.route.transactionRoutes
+import http.route.*
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.then
@@ -36,7 +32,8 @@ val routes: HttpHandler = routes(
     referenceRoutes(referenceData),
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
-    gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken))
+    gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
+    dataFilterRoutes { transactionsDatabase.data }
 )
 
 fun main() {

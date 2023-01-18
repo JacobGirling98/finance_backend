@@ -3,8 +3,8 @@ package resource
 import domain.*
 import java.time.LocalDate
 
-fun monthsOf(transactions: List<Transaction>): List<DateRange> =
-    transactions.distinctDatesBy { it.value.monthValue }.map {
+fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+    transactions().distinctDatesBy { it.value.monthValue }.map {
         StartDate(it.value.year, it.value.monthValue, 1).let { startDate ->
             DateRange(
                 startDate,
@@ -12,9 +12,10 @@ fun monthsOf(transactions: List<Transaction>): List<DateRange> =
             )
         }
     }
+}
 
-fun yearsOf(transactions: List<Transaction>): List<DateRange> =
-    transactions.distinctDatesBy { it.value.year }.map {
+fun yearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+    transactions().distinctDatesBy { it.value.year }.map {
         StartDate(it.value.year, 1, 1).let { startDate ->
             DateRange(
                 startDate,
@@ -22,16 +23,18 @@ fun yearsOf(transactions: List<Transaction>): List<DateRange> =
             )
         }
     }
+}
 
-fun fiscalMonthsOf(transactions: List<Transaction>): List<DateRange> {
+fun fiscalMonthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     val dateRanges = mutableListOf<DateRange>()
+    val data = transactions()
 
-    transactions.wageDates()
+    data.wageDates()
         .fillMissingFiscalMonths()
         .sortedBy { it.value }
         .forEach { dateRanges.add(it, StartDate::nextFiscalMonth) }
 
-    val transactionsWithoutWages = transactions.filterNot { it.category.value == "Wages" }
+    val transactionsWithoutWages = data.filterNot { it.category.value == "Wages" }
     while (transactionsWithoutWages.afterOrEqual(dateRanges.latest()).isNotEmpty()) {
         dateRanges.add(nextDateRange(dateRanges.latest()))
     }
@@ -39,20 +42,21 @@ fun fiscalMonthsOf(transactions: List<Transaction>): List<DateRange> {
         dateRanges.add(previousDateRange(dateRanges.earliest()))
     }
 
-    return dateRanges.sortedBy { it.startDate.value }
+    dateRanges.sortedBy { it.startDate.value }
 }
 
-fun fiscalYearsOf(transactions: List<Transaction>): List<DateRange> {
+fun fiscalYearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     val dateRanges = mutableListOf<DateRange>()
+    val data = transactions()
 
-    transactions.distinctDatesBy { it.value.year }
+    data.distinctDatesBy { it.value.year }
         .map {
-            transactions.wageOfMonth(4, it.value.year)?.date
+            data.wageOfMonth(4, it.value.year)?.date
                 ?: Date(LocalDate.of(it.value.year, 4, 15))
         }
         .forEach { dateRanges.add(it, StartDate::nextFiscalYear) }
 
-    return dateRanges
+    dateRanges
 }
 
 private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndDate) {

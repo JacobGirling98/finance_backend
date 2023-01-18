@@ -2,9 +2,10 @@ package http.git
 
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.transport.CredentialsProvider
+import org.eclipse.jgit.transport.HttpConfig.HTTP
+import org.eclipse.jgit.transport.HttpConfig.POST_BUFFER_KEY
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import java.io.File
-import java.lang.Exception
 import java.time.LocalDateTime
 
 class GitClient(repoPath: String, password: String) {
@@ -18,6 +19,7 @@ class GitClient(repoPath: String, password: String) {
                 password
             )
         )
+        git.repository.config.setInt(HTTP, null, POST_BUFFER_KEY, 512 * 1024 * 1024)
     }
 
     fun sync() {
@@ -40,10 +42,6 @@ class GitClient(repoPath: String, password: String) {
     }
 
     private fun push() {
-        try {
-            git.push().call()
-        } catch (e: Exception) {
-            println(e.message)
-        }
+        git.push().call()
     }
 }

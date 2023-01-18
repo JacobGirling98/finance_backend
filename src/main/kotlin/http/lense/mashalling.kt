@@ -2,6 +2,7 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Login
+import domain.DateRange
 import domain.DescriptionMapping
 import http.model.*
 import org.http4k.core.Body
@@ -31,3 +32,5 @@ val incomeListLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLen
 val loginLens: BiDiBodyLens<Login> = Body.auto<Login>().toLens()
 
 val transactionConfirmationLens: BiDiBodyLens<TransactionConfirmation> = Body.auto<TransactionConfirmation>().toLens()
+
+val dateRangeLens: BiDiBodyLens<List<DateRange>> = Body.auto<List<DateRange>>().toLens()

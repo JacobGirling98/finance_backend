@@ -13,10 +13,12 @@ class TransactionAnalyserTest : DescribeSpec({
 
     describe("date ranges per calendar month") {
         it("can extract single date range") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 1, 10),
-                aDebitTransaction().withADateOf(2020, 1, 20),
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 1, 10),
+                    aDebitTransaction().withADateOf(2020, 1, 20),
+                )
+            }
 
             monthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -27,10 +29,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can extract date range over two months") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 1, 10),
-                aDebitTransaction().withADateOf(2020, 2, 20),
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 1, 10),
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                )
+            }
 
             monthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -45,10 +49,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can extract date range over two years") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 12, 10),
-                aDebitTransaction().withADateOf(2021, 1, 10),
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 12, 10),
+                    aDebitTransaction().withADateOf(2021, 1, 10),
+                )
+            }
 
             monthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -65,10 +71,12 @@ class TransactionAnalyserTest : DescribeSpec({
 
     describe("date ranges per calendar year") {
         it("can extract date range for single year") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 1, 10),
-                aDebitTransaction().withADateOf(2020, 2, 20),
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 1, 10),
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                )
+            }
 
             yearsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -79,11 +87,13 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can extract date range for multiple years") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 1, 10),
-                aDebitTransaction().withADateOf(2021, 2, 20),
-                aDebitTransaction().withADateOf(2022, 3, 20),
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 1, 10),
+                    aDebitTransaction().withADateOf(2021, 2, 20),
+                    aDebitTransaction().withADateOf(2022, 3, 20),
+                )
+            }
 
             yearsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -104,9 +114,11 @@ class TransactionAnalyserTest : DescribeSpec({
 
     describe("date ranges per fiscal month") {
         it("single month with wages paid on the regular day") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -117,10 +129,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("single month with wages paid on the regular day and other transactions") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aDebitTransaction().withADateOf(2020, 1, 20)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aDebitTransaction().withADateOf(2020, 1, 20)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -131,10 +145,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("two months with wages paid on the regular day") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aWagesIncome().withADateOf(2020, 2, 15)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aWagesIncome().withADateOf(2020, 2, 15)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -149,10 +165,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("two months with first wage paid on a different day") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 14),
-                aWagesIncome().withADateOf(2020, 2, 15)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 14),
+                    aWagesIncome().withADateOf(2020, 2, 15)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -167,10 +185,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("two months with second wage paid on a different day") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aWagesIncome().withADateOf(2020, 2, 14)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aWagesIncome().withADateOf(2020, 2, 14)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -185,11 +205,13 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("three months with middle wage paid on a different day") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aWagesIncome().withADateOf(2020, 2, 13),
-                aWagesIncome().withADateOf(2020, 3, 14),
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aWagesIncome().withADateOf(2020, 2, 13),
+                    aWagesIncome().withADateOf(2020, 3, 14),
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -208,11 +230,13 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can infer next fiscal month if income is missing") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aDebitTransaction().withADateOf(2020, 2, 20),
-                aDebitTransaction().withADateOf(2020, 3, 12)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                    aDebitTransaction().withADateOf(2020, 3, 12)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -227,11 +251,13 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can infer multiple next fiscal months if incomes are missing") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aDebitTransaction().withADateOf(2020, 2, 20),
-                aDebitTransaction().withADateOf(2020, 3, 20)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                    aDebitTransaction().withADateOf(2020, 3, 20)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -250,11 +276,13 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can infer previous fiscal month if income is missing") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 2, 20),
-                aDebitTransaction().withADateOf(2020, 3, 12),
-                aWagesIncome().withADateOf(2020, 3, 15)
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                    aDebitTransaction().withADateOf(2020, 3, 12),
+                    aWagesIncome().withADateOf(2020, 3, 15)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -269,10 +297,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can infer fiscal month in-between existing ones") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 14),
-                aWagesIncome().withADateOf(2020, 3, 13),
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 14),
+                    aWagesIncome().withADateOf(2020, 3, 13),
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -291,10 +321,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("can infer next fiscal month if transaction is on the 15th") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 1, 15),
-                aDebitTransaction().withADateOf(2020, 2, 15)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 1, 15),
+                    aDebitTransaction().withADateOf(2020, 2, 15)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -309,14 +341,16 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("a mega test!") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 2, 20),
-                aDebitTransaction().withADateOf(2020, 3, 12),
-                aWagesIncome().withADateOf(2020, 3, 14),
-                aWagesIncome().withADateOf(2020, 6, 13),
-                aDebitTransaction().withADateOf(2020, 7, 14),
-                aDebitTransaction().withADateOf(2020, 7, 15)
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 2, 20),
+                    aDebitTransaction().withADateOf(2020, 3, 12),
+                    aWagesIncome().withADateOf(2020, 3, 14),
+                    aWagesIncome().withADateOf(2020, 6, 13),
+                    aDebitTransaction().withADateOf(2020, 7, 14),
+                    aDebitTransaction().withADateOf(2020, 7, 15)
+                )
+            }
 
             fiscalMonthsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -349,9 +383,11 @@ class TransactionAnalyserTest : DescribeSpec({
 
     describe("date ranges per fiscal year") {
         it("single year") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 5, 1)
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 5, 1)
+                )
+            }
 
             fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -362,10 +398,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("multiple years") {
-            val transactions = listOf(
-                aDebitTransaction().withADateOf(2020, 5, 1),
-                aDebitTransaction().withADateOf(2021, 6, 10)
-            )
+            val transactions = {
+                listOf(
+                    aDebitTransaction().withADateOf(2020, 5, 1),
+                    aDebitTransaction().withADateOf(2021, 6, 10)
+                )
+            }
 
             fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -380,10 +418,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("april transaction on irregular date") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 4, 14),
-                aDebitTransaction().withADateOf(2020, 6, 10)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 4, 14),
+                    aDebitTransaction().withADateOf(2020, 6, 10)
+                )
+            }
 
             fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
@@ -394,10 +434,12 @@ class TransactionAnalyserTest : DescribeSpec({
         }
 
         it("two wages on an irregular date") {
-            val transactions = listOf(
-                aWagesIncome().withADateOf(2020, 4, 14),
-                aWagesIncome().withADateOf(2021, 4, 13)
-            )
+            val transactions = {
+                listOf(
+                    aWagesIncome().withADateOf(2020, 4, 14),
+                    aWagesIncome().withADateOf(2021, 4, 13)
+                )
+            }
 
             fiscalYearsOf(transactions) shouldBe listOf(
                 DateRange(
