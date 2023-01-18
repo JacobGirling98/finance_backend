@@ -39,6 +39,7 @@ val routes: HttpHandler = routes(
 fun main() {
     referenceData.initialise()
     loginDatabase.initialise()
+    transactionsDatabase.read()
 
     standingOrderProcessor.schedule()
 
