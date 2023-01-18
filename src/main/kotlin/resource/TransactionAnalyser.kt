@@ -1,11 +1,12 @@
 package resource
 
 import domain.*
+import http.lense.StartDate
 import java.time.LocalDate
 
 fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     transactions().distinctDatesBy { it.monthAndYear }.map {
-        StartDate(it.value.year, it.value.monthValue, 1).let { startDate ->
+        StartDate.of(it.value.year, it.value.monthValue, 1,).let { startDate ->
             DateRange(
                 startDate,
                 startDate.nextMonth()
@@ -16,7 +17,7 @@ fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
 
 fun yearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     transactions().distinctDatesBy { it.value.year }.map {
-        StartDate(it.value.year, 1, 1).let { startDate ->
+        StartDate.of(it.value.year, 1, 1,).let { startDate ->
             DateRange(
                 startDate,
                 startDate.nextYear()
@@ -60,7 +61,7 @@ fun fiscalYearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> 
 }
 
 private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndDate) {
-    val startDate = StartDate(date.value.year, date.value.monthValue, date.value.dayOfMonth)
+    val startDate = StartDate.of(date.value.year, date.value.monthValue, date.value.dayOfMonth,)
     if (isNotEmpty() && startDate.value.dayOfMonth != 15) {
         this[size - 1] = last().withEndDateDayOf(startDate.value.dayOfMonth)
     }
@@ -81,8 +82,8 @@ private fun previousDateRange(earliestDateRange: DateRange): DateRange =
 
 private fun nextDateRange(latestDateRange: DateRange): DateRange =
     latestDateRange.endDate.value.let { previousEnd ->
-        StartDate(
-            previousEnd.year, previousEnd.monthValue, previousEnd.dayOfMonth
+        StartDate.of(
+            previousEnd.year, previousEnd.monthValue, previousEnd.dayOfMonth,
         ).let { startDate ->
             DateRange(
                 startDate,

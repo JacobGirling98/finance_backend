@@ -4,33 +4,35 @@ import config.CustomJackson.auto
 import dao.Login
 import domain.DateRange
 import domain.DescriptionMapping
+import domain.Transaction
 import http.model.*
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
+import org.http4k.lens.Query
+import org.http4k.lens.QueryLens
 
+inline fun <reified T : Any> biDiBodyLens(): BiDiBodyLens<T> = Body.auto<T>().toLens()
 
-val referenceLens: BiDiBodyLens<List<String>> = Body.auto<List<String>>().toLens()
+val referenceLens = biDiBodyLens<List<String>>()
 
-val descriptionsLens: BiDiBodyLens<List<DescriptionMapping>> = Body.auto<List<DescriptionMapping>>().toLens()
+val descriptionsLens = biDiBodyLens<List<DescriptionMapping>>()
 
-val creditDebitLens: BiDiBodyLens<CreditDebit> = Body.auto<CreditDebit>().toLens()
+val creditDebitLens = biDiBodyLens<CreditDebit>()
+val creditDebitListLens = biDiBodyLens<List<CreditDebit>>()
 
-val bankTransferLens: BiDiBodyLens<BankTransfer> = Body.auto<BankTransfer>().toLens()
+val bankTransferLens = biDiBodyLens<BankTransfer>()
+val bankTransferListLens = biDiBodyLens<List<BankTransfer>>()
 
-val personalTransferLens: BiDiBodyLens<PersonalTransfer> = Body.auto<PersonalTransfer>().toLens()
+val personalTransferLens = biDiBodyLens<PersonalTransfer>()
+val personalTransferListLens = biDiBodyLens<List<PersonalTransfer>>()
 
-val incomeLens: BiDiBodyLens<Income> = Body.auto<Income>().toLens()
+val incomeLens = biDiBodyLens<Income>()
+val incomeListLens = biDiBodyLens<List<Income>>()
 
-val creditDebitListLens: BiDiBodyLens<List<CreditDebit>> = Body.auto<List<CreditDebit>>().toLens()
+val loginLens = biDiBodyLens<Login>()
 
-val bankTransferListLens: BiDiBodyLens<List<BankTransfer>> = Body.auto<List<BankTransfer>>().toLens()
+val transactionConfirmationLens = biDiBodyLens<TransactionConfirmation>()
 
-val personalTransferListLens: BiDiBodyLens<List<PersonalTransfer>> = Body.auto<List<PersonalTransfer>>().toLens()
+val dateRangeListLens = biDiBodyLens<List<DateRange>>()
 
-val incomeListLens: BiDiBodyLens<List<Income>> = Body.auto<List<Income>>().toLens()
-
-val loginLens: BiDiBodyLens<Login> = Body.auto<Login>().toLens()
-
-val transactionConfirmationLens: BiDiBodyLens<TransactionConfirmation> = Body.auto<TransactionConfirmation>().toLens()
-
-val dateRangeLens: BiDiBodyLens<List<DateRange>> = Body.auto<List<DateRange>>().toLens()
+val transactionListLens = biDiBodyLens<List<Transaction>>()

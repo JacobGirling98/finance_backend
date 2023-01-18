@@ -1,5 +1,7 @@
 package domain
 
+import http.lense.StartDate
+
 data class DateRange(
     val startDate: StartDate,
     val endDate: EndDate
