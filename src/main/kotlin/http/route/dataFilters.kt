@@ -7,7 +7,6 @@ import org.http4k.core.Method.GET
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import resource.*
-import kotlin.collections.filter
 
 fun dataFilterRoutes(data: () -> List<Transaction>) = routes(
     "/reference/months" bind GET to dateRangeHandler(monthsOf(data)),

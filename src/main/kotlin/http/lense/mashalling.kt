@@ -8,8 +8,6 @@ import domain.Transaction
 import http.model.*
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
-import org.http4k.lens.Query
-import org.http4k.lens.QueryLens
 
 inline fun <reified T : Any> biDiBodyLens(): BiDiBodyLens<T> = Body.auto<T>().toLens()
 
