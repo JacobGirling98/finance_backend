@@ -1,7 +1,7 @@
 package resource
 
 import domain.*
-import http.lense.StartDate
+import domain.StartDate
 import java.time.LocalDate
 
 fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
@@ -70,7 +70,7 @@ private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndD
 
 private fun previousDateRange(earliestDateRange: DateRange): DateRange =
     earliestDateRange.startDate.value.let { previousStart ->
-        EndDate(
+        EndDate.of(
             previousStart.year, previousStart.monthValue, previousStart.dayOfMonth
         ).let { endDate ->
             DateRange(

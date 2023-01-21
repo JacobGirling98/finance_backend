@@ -2,7 +2,7 @@ package resource
 
 import domain.DateRange
 import domain.EndDate
-import http.lense.StartDate
+import domain.StartDate
 import domain.Transaction
 import fixtures.aDebitTransaction
 import fixtures.withADateOf
@@ -23,7 +23,7 @@ class TransactionFilterTest : FunSpec({
         transactions.filter(
             DateRange(
                 StartDate.of(2020, 1, 1,),
-                EndDate(2020, 2, 1)
+                EndDate.of(2020, 2, 1)
             )
         )
             .shouldContainDescription("should be included")
@@ -39,7 +39,7 @@ class TransactionFilterTest : FunSpec({
         transactions.filter(
             DateRange(
                 StartDate.of(2020, 1, 1,),
-                EndDate(2020, 2, 1)
+                EndDate.of(2020, 2, 1)
             )
         )
             .shouldContainDescription("should be included")
@@ -55,7 +55,7 @@ class TransactionFilterTest : FunSpec({
         transactions.filter(
             DateRange(
                 StartDate.of(2020, 1, 1,),
-                EndDate(2020, 2, 1)
+                EndDate.of(2020, 2, 1)
             )
         )
             .shouldContainDescription("should be included")

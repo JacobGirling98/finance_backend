@@ -1,6 +1,5 @@
 package domain
 
-import http.lense.StartDate
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -47,11 +46,24 @@ data class Outgoing(
 )
 
 data class EndDate(
-    private val year: Int,
-    private val month: Int,
-    private val day: Int
+    val value: LocalDate
 ) {
-    val value: LocalDate = LocalDate.of(year, month, day)
-
     fun previousFiscalMonth(): StartDate = value.minusMonths(1).let { StartDate.of(it.year, it.monthValue, 15) }
+
+    companion object {
+        fun of(year: Int, month: Int, day: Int) = EndDate(LocalDate.of(year, month, day))
+    }
+}
+
+data class StartDate(
+    val value: LocalDate
+) {
+    fun nextMonth(): EndDate = value.plusMonths(1).let { EndDate.of(it.year, it.monthValue, it.dayOfMonth) }
+    fun nextYear(): EndDate = value.plusYears(1).let { EndDate.of(it.year, it.monthValue, it.dayOfMonth) }
+    fun nextFiscalMonth(): EndDate = value.plusMonths(1).let { EndDate.of(it.year, it.monthValue, 15) }
+    fun nextFiscalYear(): EndDate = EndDate.of(value.plusYears(1).year, 4, 15)
+
+    companion object {
+        fun of(year: Int, month: Int, day: Int) = StartDate(LocalDate.of(year, month, day))
+    }
 }

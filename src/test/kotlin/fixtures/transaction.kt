@@ -39,4 +39,7 @@ fun Transaction.withAValueOf(value: Double) = copy(value = Value(BigDecimal.valu
 fun Transaction.withADateOf(year: Int = 2020, month: Int = 1, day: Int = 1) =
     copy(date = Date(LocalDate.of(year, month, day)))
 
+fun Transaction.withADateOf(date: LocalDate) =
+    copy(date = Date(date))
+
 fun Transaction.withADescriptionOf(value: String) = copy(description = Description(value))
