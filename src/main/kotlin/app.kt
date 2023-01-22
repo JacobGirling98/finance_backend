@@ -15,7 +15,9 @@ import org.http4k.core.then
 import org.http4k.filter.AllowAll
 import org.http4k.filter.CorsPolicy
 import org.http4k.filter.OriginPolicy
+import org.http4k.filter.ServerFilters
 import org.http4k.filter.ServerFilters.Cors
+import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
@@ -51,6 +53,7 @@ fun main() {
             true
         )
     )
+        .then(ServerFilters.CatchAll.invoke())
         .then(lastLoginFilter { loginDatabase.save(it) })
         .then(logResponseFilter())
         .then(routes)
