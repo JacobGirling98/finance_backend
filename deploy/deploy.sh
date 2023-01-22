@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./start-docker.sh
+
 docker build -t finance-backend ../.
 docker save finance-backend | gzip -c > backend.tar.gz
 
