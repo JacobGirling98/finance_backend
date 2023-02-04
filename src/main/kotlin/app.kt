@@ -17,18 +17,18 @@ import org.http4k.filter.CorsPolicy
 import org.http4k.filter.OriginPolicy
 import org.http4k.filter.ServerFilters
 import org.http4k.filter.ServerFilters.Cors
-import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import resource.StandingOrderProcessor
+import java.time.LocalDate
 
 val referenceData = ReferenceData(properties.dataLocation)
 val transactionsDatabase = TransactionsDatabase(properties.dataLocation)
 val loginDatabase = LoginDatabase(properties.dataLocation)
 val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
 
-val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase)
+val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase, LocalDate::now)
 
 val routes: HttpHandler = routes(
     referenceRoutes(referenceData),

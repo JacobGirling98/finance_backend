@@ -18,7 +18,7 @@ import java.util.UUID
 
 class StandingOrderProcessorTest : FunSpec({
 
-    val now = LocalDate.of(2020, 1, 1)
+    val now = { LocalDate.of(2020, 1, 1) }
     val monthBeforeNow = LocalDate.of(2019, 12, 2)
     val monthAfterNow = LocalDate.of(2020, 1, 31)
     val weekBeforeNow = LocalDate.of(2019, 12, 27)
@@ -46,8 +46,8 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process standing order if current date is equal to standing order date") {
-        val factory = Factory(date = Date(now), id = uuid)
-        val expected = Factory(date = Date(now.plusMonths(1)), id = uuid).standingOrder()
+        val factory = Factory(date = Date(now()), id = uuid)
+        val expected = Factory(date = Date(now().plusMonths(1)), id = uuid).standingOrder()
 
         processor.process(factory.standingOrder())
 

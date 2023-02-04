@@ -16,14 +16,14 @@ import java.util.*
 class StandingOrderProcessor(
     private val standingOrdersDatabase: StandingOrdersDatabase,
     private val transactionsDatabase: TransactionsDatabase,
-    private val now: LocalDate = LocalDate.now()
+    private val now: () -> LocalDate
 ) {
     fun process(standingOrder: StandingOrder) {
-        if (standingOrder.nextDate.value > now) {
+        if (standingOrder.nextDate.value > now()) {
             return
         }
         var standingOrderToChange: StandingOrder = standingOrder.copy()
-        while (standingOrderToChange.nextDate.value <= now) {
+        while (standingOrderToChange.nextDate.value <= now()) {
             logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.nextDate.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
             standingOrderToChange = standingOrderToChange.copy(
