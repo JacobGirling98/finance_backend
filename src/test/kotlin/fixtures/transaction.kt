@@ -1,8 +1,7 @@
 package fixtures
 
 import domain.*
-import domain.TransactionType.DEBIT
-import domain.TransactionType.INCOME
+import domain.TransactionType.*
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -32,6 +31,20 @@ fun aWagesIncome() = Transaction(
     null,
     null,
     Source("Work")
+)
+
+fun aPersonalTransferTransaction() = Transaction(
+    date,
+    category,
+    value,
+    description,
+    PERSONAL_TRANSFER,
+    Outgoing(false),
+    quantity,
+    null,
+    inbound,
+    outbound,
+    null
 )
 
 fun Transaction.withAValueOf(value: Double) = copy(value = Value(BigDecimal.valueOf(value)))

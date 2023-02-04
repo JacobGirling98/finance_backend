@@ -16,7 +16,9 @@ data class Category(
 data class Value(
     val value: BigDecimal
 ) {
-    fun add(other: Value) = Value(value.add(other.value))
+    operator fun plus(other: Value) = Value(value.add(other.value))
+
+    operator fun minus(other: Value) = Value(value.minus(other.value))
 
     companion object {
         fun of(value: Double) = Value(BigDecimal.valueOf(value))
