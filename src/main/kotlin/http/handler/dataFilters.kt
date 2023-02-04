@@ -3,9 +3,8 @@ package http.handler
 import domain.DateRange
 import domain.Transaction
 import http.lense.dateRangeListLens
-import http.lense.endDateQueryLens
-import http.lense.startDateQueryLens
 import http.lense.transactionListLens
+import http.param.extractDateRange
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -16,8 +15,6 @@ fun dateRangeHandler(get: () -> List<DateRange>): HttpHandler = {
 }
 
 fun transactionsHandler(filter: (DateRange) -> List<Transaction>): HttpHandler = { request ->
-    val startDate = startDateQueryLens.required("start").extract(request)
-    val endDate = endDateQueryLens.required("end").extract(request)
-    val transactions = filter(DateRange(startDate, endDate))
+    val transactions = filter(request.extractDateRange())
     Response(Status.OK).with(transactionListLens of transactions)
 }

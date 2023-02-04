@@ -35,7 +35,8 @@ val routes: HttpHandler = routes(
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
     gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
-    dataFilterRoutes { transactionsDatabase.data }
+    dataFilterRoutes { transactionsDatabase.data },
+    viewRoutes { transactionsDatabase.data }
 )
 
 fun main() {

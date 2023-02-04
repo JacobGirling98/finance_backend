@@ -4,6 +4,7 @@ import config.CustomJackson.auto
 import dao.Login
 import domain.DateRange
 import domain.DescriptionMapping
+import domain.Headlines
 import domain.Transaction
 import http.model.*
 import org.http4k.core.Body
@@ -34,3 +35,5 @@ val transactionConfirmationLens = biDiBodyLens<TransactionConfirmation>()
 val dateRangeListLens = biDiBodyLens<List<DateRange>>()
 
 val transactionListLens = biDiBodyLens<List<Transaction>>()
+
+val headlinesLens = biDiBodyLens<Headlines>()
