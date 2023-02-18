@@ -15,12 +15,12 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.OK
 
-private const val BASE_URL = "reference"
+private const val BASE_URL = "/reference"
 private val tag = BASE_URL.asTag()
 private val descriptionsTag = "$BASE_URL/descriptions".asTag()
 
 
-fun contractReferenceRoutes(referenceData: ReferenceData) = listOf(
+fun referenceContracts(referenceData: ReferenceData) = listOf(
     categoriesRoute(referenceData),
     accountsRoute(referenceData),
     sourcesRoute(referenceData),

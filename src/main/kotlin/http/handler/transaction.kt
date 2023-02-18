@@ -8,7 +8,7 @@ import http.lense.*
 import http.model.TransactionConfirmation
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
-import org.http4k.core.Status
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.with
 
 fun postCreditDebitHandler(
@@ -16,22 +16,22 @@ fun postCreditDebitHandler(
     save: (transaction: Transaction) -> Unit
 ): HttpHandler = { request ->
     save(transactionFrom(creditDebitLens.extract(request), transactionType))
-    Response(Status.OK)
+    Response(NO_CONTENT)
 }
 
 fun postBankTransferHandler(save: (transaction: Transaction) -> Unit): HttpHandler = { request ->
     save(transactionFrom(bankTransferLens.extract(request)))
-    Response(Status.OK)
+    Response(NO_CONTENT)
 }
 
 fun postPersonalTransferHandler(save: (transaction: Transaction) -> Unit): HttpHandler = { request ->
     save(transactionFrom(personalTransferLens.extract(request)))
-    Response(Status.OK)
+    Response(NO_CONTENT)
 }
 
 fun postIncomeHandler(save: (transaction: Transaction) -> Unit): HttpHandler = { request ->
     save(transactionFrom(incomeLens.extract(request)))
-    Response(Status.OK)
+    Response(NO_CONTENT)
 }
 
 fun postCreditDebitListHandler(
@@ -40,7 +40,7 @@ fun postCreditDebitListHandler(
 ): HttpHandler = { request ->
     val transactions = creditDebitListLens.extract(request).map { transactionFrom(it, transactionType) }
     val numberSaved = save(transactions)
-    Response(Status.OK).with(
+    Response(NO_CONTENT).with(
         transactionConfirmationLens of TransactionConfirmation(
             numberSaved,
             transactions.totalValue()
@@ -53,7 +53,7 @@ fun postBankTransferListHandler(
 ): HttpHandler = { request ->
     val transactions = bankTransferListLens.extract(request).map { transactionFrom(it) }
     val numberSaved = save(transactions)
-    Response(Status.OK).with(
+    Response(NO_CONTENT).with(
         transactionConfirmationLens of TransactionConfirmation(
             numberSaved,
             transactions.totalValue()
@@ -66,7 +66,7 @@ fun postPersonalTransferListHandler(
 ): HttpHandler = { request ->
     val transactions = personalTransferListLens.extract(request).map { transactionFrom(it) }
     val numberSaved = save(transactions)
-    Response(Status.OK).with(
+    Response(NO_CONTENT).with(
         transactionConfirmationLens of TransactionConfirmation(
             numberSaved,
             transactions.totalValue()
@@ -79,7 +79,7 @@ fun postIncomeListHandler(
 ): HttpHandler = { request ->
     val transactions = incomeListLens.extract(request).map { transactionFrom(it) }
     val numberSaved = save(transactions)
-    Response(Status.OK).with(
+    Response(NO_CONTENT).with(
         transactionConfirmationLens of TransactionConfirmation(
             numberSaved,
             transactions.totalValue()
