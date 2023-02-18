@@ -38,7 +38,8 @@ val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, trans
 val contracts = listOf(
     referenceContracts(referenceData),
     transactionContracts(transactionsDatabase),
-    loginContracts(loginDatabase)
+    loginContracts(loginDatabase),
+    gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken))
 )
 
 val ui = swaggerUi(
@@ -57,7 +58,6 @@ val api = contract {
 val routes: HttpHandler = routes(
     ui,
     api,
-    gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dataFilterRoutes { transactionsDatabase.data },
     viewRoutes { transactionsDatabase.data }
 )

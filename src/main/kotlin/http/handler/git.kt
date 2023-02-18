@@ -6,5 +6,5 @@ import org.http4k.core.Status
 
 fun gitSyncHandler(sync: () -> Unit): HttpHandler = {
     sync()
-    Response(Status.OK)
+    Response(Status.NO_CONTENT)
 }
