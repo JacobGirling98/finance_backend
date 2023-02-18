@@ -40,27 +40,22 @@ val contracts = listOf(
     transactionContracts(transactionsDatabase),
     loginContracts(loginDatabase),
     gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
-    dateRangeContracts { transactionsDatabase.data }
+    dateRangeContracts { transactionsDatabase.data },
+    headlineContracts { transactionsDatabase.data }
 )
 
-val ui = swaggerUi(
+val swaggerUi = swaggerUi(
     Uri.of("spec"),
     title = "Finances API",
 )
 
 val api = contract {
     contracts.forEach { routes += it }
-    renderer = OpenApi3(
-        ApiInfo("Finances API", "1.0.0")
-    )
+    renderer = OpenApi3(ApiInfo("Finances API", "1.0.0"))
     descriptionPath = "spec"
 }
 
-val routes: HttpHandler = routes(
-    ui,
-    api,
-    viewRoutes { transactionsDatabase.data }
-)
+val routes: HttpHandler = routes(swaggerUi, api)
 
 fun main() {
     referenceData.initialise()
