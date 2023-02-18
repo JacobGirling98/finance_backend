@@ -1,6 +1,7 @@
 package http.route
 
 import dao.Database
+import dao.TransactionsDatabase
 import domain.*
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
@@ -12,8 +13,11 @@ import http.model.CreditDebit
 import http.model.Income
 import http.model.PersonalTransfer
 import org.http4k.contract.meta
+import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Status
+import org.http4k.core.Status.Companion.OK
+import resource.filter
 import java.math.BigDecimal
 import java.time.LocalDate
 
@@ -22,7 +26,7 @@ private const val MULTIPLE_URL = "$BASE_URL/multiple"
 private val tag = BASE_URL.asTag()
 private val multipleTag = MULTIPLE_URL.asTag()
 
-fun transactionContracts(database: Database<Transaction>) = listOf(
+fun transactionContracts(database: TransactionsDatabase) = listOf(
     creditRoute(database),
     multipleCreditRoute(database),
     debitRoute(database),
@@ -32,8 +36,34 @@ fun transactionContracts(database: Database<Transaction>) = listOf(
     personalTransferRoute(database),
     multiplePersonalTransferRoute(database),
     incomeRoute(database),
-    multipleIncomeRoute(database)
+    multipleIncomeRoute(database),
+    getDataRoute { database.data }
 )
+
+private fun getDataRoute(data: () -> List<Transaction>) = BASE_URL meta {
+    operationId = BASE_URL
+    summary = "Get transactions between two dates"
+    tags += tag
+    queries += startDateQuery
+    queries += endDateQuery
+    returning(
+        OK, transactionListLens to listOf(
+            Transaction(
+                date = Date(LocalDate.of(2023, 1, 1)),
+                Category("String"),
+                Value(BigDecimal.ZERO),
+                Description("String"),
+                CREDIT,
+                Outgoing(true),
+                Quantity(1),
+                Recipient("Nullable String"),
+                Inbound("Nullable String"),
+                Outbound("Nullable String"),
+                Source("Nullable String")
+            )
+        )
+    )
+} bindContract GET to transactionsHandler { data().filter(it) }
 
 private fun creditRoute(database: Database<Transaction>) = "$BASE_URL/credit" meta {
     operationId = "$BASE_URL/credit"

@@ -1,20 +1,54 @@
 package http.route
 
+import domain.DateRange
+import domain.EndDate
+import domain.StartDate
 import domain.Transaction
+import http.asTag
 import http.handler.dateRangeHandler
-import http.handler.transactionsHandler
+import http.lense.dateRangeListLens
+import org.http4k.contract.meta
 import org.http4k.core.Method.GET
-import org.http4k.routing.bind
-import org.http4k.routing.routes
-import resource.*
+import org.http4k.core.Status.Companion.OK
+import resource.fiscalMonthsOf
+import resource.fiscalYearsOf
+import resource.monthsOf
+import resource.yearsOf
 
-fun dataFilterRoutes(data: () -> List<Transaction>) = routes(
-    "/reference/months" bind GET to dateRangeHandler(monthsOf(data)),
-    "/reference/years" bind GET to dateRangeHandler(yearsOf(data)),
-    "/reference/fiscal-months" bind GET to dateRangeHandler(fiscalMonthsOf(data)),
-    "/reference/fiscal-years" bind GET to dateRangeHandler(fiscalYearsOf(data))
+private const val REFERENCE_URL = "/reference"
+private val referenceTag = REFERENCE_URL.asTag()
+
+fun dateRangeContracts(data: () -> List<Transaction>) = listOf(
+    monthsRoute(data),
+    yearsRoute(data),
+    fiscalMonthsRoute(data),
+    fiscalYearsRoute(data)
 )
 
-fun dataRetrievalRoutes(data: () -> List<Transaction>) = routes(
-    "/transactions" bind GET to transactionsHandler { data().filter(it) }
-)
+private fun monthsRoute(data: () -> List<Transaction>) = "$REFERENCE_URL/months" meta {
+    operationId = "$REFERENCE_URL/months"
+    summary = "Get a list of months"
+    tags += referenceTag
+    returning(OK, dateRangeListLens to listOf(DateRange(StartDate.of(2020, 1, 1), EndDate.of(2020, 2, 1))))
+} bindContract GET to dateRangeHandler(monthsOf(data))
+
+private fun yearsRoute(data: () -> List<Transaction>) = "$REFERENCE_URL/years" meta {
+    operationId = "$REFERENCE_URL/years"
+    summary = "Get a list of years"
+    tags += referenceTag
+    returning(OK, dateRangeListLens to listOf(DateRange(StartDate.of(2020, 1, 1), EndDate.of(2021, 1, 1))))
+} bindContract GET to dateRangeHandler(yearsOf(data))
+
+private fun fiscalMonthsRoute(data: () -> List<Transaction>) = "$REFERENCE_URL/fiscal-months" meta {
+    operationId = "$REFERENCE_URL/fiscal-months"
+    summary = "Get a list of fiscal months"
+    tags += referenceTag
+    returning(OK, dateRangeListLens to listOf(DateRange(StartDate.of(2020, 1, 15), EndDate.of(2020, 2, 15))))
+} bindContract GET to dateRangeHandler(fiscalMonthsOf(data))
+
+private fun fiscalYearsRoute(data: () -> List<Transaction>) = "$REFERENCE_URL/fiscal-years" meta {
+    operationId = "$REFERENCE_URL/fiscal-years"
+    summary = "Get a list of fiscal years"
+    tags += referenceTag
+    returning(OK, dateRangeListLens to listOf(DateRange(StartDate.of(2020, 1, 15), EndDate.of(2021, 1, 15))))
+} bindContract GET to dateRangeHandler(fiscalYearsOf(data))

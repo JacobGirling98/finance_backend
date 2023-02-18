@@ -39,7 +39,8 @@ val contracts = listOf(
     referenceContracts(referenceData),
     transactionContracts(transactionsDatabase),
     loginContracts(loginDatabase),
-    gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken))
+    gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
+    dateRangeContracts { transactionsDatabase.data }
 )
 
 val ui = swaggerUi(
@@ -58,7 +59,6 @@ val api = contract {
 val routes: HttpHandler = routes(
     ui,
     api,
-    dataFilterRoutes { transactionsDatabase.data },
     viewRoutes { transactionsDatabase.data }
 )
 
