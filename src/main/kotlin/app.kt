@@ -9,8 +9,13 @@ import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import http.git.GitClient
 import http.route.*
+import org.http4k.contract.contract
+import org.http4k.contract.openapi.ApiInfo
+import org.http4k.contract.openapi.v3.OpenApi3
+import org.http4k.contract.ui.swaggerUi
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
+import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.AllowAll
 import org.http4k.filter.CorsPolicy
@@ -30,8 +35,23 @@ val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
 
 val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase, LocalDate::now)
 
+val ui = swaggerUi(
+    Uri.of("spec"),
+    title = "Finances API",
+    displayOperationId = true
+)
+
+val api = contract {
+    routes += contractReferenceRoutes(referenceData)
+    renderer = OpenApi3(
+        ApiInfo("Finances API", "1.0.0")
+    )
+    descriptionPath = "spec"
+}
+
 val routes: HttpHandler = routes(
-    referenceRoutes(referenceData),
+    ui,
+    api,
     transactionRoutes(transactionsDatabase),
     loginRoutes(loginDatabase),
     gitRoutes(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),

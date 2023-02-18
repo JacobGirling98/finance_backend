@@ -19,6 +19,7 @@ dependencies {
     implementation("org.http4k:http4k-server-undertow")
     implementation("org.http4k:http4k-client-apache")
     implementation("org.http4k:http4k-format-jackson")
+    implementation("org.http4k:http4k-contract:4.39.0.0")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.3")
     implementation("ch.qos.logback:logback-classic:1.4.4")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
