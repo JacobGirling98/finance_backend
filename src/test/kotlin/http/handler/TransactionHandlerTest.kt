@@ -12,6 +12,7 @@ import io.kotest.matchers.shouldBe
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
+import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -167,7 +168,7 @@ class TransactionHandlerTest : FunSpec({
             )
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus OK
         database.arguments
             .shouldContain(
                 Transaction(
@@ -221,7 +222,7 @@ class TransactionHandlerTest : FunSpec({
             )
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus OK
         database.arguments.shouldContain(
             Transaction(
                 Date(LocalDate.of(2020, 10, 12)),
@@ -275,7 +276,7 @@ class TransactionHandlerTest : FunSpec({
             )
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus OK
 
         database.arguments
             .shouldContain(
@@ -333,7 +334,7 @@ class TransactionHandlerTest : FunSpec({
             )
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus OK
         database.arguments.shouldContain(
             Transaction(
                 Date(LocalDate.of(2020, 10, 12)),
