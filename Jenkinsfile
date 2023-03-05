@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { gradle:jdk11-alpine }  }
+    agent { docker { image 'gradle:jdk11-alpine' }  }
 
     stages {
       stage("build") {
