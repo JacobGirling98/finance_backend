@@ -13,7 +13,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
 
-private const val BASE_URL = "/standing-order"
+private const val BASE_URL = "/standing-orders"
 
 fun standingOrdersContract(database: StandingOrdersDatabase) = listOf(
     getStandingOrdersRoute { database.data }
