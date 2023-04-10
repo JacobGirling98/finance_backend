@@ -2,10 +2,7 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Login
-import domain.DateRange
-import domain.DescriptionMapping
-import domain.Headlines
-import domain.Transaction
+import domain.*
 import http.model.*
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
@@ -37,3 +34,5 @@ val dateRangeListLens = biDiBodyLens<List<DateRange>>()
 val transactionListLens = biDiBodyLens<List<Transaction>>()
 
 val headlinesLens = biDiBodyLens<Headlines>()
+
+val standingOrderListLens = biDiBodyLens<List<StandingOrder>>()

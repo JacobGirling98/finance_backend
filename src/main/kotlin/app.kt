@@ -41,7 +41,8 @@ val contracts = listOf(
     loginContracts(loginDatabase),
     gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dateRangeContracts { transactionsDatabase.data },
-    headlineContracts { transactionsDatabase.data }
+    headlineContracts { transactionsDatabase.data },
+    standingOrdersContract(standingOrderDatabase)
 )
 
 val swaggerUi = swaggerUi(
