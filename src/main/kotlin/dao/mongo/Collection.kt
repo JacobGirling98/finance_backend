@@ -33,4 +33,13 @@ abstract class Collection<T>(private val client: MongoClient) {
         .toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
+
+    fun findAll(): List<T> {
+        val documents = mutableListOf<T>()
+        val cursor = collection().find().cursor()
+        while (cursor.hasNext()) {
+            documents.add(cursor.next().toDomain())
+        }
+        return documents.toList()
+    }
 }
