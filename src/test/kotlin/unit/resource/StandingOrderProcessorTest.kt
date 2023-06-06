@@ -1,6 +1,6 @@
-package resource
+package unit.resource
 
-import common.Factory
+import unit.common.Factory
 import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
 import domain.Date
@@ -13,6 +13,7 @@ import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import resource.StandingOrderProcessor
 import java.time.LocalDate
 import java.util.UUID
 

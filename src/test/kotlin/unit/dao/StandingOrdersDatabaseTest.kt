@@ -1,16 +1,17 @@
-package dao
+package unit.dao
 
-import common.Factory
+import dao.StandingOrdersDatabase
 import domain.*
+import domain.Date
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import unit.common.Factory
 import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 class StandingOrdersDatabaseTest : FunSpec({
 
@@ -111,7 +112,7 @@ class StandingOrdersDatabaseTest : FunSpec({
 
         file().readText() shouldBe initialContents
     }
-    
+
     test("can update a standing order") {
         val id = UUID.randomUUID()
         val otherStandingOrder = Factory(id = UUID.randomUUID()).standingOrder()

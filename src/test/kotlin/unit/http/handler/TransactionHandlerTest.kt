@@ -1,9 +1,10 @@
-package http.handler
+package unit.http.handler
 
 import dao.Database
 import domain.*
 import domain.TransactionType.DEBIT
-import fixtures.toObject
+import http.handler.*
+import unit.fixtures.toObject
 import http.model.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain

@@ -1,12 +1,16 @@
-package resource
+package unit.resource
 
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
 import domain.Value
-import fixtures.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import resource.incomeBetween
+import resource.netIncomeBetween
+import resource.savingsBetween
+import resource.spendingBetween
+import unit.fixtures.*
 
 class TransactionAnalyserTest : FunSpec({
     test("excludes inbound transactions") {

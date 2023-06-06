@@ -1,8 +1,9 @@
-package http.handler
+package unit.http.handler
 
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
+import http.handler.postDescriptionsHandler
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContain
 import org.http4k.core.Method

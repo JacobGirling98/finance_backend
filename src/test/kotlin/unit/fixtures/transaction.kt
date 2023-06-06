@@ -1,4 +1,4 @@
-package fixtures
+package unit.fixtures
 
 import domain.*
 import domain.TransactionType.*

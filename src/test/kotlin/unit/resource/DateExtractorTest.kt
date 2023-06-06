@@ -1,14 +1,18 @@
-package resource
+package unit.resource
 
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
-import fixtures.aDebitTransaction
-import fixtures.aWagesIncome
-import fixtures.withADateOf
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.aWagesIncome
+import unit.fixtures.withADateOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
+import resource.fiscalMonthsOf
+import resource.fiscalYearsOf
+import resource.monthsOf
+import resource.yearsOf
 
 class DateExtractorTest : DescribeSpec({
 

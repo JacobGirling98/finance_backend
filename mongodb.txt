@@ -1,0 +1,1 @@
+docker run -d -p 27017:27017 --name example-mongo -v /Users/jacobgirling/Documents/Programming/FinanceV3/mongo-data:/data/db mongo:latest

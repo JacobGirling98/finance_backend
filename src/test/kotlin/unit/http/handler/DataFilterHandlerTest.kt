@@ -1,12 +1,14 @@
-package http.handler
+package unit.http.handler
 
 import config.CustomJackson
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
 import domain.Transaction
-import fixtures.aDebitTransaction
-import fixtures.withADateOf
+import http.handler.dateRangeHandler
+import http.handler.transactionsHandler
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.withADateOf
 import io.kotest.core.spec.style.FunSpec
 import org.http4k.core.Method
 import org.http4k.core.Request

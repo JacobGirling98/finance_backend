@@ -1,4 +1,4 @@
-package fixtures
+package unit.fixtures
 
 import config.CustomJackson
 import org.http4k.core.Body

@@ -1,7 +1,8 @@
-package domain
+package unit.domain
 
-import fixtures.aDebitTransaction
-import fixtures.withAValueOf
+import domain.totalValue
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.withAValueOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 

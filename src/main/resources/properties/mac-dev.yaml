@@ -1,0 +1,4 @@
+dataLocation: /Users/jacobgirling/Documents/Programming/FinanceV3/finance_data/dev
+mongo:
+  uri: mongodb://localhost:27017
+  database: testFinance

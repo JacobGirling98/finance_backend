@@ -5,8 +5,14 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.io.File
 
+data class MongoProperties(
+    val uri: String,
+    val database: String
+)
+
 data class Properties(
-    val dataLocation: String
+    val dataLocation: String,
+    val mongo: MongoProperties
 )
 
 fun readProperties(profile: String): Properties {

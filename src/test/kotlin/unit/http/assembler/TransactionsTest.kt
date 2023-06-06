@@ -1,6 +1,7 @@
-package http.assembler
+package unit.http.assembler
 
 import domain.*
+import http.assembler.transactionFrom
 import http.model.BankTransfer
 import http.model.CreditDebit
 import http.model.Income

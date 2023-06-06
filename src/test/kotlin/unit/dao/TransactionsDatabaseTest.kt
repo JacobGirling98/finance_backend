@@ -1,5 +1,6 @@
-package dao
+package unit.dao
 
+import dao.TransactionsDatabase
 import domain.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSingleElement

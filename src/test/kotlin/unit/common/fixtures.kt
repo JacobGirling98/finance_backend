@@ -1,4 +1,4 @@
-package common
+package unit.common
 
 import domain.*
 import java.math.BigDecimal
