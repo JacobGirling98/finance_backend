@@ -80,8 +80,6 @@ class StandingOrderCollectionTest : FunSpec({
         standingOrderCollection.add(standingOrder)
         standingOrderCollection.add(standingOrder)
 
-        val retrieved = standingOrderCollection.findAll()
-
-        retrieved shouldHaveSize 2
+        standingOrderCollection.findAll() shouldHaveSize 2
     }
 })
