@@ -1,10 +1,12 @@
 import config.environmentVariables
 import config.logger
+import config.mongoClient
 import config.properties
 import dao.LoginDatabase
 import dao.ReferenceData
 import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
+import dao.mongo.StandingOrderCollection
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import http.git.GitClient
@@ -32,6 +34,7 @@ val referenceData = ReferenceData(properties.dataLocation)
 val transactionsDatabase = TransactionsDatabase(properties.dataLocation)
 val loginDatabase = LoginDatabase(properties.dataLocation)
 val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
+val standingOrderCollection = StandingOrderCollection(mongoClient)
 
 val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase, LocalDate::now)
 
@@ -42,7 +45,7 @@ val contracts = listOf(
     gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dateRangeContracts { transactionsDatabase.data },
     headlineContracts { transactionsDatabase.data },
-    standingOrdersContract(standingOrderDatabase)
+    standingOrdersContract(standingOrderCollection)
 )
 
 val swaggerUi = swaggerUi(

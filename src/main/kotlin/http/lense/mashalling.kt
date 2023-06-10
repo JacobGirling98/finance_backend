@@ -35,4 +35,5 @@ val transactionListLens = biDiBodyLens<List<Transaction>>()
 
 val headlinesLens = biDiBodyLens<Headlines>()
 
+val standingOrderLens = biDiBodyLens<StandingOrder>()
 val standingOrderListLens = biDiBodyLens<List<StandingOrder>>()
