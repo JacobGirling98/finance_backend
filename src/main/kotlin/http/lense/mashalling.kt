@@ -2,6 +2,7 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Login
+import dao.mongo.Entity
 import domain.*
 import http.model.*
 import org.http4k.core.Body
@@ -36,4 +37,4 @@ val transactionListLens = biDiBodyLens<List<Transaction>>()
 val headlinesLens = biDiBodyLens<Headlines>()
 
 val standingOrderLens = biDiBodyLens<StandingOrder>()
-val standingOrderListLens = biDiBodyLens<List<StandingOrder>>()
+val standingOrderListLens = biDiBodyLens<List<Entity<StandingOrder>>>()

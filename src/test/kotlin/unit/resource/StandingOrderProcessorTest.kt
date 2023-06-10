@@ -1,21 +1,19 @@
 package unit.resource
 
-import unit.common.Factory
-import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
+import dao.mongo.StandingOrderCollection
 import domain.Date
 import domain.Frequency
-import domain.StandingOrder
 import domain.Transaction
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.shouldBe
+import io.mockk.mockk
+import io.mockk.verify
 import resource.StandingOrderProcessor
+import unit.common.Factory
 import java.time.LocalDate
-import java.util.UUID
 
 class StandingOrderProcessorTest : FunSpec({
 
@@ -24,36 +22,36 @@ class StandingOrderProcessorTest : FunSpec({
     val monthAfterNow = LocalDate.of(2020, 1, 31)
     val weekBeforeNow = LocalDate.of(2019, 12, 27)
 
-    val uuid = UUID.randomUUID()
+    val uuid = "12345"
 
-    val standingOrdersDatabase = StandingOrdersDatabaseTestDouble()
+    val standingOrdersDatabase = mockk<StandingOrderCollection>()
     val transactionsDatabase = TransactionsDatabaseTestDouble()
     val processor = StandingOrderProcessor(standingOrdersDatabase, transactionsDatabase, now)
 
     test("will not process standing order if current date is before standing order date") {
-        processor.process(Factory(date = Date(monthAfterNow)).standingOrder())
+        processor.process(Factory(date = Date(monthAfterNow)).standingOrderEntity())
 
-        standingOrdersDatabase.ordersUpdated.shouldBeEmpty()
+        verify(exactly = 0) { standingOrdersDatabase.update(any()) }
     }
 
     test("will process monthly standing order if current date is after standing order date") {
         val factory = Factory(date = Date(monthBeforeNow), id = uuid)
-        val expected = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid).standingOrder()
+        val expected = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid).standingOrderEntity()
 
-        processor.process(factory.standingOrder())
+        processor.process(factory.standingOrderEntity())
 
         transactionsDatabase.transactionsSaved shouldHaveSingleElement factory.transaction()
-        standingOrdersDatabase.ordersUpdated shouldHaveSingleElement expected
+        verify { standingOrdersDatabase.update(expected) }
     }
 
     test("will process standing order if current date is equal to standing order date") {
         val factory = Factory(date = Date(now()), id = uuid)
-        val expected = Factory(date = Date(now().plusMonths(1)), id = uuid).standingOrder()
+        val expected = Factory(date = Date(now().plusMonths(1)), id = uuid).standingOrderEntity()
 
-        processor.process(factory.standingOrder())
+        processor.process(factory.standingOrderEntity())
 
         transactionsDatabase.transactionsSaved shouldHaveSingleElement factory.transaction()
-        standingOrdersDatabase.ordersUpdated shouldHaveSingleElement expected
+        verify { standingOrdersDatabase.update(expected) }
     }
 
     test("will process monthly standing order multiple times if current date is multiple time periods after standing order date") {
@@ -61,26 +59,24 @@ class StandingOrderProcessorTest : FunSpec({
         val secondFactory = Factory(date = Date(monthBeforeNow), id = uuid)
         val thirdFactory = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid)
 
-        processor.process(firstFactory.standingOrder())
+        processor.process(firstFactory.standingOrderEntity())
 
         transactionsDatabase.transactionsSaved
             .shouldHaveSize(2)
             .shouldContain(firstFactory.transaction())
             .shouldContain(secondFactory.transaction())
-        standingOrdersDatabase.ordersUpdated
-            .shouldHaveSize(2)
-            .shouldContain(secondFactory.standingOrder())
-            .shouldContain(thirdFactory.standingOrder())
+        verify { standingOrdersDatabase.update(secondFactory.standingOrderEntity()) }
+        verify { standingOrdersDatabase.update(thirdFactory.standingOrderEntity()) }
     }
 
     test("will process weekly standing order if current date is after standing order date") {
         val factory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
-        val expected = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid).standingOrder()
+        val expected = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid).standingOrderEntity()
 
-        processor.process(factory.standingOrder())
+        processor.process(factory.standingOrderEntity())
 
         transactionsDatabase.transactionsSaved shouldHaveSingleElement factory.transaction()
-        standingOrdersDatabase.ordersUpdated shouldHaveSingleElement expected
+        verify { standingOrdersDatabase.update(expected) }
     }
 
     test("will process weekly standing order multiple times if current date is multiple time periods after standing order date") {
@@ -88,56 +84,35 @@ class StandingOrderProcessorTest : FunSpec({
         val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
         val thirdFactory = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid)
 
-        processor.process(firstFactory.standingOrder())
+        processor.process(firstFactory.standingOrderEntity())
 
         transactionsDatabase.transactionsSaved
             .shouldHaveSize(2)
             .shouldContain(firstFactory.transaction())
             .shouldContain(secondFactory.transaction())
-        standingOrdersDatabase.ordersUpdated
-            .shouldHaveSize(2)
-            .shouldContain(secondFactory.standingOrder())
-            .shouldContain(thirdFactory.standingOrder())
+        verify { standingOrdersDatabase.update(secondFactory.standingOrderEntity()) }
+        verify { standingOrdersDatabase.update(thirdFactory.standingOrderEntity()) }
     }
 
     test("will process all standing orders") {
         val firstFactory = Factory(date = Date(monthBeforeNow))
         val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY)
 
-        processor.processAll(listOf(firstFactory.standingOrder(), secondFactory.standingOrder()))
+        processor.processAll(listOf(firstFactory.standingOrderEntity(), secondFactory.standingOrderEntity()))
+
+        val firstStandingOrder = firstFactory.standingOrderEntity()
+            .copy(domain = firstFactory.standingOrder().copy(nextDate = Date(firstFactory.standingOrder().nextDate.value.plusMonths(1))))
+        val secondStandingOrder = secondFactory.standingOrderEntity()
+            .copy(domain = secondFactory.standingOrder().copy(nextDate = Date(secondFactory.standingOrder().nextDate.value.plusWeeks(1))))
 
         transactionsDatabase.transactionsSaved
             .shouldHaveSize(2)
             .shouldContain(firstFactory.transaction())
             .shouldContain(secondFactory.transaction())
-        standingOrdersDatabase.ordersUpdated
-            .shouldHaveSize(2)
-            .shouldContain(
-                firstFactory.standingOrder()
-                    .copy(nextDate = Date(firstFactory.standingOrder().nextDate.value.plusMonths(1)))
-            )
-            .shouldContain(
-                secondFactory.standingOrder()
-                    .copy(nextDate = Date(secondFactory.standingOrder().nextDate.value.plusWeeks(1)))
-            )
-        standingOrdersDatabase.flushes shouldBe 1
+        verify { standingOrdersDatabase.update(firstStandingOrder) }
+        verify { standingOrdersDatabase.update(secondStandingOrder) }
     }
 })
-
-private class StandingOrdersDatabaseTestDouble : StandingOrdersDatabase("tmp") {
-
-    val ordersUpdated = mutableListOf<StandingOrder>()
-    var flushes = 0
-
-    override fun update(data: StandingOrder) {
-        ordersUpdated.add(data)
-    }
-
-    override fun flush() {
-        flushes++
-    }
-
-}
 
 private class TransactionsDatabaseTestDouble : TransactionsDatabase("tmp") {
     var transactionsSaved = mutableListOf<Transaction>()

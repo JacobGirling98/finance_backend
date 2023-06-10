@@ -2,10 +2,8 @@ package dao.mongo
 
 import com.mongodb.client.MongoClient
 import domain.*
-import domain.Date
 import org.bson.Document
 import org.bson.types.Decimal128
-import java.util.*
 
 class StandingOrderCollection(client: MongoClient) : Collection<StandingOrder>(client) {
     override fun StandingOrder.toDocument() = Document(
@@ -18,7 +16,6 @@ class StandingOrderCollection(client: MongoClient) : Collection<StandingOrder>(c
             "description" to description.value,
             "category" to category.value,
             "quantity" to quantity.value,
-            "id" to id,
             "recipient" to recipient?.value,
             "inbound" to inbound?.value,
             "outbound" to outbound?.value,
@@ -35,7 +32,6 @@ class StandingOrderCollection(client: MongoClient) : Collection<StandingOrder>(c
         transactionTypeFrom(getString("transactionType")),
         Outgoing(getBoolean("outgoing")),
         Quantity(getInteger("quantity")),
-        get("id", UUID::class.java),
         getString("recipient")?.let { Recipient(it) },
         getString("inbound")?.let { Inbound(it) },
         getString("outbound")?.let { Outbound(it) },

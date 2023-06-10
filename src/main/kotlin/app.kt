@@ -4,7 +4,6 @@ import config.mongoClient
 import config.properties
 import dao.LoginDatabase
 import dao.ReferenceData
-import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
 import dao.mongo.StandingOrderCollection
 import http.filter.lastLoginFilter
@@ -33,10 +32,9 @@ import java.time.LocalDate
 val referenceData = ReferenceData(properties.dataLocation)
 val transactionsDatabase = TransactionsDatabase(properties.dataLocation)
 val loginDatabase = LoginDatabase(properties.dataLocation)
-val standingOrderDatabase = StandingOrdersDatabase(properties.dataLocation)
 val standingOrderCollection = StandingOrderCollection(mongoClient)
 
-val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionsDatabase, LocalDate::now)
+val standingOrderProcessor = StandingOrderProcessor(standingOrderCollection, transactionsDatabase, LocalDate::now)
 
 val contracts = listOf(
     referenceContracts(referenceData),

@@ -1,8 +1,9 @@
 package resource
 
 import config.logger
-import dao.StandingOrdersDatabase
 import dao.TransactionsDatabase
+import dao.mongo.Entity
+import dao.mongo.StandingOrderCollection
 import domain.Date
 import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
@@ -14,15 +15,15 @@ import java.time.LocalDate
 import java.util.*
 
 class StandingOrderProcessor(
-    private val standingOrdersDatabase: StandingOrdersDatabase,
+    private val standingOrdersDatabase: StandingOrderCollection,
     private val transactionsDatabase: TransactionsDatabase,
     private val now: () -> LocalDate
 ) {
-    fun process(standingOrder: StandingOrder) {
-        if (standingOrder.nextDate.value > now()) {
+    fun process(standingOrder: Entity<StandingOrder>) {
+        if (standingOrder.domain.nextDate.value > now()) {
             return
         }
-        var standingOrderToChange: StandingOrder = standingOrder.copy()
+        var standingOrderToChange: StandingOrder = standingOrder.domain.copy()
         while (standingOrderToChange.nextDate.value <= now()) {
             logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.nextDate.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
@@ -32,14 +33,13 @@ class StandingOrderProcessor(
                     WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(1))
                 }
             )
-            standingOrdersDatabase.update(standingOrderToChange)
+            standingOrdersDatabase.update(Entity(standingOrder.id, standingOrderToChange))
         }
     }
 
-    fun processAll(standingOrders: List<StandingOrder>) {
+    fun processAll(standingOrders: List<Entity<StandingOrder>>) {
         logger.info { "Processing standing orders..." }
         standingOrders.forEach { process(it) }
-        standingOrdersDatabase.flush()
     }
 
     fun schedule() {
@@ -49,8 +49,7 @@ class StandingOrderProcessor(
         Timer().scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    standingOrdersDatabase.read()
-                    processAll(standingOrdersDatabase.data)
+                    processAll(standingOrdersDatabase.findAll())
                 }
             },
             now,

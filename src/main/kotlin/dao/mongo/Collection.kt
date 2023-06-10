@@ -27,19 +27,25 @@ abstract class Collection<T>(private val client: MongoClient) {
         Document(domain.toDocument())
     ).insertedId?.asObjectId()?.value?.toHexString()
 
-    fun findById(id: String): T? = collection().find(eq(ObjectId(id))).first()?.toDomain()
+    fun findById(id: String): Entity<T>? = collection().find(eq(ObjectId(id))).first()?.let {
+        Entity(id, it.toDomain())
+    }
 
     protected fun Document.getLocalDate(field: String): LocalDate = getDate(field)
         .toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDate()
 
-    fun findAll(): List<T> {
-        val documents = mutableListOf<T>()
+    fun findAll(): List<Entity<T>> {
+        val documents = mutableListOf<Entity<T>>()
         val cursor = collection().find().cursor()
         while (cursor.hasNext()) {
-            documents.add(cursor.next().toDomain())
+            documents.add(cursor.next().let { Entity(it.getObjectId("_id").toHexString(), it.toDomain()) })
         }
         return documents.toList()
+    }
+
+    fun update(entity: Entity<T>) {
+        collection().replaceOne(eq(ObjectId(entity.id)), entity.domain.toDocument())
     }
 }
