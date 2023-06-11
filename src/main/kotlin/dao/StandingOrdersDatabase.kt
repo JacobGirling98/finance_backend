@@ -21,10 +21,10 @@ open class StandingOrdersDatabase(dataDirectory: String) : CsvDatabase<StandingO
                 transactionTypeFrom(data[columns.transactionTypeColumn]),
                 Outgoing(data[columns.outgoingColumn].toBoolean()),
                 Quantity(data[columns.quantityColumn].toInt()),
-                recipient = data[columns.recipientColumn].valueOrNull()?.let { Recipient(it) },
-                outbound = data[columns.outboundColumn].valueOrNull()?.let { Outbound(it) },
-                inbound = data[columns.inboundColumn].valueOrNull()?.let { Inbound(it) },
-                source = data[columns.sourceColumn].valueOrNull()?.let { Source(it) }
+                data[columns.recipientColumn].valueOrNull()?.let { Recipient(it) },
+                data[columns.inboundColumn].valueOrNull()?.let { Inbound(it) },
+                data[columns.outboundColumn].valueOrNull()?.let { Outbound(it) },
+                data[columns.sourceColumn].valueOrNull()?.let { Source(it) },
             )
         }
     }

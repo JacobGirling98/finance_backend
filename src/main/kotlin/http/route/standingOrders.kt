@@ -3,7 +3,6 @@ package http.route
 import dao.mongo.Entity
 import dao.mongo.StandingOrderCollection
 import domain.*
-import domain.Date
 import http.asTag
 import http.handler.addStandingOrderHandler
 import http.handler.getStandingOrdersHandler
@@ -36,7 +35,7 @@ private fun addStandingOrderContract(addStandingOrder: (StandingOrder) -> Unit) 
                     Description("Shopping"),
                     TransactionType.DEBIT,
                     Outgoing(true),
-                    Quantity(1)
+                    Quantity(1),
                 )
     )
     returning(Status.NO_CONTENT)
