@@ -24,7 +24,7 @@ class StandingOrderProcessorTest : FunSpec({
 
     val uuid = "12345"
 
-    val standingOrdersDatabase = mockk<StandingOrderCollection>()
+    val standingOrdersDatabase = mockk<StandingOrderCollection>(relaxed = true)
     val transactionsDatabase = TransactionsDatabaseTestDouble()
     val processor = StandingOrderProcessor(standingOrdersDatabase, transactionsDatabase, now)
 

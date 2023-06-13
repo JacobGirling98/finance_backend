@@ -21,18 +21,18 @@ class Factory(
     private val id: String = "12345"
 ) {
     fun standingOrder() = StandingOrder(
-        date,
-        frequency,
-        category,
-        value,
-        description,
-        type,
-        outgoing,
-        quantity,
-        recipient,
-        inbound,
-        outbound,
-        source,
+        nextDate = date,
+        frequency = frequency,
+        category = category,
+        value = value,
+        description = description,
+        type = type,
+        outgoing = outgoing,
+        quantity = quantity,
+        recipient = recipient,
+        inbound = inbound,
+        outbound = outbound,
+        source = source,
     )
 
     fun standingOrderEntity() = Entity(id, standingOrder())
