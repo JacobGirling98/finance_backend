@@ -1,9 +1,11 @@
 package unit.common
 
-import dao.mongo.Entity
 import domain.*
+import domain.Date
+import dao.Entity
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.*
 
 class Factory(
     private val date: Date = Date(LocalDate.of(2020, 1, 1)),
@@ -18,7 +20,7 @@ class Factory(
     private val inbound: Inbound? = null,
     private val outbound: Outbound? = null,
     private val source: Source? = null,
-    private val id: String = "12345"
+    private val id: UUID = UUID.randomUUID()
 ) {
     fun standingOrder() = StandingOrder(
         nextDate = date,
@@ -31,8 +33,7 @@ class Factory(
         quantity = quantity,
         recipient = recipient,
         inbound = inbound,
-        outbound = outbound,
-        source = source,
+        outbound = outbound
     )
 
     fun standingOrderEntity() = Entity(id, standingOrder())

@@ -1,8 +1,7 @@
 package http.lense
 
 import config.CustomJackson.auto
-import dao.Login
-import dao.mongo.Entity
+import dao.Entity
 import domain.*
 import http.model.*
 import org.http4k.core.Body
@@ -10,9 +9,12 @@ import org.http4k.lens.BiDiBodyLens
 
 inline fun <reified T : Any> biDiBodyLens(): BiDiBodyLens<T> = Body.auto<T>().toLens()
 
-val referenceLens = biDiBodyLens<List<String>>()
+inline fun <reified T : Any> entitiesBiDiBodyLens(): BiDiBodyLens<List<Entity<T>>> = biDiBodyLens<List<Entity<T>>>()
+
+val referenceEntitiesLens = entitiesBiDiBodyLens<String>()
 
 val descriptionsLens = biDiBodyLens<List<DescriptionMapping>>()
+val descriptionEntitiesLens = entitiesBiDiBodyLens<DescriptionMapping>()
 
 val creditDebitLens = biDiBodyLens<CreditDebit>()
 val creditDebitListLens = biDiBodyLens<List<CreditDebit>>()
@@ -32,7 +34,7 @@ val transactionConfirmationLens = biDiBodyLens<TransactionConfirmation>()
 
 val dateRangeListLens = biDiBodyLens<List<DateRange>>()
 
-val transactionListLens = biDiBodyLens<List<Transaction>>()
+val transactionEntityListLens = biDiBodyLens<List<Entity<Transaction>>>()
 
 val headlinesLens = biDiBodyLens<Headlines>()
 

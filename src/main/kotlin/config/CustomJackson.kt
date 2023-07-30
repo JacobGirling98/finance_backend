@@ -2,7 +2,6 @@ package config
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import dao.Login
 import domain.*
 import org.http4k.format.*
 
@@ -20,7 +19,6 @@ object CustomJackson : ConfigurableJackson(
         .text(::Inbound, Inbound::value)
         .text(::Outbound, Outbound::value)
         .text(::Source, Source::value)
-        .localDate(::Login, Login::value)
         .localDate(::Date, Date::value)
         .localDate(::StartDate, StartDate::value)
         .localDate(::EndDate, EndDate::value)

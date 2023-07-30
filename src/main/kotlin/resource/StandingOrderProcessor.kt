@@ -1,22 +1,22 @@
 package resource
 
 import config.logger
-import dao.TransactionsDatabase
-import dao.mongo.Entity
-import dao.mongo.StandingOrderCollection
 import domain.Date
 import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
 import domain.StandingOrder
 import domain.Transaction
+import dao.Database
+import dao.Entity
+import dao.asEntity
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
 class StandingOrderProcessor(
-    private val standingOrdersDatabase: StandingOrderCollection,
-    private val transactionsDatabase: TransactionsDatabase,
+    private val standingOrderDatabase: Database<StandingOrder, UUID>,
+    private val transactionsDatabase: Database<Transaction, UUID>,
     private val now: () -> LocalDate
 ) {
     fun process(standingOrder: Entity<StandingOrder>) {
@@ -33,7 +33,7 @@ class StandingOrderProcessor(
                     WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(1))
                 }
             )
-            standingOrdersDatabase.update(Entity(standingOrder.id, standingOrderToChange))
+            standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))
         }
     }
 
@@ -49,7 +49,7 @@ class StandingOrderProcessor(
         Timer().scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    processAll(standingOrdersDatabase.findAll())
+                    processAll(standingOrderDatabase.selectAll())
                 }
             },
             now,
@@ -67,7 +67,6 @@ class StandingOrderProcessor(
         quantity,
         recipient,
         inbound,
-        outbound,
-        source
+        outbound
     )
 }

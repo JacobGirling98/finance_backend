@@ -11,6 +11,5 @@ data class StandingOrder(
     val quantity: Quantity = Quantity(1),
     val recipient: Recipient? = null,
     val inbound: Inbound? = null,
-    val outbound: Outbound? = null,
-    val source: Source? = null
+    val outbound: Outbound? = null
 )

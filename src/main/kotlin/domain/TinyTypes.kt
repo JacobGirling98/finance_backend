@@ -75,3 +75,9 @@ data class StartDate(
         fun of(year: Int, month: Int, day: Int) = StartDate(LocalDate.of(year, month, day))
     }
 }
+
+data class Login(val value: LocalDate) {
+    companion object {
+        fun of(year: Int, month: Int, day: Int) = Login(LocalDate.of(year, month, day))
+    }
+}

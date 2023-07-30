@@ -1,12 +1,12 @@
 package resource
 
 import domain.*
-import domain.StartDate
+import dao.Entity
 import java.time.LocalDate
 
-fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+fun monthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
     transactions().distinctDatesBy { it.monthAndYear }.map {
-        StartDate.of(it.value.year, it.value.monthValue, 1,).let { startDate ->
+        StartDate.of(it.value.year, it.value.monthValue, 1).let { startDate ->
             DateRange(
                 startDate,
                 startDate.nextMonth()
@@ -15,9 +15,9 @@ fun monthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     }
 }
 
-fun yearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+fun yearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
     transactions().distinctDatesBy { it.value.year }.map {
-        StartDate.of(it.value.year, 1, 1,).let { startDate ->
+        StartDate.of(it.value.year, 1, 1).let { startDate ->
             DateRange(
                 startDate,
                 startDate.nextYear()
@@ -26,7 +26,7 @@ fun yearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
     }
 }
 
-fun fiscalMonthsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+fun fiscalMonthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
     val dateRanges = mutableListOf<DateRange>()
     val data = transactions()
 
@@ -35,7 +35,7 @@ fun fiscalMonthsOf(transactions: () -> List<Transaction>): () -> List<DateRange>
         .sortedBy { it.value }
         .forEach { dateRanges.add(it, StartDate::nextFiscalMonth) }
 
-    val transactionsWithoutWages = data.filterNot { it.category.value == "Wages" }
+    val transactionsWithoutWages = data.filterNot { it.domain.category.value == "Wages" }
     while (transactionsWithoutWages.afterOrEqual(dateRanges.latest()).isNotEmpty()) {
         dateRanges.add(nextDateRange(dateRanges.latest()))
     }
@@ -46,13 +46,13 @@ fun fiscalMonthsOf(transactions: () -> List<Transaction>): () -> List<DateRange>
     dateRanges.sortedBy { it.startDate.value }
 }
 
-fun fiscalYearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> = {
+fun fiscalYearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
     val dateRanges = mutableListOf<DateRange>()
     val data = transactions()
 
     data.distinctDatesBy { it.value.year }
         .map {
-            data.wageOfMonth(4, it.value.year)?.date
+            data.wageOfMonth(4, it.value.year)?.domain?.date
                 ?: Date(LocalDate.of(it.value.year, 4, 15))
         }
         .forEach { dateRanges.add(it, StartDate::nextFiscalYear) }
@@ -61,7 +61,7 @@ fun fiscalYearsOf(transactions: () -> List<Transaction>): () -> List<DateRange> 
 }
 
 private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndDate) {
-    val startDate = StartDate.of(date.value.year, date.value.monthValue, date.value.dayOfMonth,)
+    val startDate = StartDate.of(date.value.year, date.value.monthValue, date.value.dayOfMonth)
     if (isNotEmpty() && startDate.value.dayOfMonth != 15) {
         this[size - 1] = last().withEndDateDayOf(startDate.value.dayOfMonth)
     }
@@ -92,18 +92,18 @@ private fun nextDateRange(latestDateRange: DateRange): DateRange =
         }
     }
 
-private fun List<Transaction>.wageOfMonth(month: Int, year: Int): Transaction? =
-    firstOrNull { transaction -> transaction.category.value == "Wages" && transaction.date.value.monthValue == month && transaction.date.value.year == year }
+private fun List<Entity<Transaction>>.wageOfMonth(month: Int, year: Int): Entity<Transaction>? =
+    firstOrNull { transaction -> transaction.domain.category.value == "Wages" && transaction.domain.date.value.monthValue == month && transaction.domain.date.value.year == year }
 
 private fun MutableList<DateRange>.latest(): DateRange = maxBy { it.endDate.value }
 
 private fun MutableList<DateRange>.earliest(): DateRange = minBy { it.startDate.value }
 
-private fun List<Transaction>.beforeOrEqual(dateRange: DateRange) =
-    filter { it.date.value.let { date -> date.isBefore(dateRange.startDate.value) || date.isEqual(dateRange.startDate.value) } }
+private fun List<Entity<Transaction>>.beforeOrEqual(dateRange: DateRange) =
+    filter { it.domain.date.value.let { date -> date.isBefore(dateRange.startDate.value) || date.isEqual(dateRange.startDate.value) } }
 
-private fun List<Transaction>.afterOrEqual(dateRange: DateRange) =
-    filter { it.date.value.let { date -> date.isAfter(dateRange.endDate.value) || date.isEqual(dateRange.endDate.value) } }
+private fun List<Entity<Transaction>>.afterOrEqual(dateRange: DateRange) =
+    filter { it.domain.date.value.let { date -> date.isAfter(dateRange.endDate.value) || date.isEqual(dateRange.endDate.value) } }
 
 private fun List<Date>.fillMissingFiscalMonths(): List<Date> {
     val sortedDates = this.sortedBy { it.value }.toMutableList()
@@ -124,10 +124,11 @@ private fun Date.isMoreThanAMonthAfter(other: Date): Boolean {
     return if (this.value.isBefore(other.value)) false else newDate.monthValue != this.value.monthValue
 }
 
-private fun <T> List<Transaction>.distinctDatesBy(field: (Date) -> T): List<Date> = map { it.date }.distinctBy(field)
+private fun <T> List<Entity<Transaction>>.distinctDatesBy(field: (Date) -> T): List<Date> =
+    map { it.domain.date }.distinctBy(field)
 
-private fun List<Transaction>.wageDates() =
-    filter { it.category.value == "Wages" }.map { it.date }
+private fun List<Entity<Transaction>>.wageDates() =
+    filter { it.domain.category.value == "Wages" }.map { it.domain.date }
 
 private val Date.monthAndYear: Pair<Int, Int>
     get() = Pair(value.monthValue, value.year)

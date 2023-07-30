@@ -10,12 +10,13 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
+import java.util.*
 
 class ReferenceHandlerTest : FunSpec({
 
     test("can post descriptions") {
         var arguments = listOf<DescriptionMapping>()
-        val handler = postDescriptionsHandler { arguments = it }
+        val handler = postDescriptionsHandler { arguments = it; listOf(UUID.randomUUID()) }
 
         val response = handler(
             Request(Method.POST, "/").body(

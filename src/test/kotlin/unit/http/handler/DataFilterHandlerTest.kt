@@ -7,12 +7,14 @@ import domain.StartDate
 import domain.Transaction
 import http.handler.dateRangeHandler
 import http.handler.transactionsHandler
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.withADateOf
 import io.kotest.core.spec.style.FunSpec
+import dao.Entity
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.kotest.shouldHaveBody
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.entity
+import unit.fixtures.withADateOf
 import java.time.LocalDate
 
 class DataFilterHandlerTest : FunSpec({
@@ -27,8 +29,8 @@ class DataFilterHandlerTest : FunSpec({
     test("can use date ranges with filter transactions") {
         val transactions = { dateRange: DateRange ->
             listOf(
-                aDebitTransaction().withADateOf(dateRange.startDate.value),
-                aDebitTransaction().withADateOf(dateRange.endDate.value),
+                entity { aDebitTransaction().withADateOf(dateRange.startDate.value) },
+                entity { aDebitTransaction().withADateOf(dateRange.endDate.value) },
             )
         }
         val startDate = LocalDate.of(2020, 1, 1)
@@ -44,5 +46,5 @@ class DataFilterHandlerTest : FunSpec({
 private fun <T> T.asJson(): String =
     CustomJackson.mapper.writeValueAsString(this)
 
-private fun ((DateRange) -> List<Transaction>).withDateRange(startDate: LocalDate, endDate: LocalDate) =
+private fun ((DateRange) -> List<Entity<Transaction>>).withDateRange(startDate: LocalDate, endDate: LocalDate) =
     this(DateRange(StartDate(startDate), EndDate(endDate)))

@@ -1,6 +1,6 @@
 package http.handler
 
-import dao.Login
+import domain.Login
 import http.lense.loginLens
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response

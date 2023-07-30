@@ -1,25 +1,31 @@
 package unit.http.handler
 
-import dao.Database
 import domain.*
+import domain.Date
 import domain.TransactionType.DEBIT
 import http.handler.*
-import unit.fixtures.toObject
 import http.model.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldContain
-import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import dao.Database
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
+import unit.fixtures.toObject
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.util.*
 
 class TransactionHandlerTest : FunSpec({
-    val database = TestDatabase()
+    val database = mockk<Database<Transaction, UUID>>(relaxed = true)
+
+    every { database.save(any<Transaction>()) } returns UUID.randomUUID()
+    every { database.save(any<List<Transaction>>()) } returns listOf(UUID.randomUUID())
 
     test("can post a credit-debit transaction") {
         val handler = postCreditDebitHandler(TransactionType.CREDIT) { database.save(it) }
@@ -39,15 +45,19 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus NO_CONTENT
-        database.arguments shouldHaveSingleElement Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            TransactionType.CREDIT,
-            Outgoing(true),
-            Quantity(2)
-        )
+        verify {
+            database.save(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    TransactionType.CREDIT,
+                    Outgoing(true),
+                    Quantity(2)
+                )
+            )
+        }
     }
 
     test("can post a bank transfer transaction") {
@@ -69,16 +79,20 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus NO_CONTENT
-        database.arguments shouldHaveSingleElement Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            TransactionType.BANK_TRANSFER,
-            Outgoing(true),
-            Quantity(1),
-            Recipient("Friend")
-        )
+        verify {
+            database.save(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    TransactionType.BANK_TRANSFER,
+                    Outgoing(true),
+                    Quantity(1),
+                    Recipient("Friend")
+                )
+            )
+        }
     }
 
     test("can post a personal transfer transaction") {
@@ -100,17 +114,21 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus NO_CONTENT
-        database.arguments shouldHaveSingleElement Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            TransactionType.PERSONAL_TRANSFER,
-            Outgoing(false),
-            Quantity(1),
-            outbound = Outbound("Current"),
-            inbound = Inbound("Savings")
-        )
+        verify {
+            database.save(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    TransactionType.PERSONAL_TRANSFER,
+                    Outgoing(false),
+                    Quantity(1),
+                    outbound = Outbound("Current"),
+                    inbound = Inbound("Savings")
+                )
+            )
+        }
     }
 
     test("can post an income transaction") {
@@ -131,16 +149,20 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus NO_CONTENT
-        database.arguments shouldHaveSingleElement Transaction(
-            Date(LocalDate.of(2020, 10, 12)),
-            Category("Food"),
-            Value(BigDecimal("12.50")),
-            Description("Cake"),
-            TransactionType.INCOME,
-            Outgoing(false),
-            Quantity(1),
-            source = Source("Work")
-        )
+        verify {
+            database.save(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    TransactionType.INCOME,
+                    Outgoing(false),
+                    Quantity(1),
+                    source = Source("Work")
+                )
+            )
+        }
     }
 
     test("can post multiple credit-debit transactions") {
@@ -170,29 +192,30 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus OK
-        database.arguments
-            .shouldContain(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    TransactionType.CREDIT,
-                    Outgoing(true),
-                    Quantity(2)
+        verify {
+            database.save(
+                listOf(
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 12)),
+                        Category("Food"),
+                        Value(BigDecimal("12.50")),
+                        Description("Cake"),
+                        TransactionType.CREDIT,
+                        Outgoing(true),
+                        Quantity(2)
+                    ),
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 15)),
+                        Category("Tech"),
+                        Value(BigDecimal("500.00")),
+                        Description("Speaker"),
+                        TransactionType.CREDIT,
+                        Outgoing(true),
+                        Quantity(1)
+                    )
                 )
             )
-            .shouldContain(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 15)),
-                    Category("Tech"),
-                    Value(BigDecimal("500.00")),
-                    Description("Speaker"),
-                    TransactionType.CREDIT,
-                    Outgoing(true),
-                    Quantity(1)
-                )
-            )
+        }
     }
 
     test("can post multiple bank transfer transactions") {
@@ -224,29 +247,32 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus OK
-        database.arguments.shouldContain(
-            Transaction(
-                Date(LocalDate.of(2020, 10, 12)),
-                Category("Food"),
-                Value(BigDecimal("12.50")),
-                Description("Cake"),
-                TransactionType.BANK_TRANSFER,
-                Outgoing(true),
-                Quantity(1),
-                Recipient("Friend")
+        verify {
+            database.save(
+                listOf(
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 12)),
+                        Category("Food"),
+                        Value(BigDecimal("12.50")),
+                        Description("Cake"),
+                        TransactionType.BANK_TRANSFER,
+                        Outgoing(true),
+                        Quantity(1),
+                        Recipient("Friend")
+                    ),
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 15)),
+                        Category("Tech"),
+                        Value(BigDecimal("500.00")),
+                        Description("Speaker"),
+                        TransactionType.BANK_TRANSFER,
+                        Outgoing(true),
+                        Quantity(1),
+                        Recipient("Family")
+                    )
+                )
             )
-        ).shouldContain(
-            Transaction(
-                Date(LocalDate.of(2020, 10, 15)),
-                Category("Tech"),
-                Value(BigDecimal("500.00")),
-                Description("Speaker"),
-                TransactionType.BANK_TRANSFER,
-                Outgoing(true),
-                Quantity(1),
-                Recipient("Family")
-            )
-        )
+        }
     }
 
     test("can post multiple personal transfer transactions") {
@@ -279,34 +305,34 @@ class TransactionHandlerTest : FunSpec({
 
         response shouldHaveStatus OK
 
-        database.arguments
-            .shouldContain(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 12)),
-                    Category("Food"),
-                    Value(BigDecimal("12.50")),
-                    Description("Cake"),
-                    TransactionType.PERSONAL_TRANSFER,
-                    Outgoing(false),
-                    Quantity(1),
-                    outbound = Outbound("Current"),
-                    inbound = Inbound("Savings")
+        verify {
+            database.save(
+                listOf(
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 12)),
+                        Category("Food"),
+                        Value(BigDecimal("12.50")),
+                        Description("Cake"),
+                        TransactionType.PERSONAL_TRANSFER,
+                        Outgoing(false),
+                        Quantity(1),
+                        outbound = Outbound("Current"),
+                        inbound = Inbound("Savings")
+                    ),
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 15)),
+                        Category("Tech"),
+                        Value(BigDecimal("500.00")),
+                        Description("Speaker"),
+                        TransactionType.PERSONAL_TRANSFER,
+                        Outgoing(false),
+                        Quantity(1),
+                        outbound = Outbound("Current"),
+                        inbound = Inbound("Credit")
+                    )
                 )
-
-            ).shouldContain(
-                Transaction(
-                    Date(LocalDate.of(2020, 10, 15)),
-                    Category("Tech"),
-                    Value(BigDecimal("500.00")),
-                    Description("Speaker"),
-                    TransactionType.PERSONAL_TRANSFER,
-                    Outgoing(false),
-                    Quantity(1),
-                    outbound = Outbound("Current"),
-                    inbound = Inbound("Credit")
-                )
-
             )
+        }
     }
 
     test("can post multiple income transactions") {
@@ -336,33 +362,37 @@ class TransactionHandlerTest : FunSpec({
         )
 
         response shouldHaveStatus OK
-        database.arguments.shouldContain(
-            Transaction(
-                Date(LocalDate.of(2020, 10, 12)),
-                Category("Food"),
-                Value(BigDecimal("12.50")),
-                Description("Cake"),
-                TransactionType.INCOME,
-                Outgoing(false),
-                Quantity(1),
-                source = Source("Work")
+        verify {
+            database.save(
+                listOf(
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 12)),
+                        Category("Food"),
+                        Value(BigDecimal("12.50")),
+                        Description("Cake"),
+                        TransactionType.INCOME,
+                        Outgoing(false),
+                        Quantity(1),
+                        source = Source("Work")
+                    ),
+                    Transaction(
+                        Date(LocalDate.of(2020, 10, 15)),
+                        Category("Wages"),
+                        Value(BigDecimal("500.00")),
+                        Description("Wages"),
+                        TransactionType.INCOME,
+                        Outgoing(false),
+                        Quantity(1),
+                        source = Source("Work")
+                    )
+                )
             )
-        ).shouldContain(
-            Transaction(
-                Date(LocalDate.of(2020, 10, 15)),
-                Category("Wages"),
-                Value(BigDecimal("500.00")),
-                Description("Wages"),
-                TransactionType.INCOME,
-                Outgoing(false),
-                Quantity(1),
-                source = Source("Work")
-            )
-        )
+        }
     }
 
     test("posting debit/credit transactions returns number saved and total value") {
-        val handler = postCreditDebitListHandler(DEBIT) { transactions -> transactions.size }
+        val handler =
+            postCreditDebitListHandler(DEBIT) { transactions -> List(transactions.size) { UUID.randomUUID() } }
 
         val response = handler(
             Request(Method.POST, "/").body(
@@ -394,7 +424,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("posting bank transfer transactions returns number saved and total value") {
-        val handler = postBankTransferListHandler { transactions -> transactions.size }
+        val handler = postBankTransferListHandler { transactions -> List(transactions.size) { UUID.randomUUID() } }
 
         val response = handler(
             Request(Method.POST, "/").body(
@@ -428,7 +458,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("posting personal transfer transactions returns number saved and total value") {
-        val handler = postPersonalTransferListHandler { transactions -> transactions.size }
+        val handler = postPersonalTransferListHandler { transactions -> List(transactions.size) { UUID.randomUUID() } }
 
         val response = handler(
             Request(Method.POST, "/").body(
@@ -462,7 +492,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("posting income transactions returns number saved and total value") {
-        val handler = postIncomeListHandler { transactions -> transactions.size }
+        val handler = postIncomeListHandler { transactions -> List(transactions.size) { UUID.randomUUID() } }
 
         val response = handler(
             Request(Method.POST, "/").body(
@@ -493,18 +523,3 @@ class TransactionHandlerTest : FunSpec({
         )
     }
 })
-
-private class TestDatabase : Database<Transaction> {
-
-    var arguments = mutableListOf<Transaction>()
-
-    override fun save(data: Transaction) {
-        arguments.add(data)
-    }
-
-    override fun save(data: List<Transaction>): Int {
-        data.forEach { arguments.add(it) }
-        return data.size
-    }
-
-}
