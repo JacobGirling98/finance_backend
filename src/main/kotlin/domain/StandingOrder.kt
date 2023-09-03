@@ -2,7 +2,8 @@ package domain
 
 data class StandingOrder(
     val nextDate: Date,
-    val frequency: Frequency,
+    val frequencyQuantity: FrequencyQuantity,
+    val frequencyUnit: Frequency,
     val category: Category,
     val value: Value,
     val description: Description,

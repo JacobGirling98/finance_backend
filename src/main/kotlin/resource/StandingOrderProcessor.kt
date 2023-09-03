@@ -1,14 +1,14 @@
 package resource
 
 import config.logger
+import dao.Database
+import dao.Entity
+import dao.asEntity
 import domain.Date
 import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
 import domain.StandingOrder
 import domain.Transaction
-import dao.Database
-import dao.Entity
-import dao.asEntity
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -28,9 +28,9 @@ class StandingOrderProcessor(
             logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.nextDate.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
             standingOrderToChange = standingOrderToChange.copy(
-                nextDate = when (standingOrderToChange.frequency) {
-                    MONTHLY -> Date(standingOrderToChange.nextDate.value.plusMonths(1))
-                    WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(1))
+                nextDate = when (standingOrderToChange.frequencyUnit) {
+                    MONTHLY -> Date(standingOrderToChange.nextDate.value.plusMonths(standingOrderToChange.frequencyQuantity.value.toLong()))
+                    WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
                 }
             )
             standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))

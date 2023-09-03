@@ -1,5 +1,8 @@
 package http.contract
 
+import dao.Database
+import dao.Entity
+import dao.entityOf
 import domain.*
 import domain.Date
 import http.asTag
@@ -7,9 +10,6 @@ import http.handler.addStandingOrderHandler
 import http.handler.getStandingOrdersHandler
 import http.lense.standingOrderLens
 import http.lense.standingOrderListLens
-import dao.Database
-import dao.Entity
-import dao.entityOf
 import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Status
@@ -32,6 +32,7 @@ private fun addStandingOrderContract(addStandingOrder: (StandingOrder) -> Unit) 
         standingOrderLens to
                 StandingOrder(
                     Date(LocalDate.of(2023, 1, 1)),
+                    FrequencyQuantity(1),
                     Frequency.MONTHLY,
                     Category("Food"),
                     Value.of(20.00),
@@ -53,6 +54,7 @@ private fun getStandingOrdersContract(standingOrders: () -> List<Entity<Standing
             entityOf(
                 StandingOrder(
                     Date(LocalDate.of(2023, 1, 1)),
+                    FrequencyQuantity(1),
                     Frequency.MONTHLY,
                     Category("String"),
                     Value(BigDecimal.ZERO),

@@ -1,14 +1,15 @@
 package unit.common
 
+import dao.Entity
 import domain.*
 import domain.Date
-import dao.Entity
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
 
 class Factory(
     private val date: Date = Date(LocalDate.of(2020, 1, 1)),
+    private val frequencyQuantity: FrequencyQuantity = FrequencyQuantity(1),
     private val frequency: Frequency = Frequency.MONTHLY,
     private val category: Category = Category("Food"),
     private val value: Value = Value(BigDecimal("20.00")),
@@ -24,7 +25,8 @@ class Factory(
 ) {
     fun standingOrder() = StandingOrder(
         nextDate = date,
-        frequency = frequency,
+        frequencyQuantity = frequencyQuantity,
+        frequencyUnit = frequency,
         category = category,
         value = value,
         description = description,

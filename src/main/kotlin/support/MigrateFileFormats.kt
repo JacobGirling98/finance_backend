@@ -28,6 +28,7 @@ fun standingOrders() {
         line.split(",").let {
             StandingOrder(
                 Date(LocalDate.parse(it[0])),
+                FrequencyQuantity(1),
                 frequencyFrom(it[1]),
                 Category(it[11]),
                 Value.of(it[4].toDouble()),

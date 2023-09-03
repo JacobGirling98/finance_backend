@@ -1,12 +1,12 @@
 package unit.dao.csv
 
+import dao.asEntity
+import dao.csv.StandingOrderCsvDatabase
 import domain.*
 import domain.Date
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import dao.asEntity
-import dao.csv.StandingOrderCsvDatabase
 import unit.fixtures.aBankTransferStandingOrder
 import unit.fixtures.aCreditStandingOrder
 import unit.fixtures.aDebitStandingOrder
@@ -33,17 +33,18 @@ class StandingOrderCsvDatabaseTest : FunSpec({
 
         file.writeText(
             """
-            id,next_date,frequency,category,value,description,type,outgoing,quantity,recipient,inbound,outbound
-            $debitUUID,2020-01-01,monthly,Food,1.5,Bananas,Debit,true,1,,,
-            $creditUUID,2020-01-02,weekly,Food,1,Bananas,Credit,true,1,,,
-            $bankTransferUUID,2020-01-03,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
-            $personalTransferUUID,2020-01-04,weekly,Food,1,Bananas,Personal Transfer,false,1,,Savings,Current
+            id,next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound
+            $debitUUID,2020-01-01,1,monthly,Food,1.5,Bananas,Debit,true,1,,,
+            $creditUUID,2020-01-02,1,weekly,Food,1,Bananas,Credit,true,1,,,
+            $bankTransferUUID,2020-01-03,1,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
+            $personalTransferUUID,2020-01-04,2,weekly,Food,1,Bananas,Personal Transfer,false,1,,Savings,Current
         """.trimIndent()
         )
 
         database().selectAll() shouldContainExactlyInAnyOrder listOf(
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 1)),
+                FrequencyQuantity(1),
                 Frequency.MONTHLY,
                 Category("Food"),
                 Value.of(1.5),
@@ -53,6 +54,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
             ).asEntity(debitUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 2)),
+                FrequencyQuantity(1),
                 Frequency.WEEKLY,
                 Category("Food"),
                 Value.of(1.0),
@@ -62,6 +64,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
             ).asEntity(creditUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 3)),
+                FrequencyQuantity(1),
                 Frequency.MONTHLY,
                 Category("Food"),
                 Value.of(1.0),
@@ -72,6 +75,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
             ).asEntity(bankTransferUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 4)),
+                FrequencyQuantity(2),
                 Frequency.WEEKLY,
                 Category("Food"),
                 Value.of(1.0),
@@ -85,7 +89,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
     }
 
     test("can flush a standing order to a file") {
-        file.writeText("id,next_date,frequency,category,value,description,type,outgoing,quantity,recipient,inbound,outbound\n")
+        file.writeText("id,next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound\n")
         val database = database()
         val debitId = database.save(aDebitStandingOrder())
         val creditId = database.save(aCreditStandingOrder())
@@ -95,11 +99,11 @@ class StandingOrderCsvDatabaseTest : FunSpec({
         database.flush()
 
         file.readText() shouldBe """
-            id,next_date,frequency,category,value,description,type,outgoing,quantity,recipient,inbound,outbound
-            $debitId,2020-01-01,monthly,Food,1,Bananas,Debit,true,1,,,
-            $creditId,2020-01-01,monthly,Food,1,Bananas,Credit,true,1,,,
-            $bankTransferId,2020-01-01,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
-            $personalTransferId,2020-01-01,monthly,Food,1,Bananas,Personal Transfer,false,1,,inbound,outbound
+            id,next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound
+            $debitId,2020-01-01,1,monthly,Food,1,Bananas,Debit,true,1,,,
+            $creditId,2020-01-01,1,monthly,Food,1,Bananas,Credit,true,1,,,
+            $bankTransferId,2020-01-01,1,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
+            $personalTransferId,2020-01-01,1,monthly,Food,1,Bananas,Personal Transfer,false,1,,inbound,outbound
         """.trimIndent()
 
     }

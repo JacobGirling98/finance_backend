@@ -81,3 +81,5 @@ data class Login(val value: LocalDate) {
         fun of(year: Int, month: Int, day: Int) = Login(LocalDate.of(year, month, day))
     }
 }
+
+data class FrequencyQuantity(val value: Int)
