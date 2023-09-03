@@ -7,12 +7,8 @@ import domain.TransactionType
 import domain.TransactionType.BANK_TRANSFER
 import domain.TransactionType.INCOME
 import domain.TransactionType.PERSONAL_TRANSFER
-import http.model.BankTransfer
-import http.model.CreditDebit
-import http.model.Income
-import http.model.PersonalTransfer
 
-fun transactionFrom(transaction: CreditDebit, transactionType: TransactionType) = Transaction(
+fun transactionFrom(transaction: http.model.Transaction.CreditDebit, transactionType: TransactionType) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -22,7 +18,7 @@ fun transactionFrom(transaction: CreditDebit, transactionType: TransactionType) 
     quantity = transaction.quantity
 )
 
-fun transactionFrom(transaction: BankTransfer) = Transaction(
+fun transactionFrom(transaction: http.model.Transaction.BankTransfer) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -33,7 +29,7 @@ fun transactionFrom(transaction: BankTransfer) = Transaction(
     recipient = transaction.recipient
 )
 
-fun transactionFrom(transaction: PersonalTransfer) = Transaction(
+fun transactionFrom(transaction: http.model.Transaction.PersonalTransfer) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -45,7 +41,7 @@ fun transactionFrom(transaction: PersonalTransfer) = Transaction(
     inbound = transaction.inbound
 )
 
-fun transactionFrom(transaction: Income) = Transaction(
+fun transactionFrom(transaction: http.model.Transaction.Income) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,

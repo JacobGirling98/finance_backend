@@ -22,7 +22,7 @@ import http.handler.postIncomeHandler
 import http.handler.postIncomeListHandler
 import http.handler.postPersonalTransferHandler
 import http.handler.postPersonalTransferListHandler
-import http.model.TransactionConfirmation
+import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

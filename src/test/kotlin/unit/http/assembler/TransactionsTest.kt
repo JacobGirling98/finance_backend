@@ -13,10 +13,10 @@ import domain.Transaction
 import domain.TransactionType
 import domain.Value
 import http.assembler.transactionFrom
-import http.model.BankTransfer
-import http.model.CreditDebit
-import http.model.Income
-import http.model.PersonalTransfer
+import http.model.Transaction.BankTransfer
+import http.model.Transaction.CreditDebit
+import http.model.Transaction.Income
+import http.model.Transaction.PersonalTransfer
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import java.math.BigDecimal

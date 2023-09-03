@@ -13,7 +13,7 @@ import http.lense.incomeListLens
 import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.transactionConfirmationLens
-import http.model.TransactionConfirmation
+import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.NO_CONTENT

@@ -2,18 +2,40 @@ package http.handler
 
 import dao.Entity
 import domain.StandingOrder
-import http.lense.standingOrderLens
+import domain.TransactionType
+import http.assembler.standingOrderFrom
+import http.lense.bankTransferStandingOrderLens
+import http.lense.creditDebitStandingOrderLens
+import http.lense.incomeStandingOrderLens
+import http.lense.personalTransferStandingOrderLens
 import http.lense.standingOrderListLens
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.with
+import java.util.*
 
 fun getStandingOrdersHandler(standingOrders: () -> List<Entity<StandingOrder>>): HttpHandler = {
     Response(Status.OK).with(standingOrderListLens of standingOrders())
 }
 
-fun addStandingOrderHandler(addStandingOrder: (StandingOrder) -> Unit): HttpHandler = { request ->
-    addStandingOrder(standingOrderLens(request))
-    Response(Status.NO_CONTENT)
+fun postCreditDebitStandingOrderHandler(transactionType: TransactionType, addStandingOrder: (StandingOrder) -> UUID): HttpHandler = { request ->
+    addStandingOrder(standingOrderFrom(creditDebitStandingOrderLens(request), transactionType))
+    Response(NO_CONTENT)
+}
+
+fun postBankTransferStandingOrderHandler(addStandingOrder: (StandingOrder) -> UUID): HttpHandler = { request ->
+    addStandingOrder(standingOrderFrom(bankTransferStandingOrderLens(request)))
+    Response(NO_CONTENT)
+}
+
+fun postPersonalTransferStandingOrderHandler(addStandingOrder: (StandingOrder) -> UUID): HttpHandler = { request ->
+    addStandingOrder(standingOrderFrom(personalTransferStandingOrderLens(request)))
+    Response(NO_CONTENT)
+}
+
+fun postIncomeStandingOrderHandler(addStandingOrder: (StandingOrder) -> UUID): HttpHandler = { request ->
+    addStandingOrder(standingOrderFrom(incomeStandingOrderLens(request)))
+    Response(NO_CONTENT)
 }

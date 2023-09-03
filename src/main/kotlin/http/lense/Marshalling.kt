@@ -8,11 +8,11 @@ import domain.Headlines
 import domain.Login
 import domain.StandingOrder
 import domain.Transaction
-import http.model.BankTransfer
-import http.model.CreditDebit
-import http.model.Income
-import http.model.PersonalTransfer
-import http.model.TransactionConfirmation
+import http.model.Transaction.BankTransfer
+import http.model.Transaction.CreditDebit
+import http.model.Transaction.Income
+import http.model.Transaction.PersonalTransfer
+import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
 
@@ -49,3 +49,11 @@ val headlinesLens = biDiBodyLens<Headlines>()
 
 val standingOrderLens = biDiBodyLens<StandingOrder>()
 val standingOrderListLens = biDiBodyLens<List<Entity<StandingOrder>>>()
+
+val creditDebitStandingOrderLens = biDiBodyLens<http.model.StandingOrder.CreditDebit>()
+
+val bankTransferStandingOrderLens = biDiBodyLens<http.model.StandingOrder.BankTransfer>()
+
+val personalTransferStandingOrderLens = biDiBodyLens<http.model.StandingOrder.PersonalTransfer>()
+
+val incomeStandingOrderLens = biDiBodyLens<http.model.StandingOrder.Income>()

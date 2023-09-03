@@ -37,10 +37,10 @@ import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.startDateQuery
 import http.lense.transactionEntityListLens
-import http.model.BankTransfer
-import http.model.CreditDebit
-import http.model.Income
-import http.model.PersonalTransfer
+import http.model.Transaction.BankTransfer
+import http.model.Transaction.CreditDebit
+import http.model.Transaction.Income
+import http.model.Transaction.PersonalTransfer
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
