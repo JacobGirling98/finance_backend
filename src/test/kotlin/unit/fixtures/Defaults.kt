@@ -1,6 +1,13 @@
 package unit.fixtures
 
-import domain.*
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Quantity
+import domain.Recipient
+import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
 

@@ -4,26 +4,26 @@ import domain.DateRange
 import domain.EndDate
 import domain.StartDate
 import domain.Transaction
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.withADateOf
-import unit.fixtures.withADescriptionOf
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.Matcher
 import io.kotest.matchers.MatcherResult
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldNot
 import resource.filter
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.withADateOf
+import unit.fixtures.withADescriptionOf
 
 class TransactionFilterTest : FunSpec({
     test("can filter transactions") {
         val transactions = listOf(
             aDebitTransaction().withADescriptionOf("should be included").withADateOf(2020, 1, 10),
-            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 10),
+            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 10)
         )
 
         transactions.filter(
             DateRange(
-                StartDate.of(2020, 1, 1,),
+                StartDate.of(2020, 1, 1),
                 EndDate.of(2020, 2, 1)
             )
         )
@@ -34,12 +34,12 @@ class TransactionFilterTest : FunSpec({
     test("start date in inclusive") {
         val transactions = listOf(
             aDebitTransaction().withADescriptionOf("should be included").withADateOf(2020, 1, 1),
-            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 10),
+            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 10)
         )
 
         transactions.filter(
             DateRange(
-                StartDate.of(2020, 1, 1,),
+                StartDate.of(2020, 1, 1),
                 EndDate.of(2020, 2, 1)
             )
         )
@@ -50,12 +50,12 @@ class TransactionFilterTest : FunSpec({
     test("end date is exclusive") {
         val transactions = listOf(
             aDebitTransaction().withADescriptionOf("should be included").withADateOf(2020, 1, 10),
-            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 1),
+            aDebitTransaction().withADescriptionOf("should not be included").withADateOf(2020, 2, 1)
         )
 
         transactions.filter(
             DateRange(
-                StartDate.of(2020, 1, 1,),
+                StartDate.of(2020, 1, 1),
                 EndDate.of(2020, 2, 1)
             )
         )

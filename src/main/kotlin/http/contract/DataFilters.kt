@@ -1,5 +1,6 @@
 package http.contract
 
+import dao.Entity
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
@@ -7,7 +8,6 @@ import domain.Transaction
 import http.asTag
 import http.handler.dateRangeHandler
 import http.lense.dateRangeListLens
-import dao.Entity
 import org.http4k.contract.ContractRoute
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET

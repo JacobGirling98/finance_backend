@@ -23,7 +23,8 @@ private fun headlinesRoute(data: () -> List<Transaction>) = URL meta {
     queries += startDateQuery
     queries += endDateQuery
     returning(
-        OK, headlinesLens to Headlines(
+        OK,
+        headlinesLens to Headlines(
             Value.of(0.0),
             Value.of(0.0),
             Value.of(0.0),

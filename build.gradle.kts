@@ -1,9 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     kotlin("jvm") version "1.7.10"
     application
     id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
 }
 
 group = "jacob.finance"
@@ -59,25 +61,29 @@ application {
     mainClass.set("AppKt")
 }
 
-//val fatJar = task("fatJar", type = Jar::class) {
+// val fatJar = task("fatJar", type = Jar::class) {
 //    manifest {
 //        attributes["Main-Class"] = "AppKt"
 //    }
 //    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
 //    with(tasks.jar.get() as CopySpec)
-//}
+// }
 
-//tasks {
+// tasks {
 //    "build" {
 //        dependsOn(fatJar)
 //    }
-//}
+// }
 
 tasks.withType<Jar> {
 
     manifest {
         attributes["Main-Class"] = "AppKt"
     }
+}
 
-
+configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    reporters {
+        reporter(ReporterType.HTML)
+    }
 }

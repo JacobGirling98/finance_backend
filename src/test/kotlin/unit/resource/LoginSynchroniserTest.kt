@@ -1,12 +1,12 @@
 package unit.resource
 
+import dao.Database
+import dao.asEntity
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyAll
-import dao.Database
-import dao.asEntity
 import resource.LoginSynchroniser
 import java.time.LocalDate
 import java.util.*
@@ -57,7 +57,9 @@ class LoginSynchroniserTest : FunSpec({
 
     test("the oldest logins are deleted if there are more than 3 in the database") {
         every { database.selectAll() } returns listOf(
-            secondDay.asEntity(secondDayId), thirdDay.asEntity(thirdDayId), fourthDay.asEntity(fourthDayId)
+            secondDay.asEntity(secondDayId),
+            thirdDay.asEntity(thirdDayId),
+            fourthDay.asEntity(fourthDayId)
         )
         every { database.save(any<LocalDate>()) } returns UUID.randomUUID()
         every { database.delete(any()) } returns null
@@ -71,5 +73,4 @@ class LoginSynchroniserTest : FunSpec({
         }
         verify { database.delete(fourthDayId) }
     }
-
 })

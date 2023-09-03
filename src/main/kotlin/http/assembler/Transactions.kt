@@ -4,7 +4,9 @@ import domain.Outgoing
 import domain.Quantity
 import domain.Transaction
 import domain.TransactionType
-import domain.TransactionType.*
+import domain.TransactionType.BANK_TRANSFER
+import domain.TransactionType.INCOME
+import domain.TransactionType.PERSONAL_TRANSFER
 import http.model.BankTransfer
 import http.model.CreditDebit
 import http.model.Income

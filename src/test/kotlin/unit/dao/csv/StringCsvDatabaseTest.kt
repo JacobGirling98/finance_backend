@@ -1,8 +1,8 @@
 package unit.dao.csv
 
+import dao.csv.StringCsvDatabase
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import dao.csv.StringCsvDatabase
 import unit.matchers.shouldContainDomain
 import java.io.File
 import java.util.*
@@ -20,10 +20,12 @@ class StringCsvDatabaseTest : FunSpec({
     test("can read from a file") {
         val id = UUID.randomUUID()
 
-        file.writeText("""
+        file.writeText(
+            """
             id,value
             $id,testing
-        """.trimIndent())
+            """.trimIndent()
+        )
 
         database().selectAll() shouldContainDomain "testing"
     }

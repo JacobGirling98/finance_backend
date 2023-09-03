@@ -4,7 +4,15 @@ import domain.Transaction
 import domain.TransactionType
 import domain.totalValue
 import http.assembler.transactionFrom
-import http.lense.*
+import http.lense.bankTransferLens
+import http.lense.bankTransferListLens
+import http.lense.creditDebitLens
+import http.lense.creditDebitListLens
+import http.lense.incomeLens
+import http.lense.incomeListLens
+import http.lense.personalTransferLens
+import http.lense.personalTransferListLens
+import http.lense.transactionConfirmationLens
 import http.model.TransactionConfirmation
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response

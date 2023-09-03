@@ -1,6 +1,10 @@
 package unit.fixtures
 
-import domain.*
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Outgoing
+import domain.StandingOrder
+import domain.TransactionType
 
 fun aDebitStandingOrder() = StandingOrder(
     date,

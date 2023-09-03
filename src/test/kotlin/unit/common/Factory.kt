@@ -1,8 +1,21 @@
 package unit.common
 
 import dao.Entity
-import domain.*
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.StandingOrder
+import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -51,6 +64,6 @@ class Factory(
         recipient,
         inbound,
         outbound,
-        source,
+        source
     )
 }

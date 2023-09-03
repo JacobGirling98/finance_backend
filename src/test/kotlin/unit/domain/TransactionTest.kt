@@ -1,10 +1,10 @@
 package unit.domain
 
 import domain.totalValue
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.withAValueOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.withAValueOf
 
 class TransactionTest : DescribeSpec({
 

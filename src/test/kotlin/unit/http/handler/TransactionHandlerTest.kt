@@ -1,16 +1,33 @@
 package unit.http.handler
 
-import domain.*
+import dao.Database
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Transaction
+import domain.TransactionType
 import domain.TransactionType.DEBIT
-import http.handler.*
+import domain.Value
+import http.handler.postBankTransferHandler
+import http.handler.postBankTransferListHandler
+import http.handler.postCreditDebitHandler
+import http.handler.postCreditDebitListHandler
+import http.handler.postIncomeHandler
+import http.handler.postIncomeListHandler
+import http.handler.postPersonalTransferHandler
+import http.handler.postPersonalTransferListHandler
 import http.model.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import dao.Database
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
@@ -40,7 +57,7 @@ class TransactionHandlerTest : FunSpec({
                     "description": "Cake",
                     "quantity": 2
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -74,7 +91,7 @@ class TransactionHandlerTest : FunSpec({
                     "quantity": 1,
                     "recipient": "Friend"
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -109,7 +126,7 @@ class TransactionHandlerTest : FunSpec({
                     "outbound": "Current",
                     "inbound": "Savings"
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -144,7 +161,7 @@ class TransactionHandlerTest : FunSpec({
                     "description": "Cake",
                     "source": "Work"
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -187,7 +204,7 @@ class TransactionHandlerTest : FunSpec({
                         "quantity": 1
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -242,7 +259,7 @@ class TransactionHandlerTest : FunSpec({
                         "recipient": "Family"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -299,7 +316,7 @@ class TransactionHandlerTest : FunSpec({
                         "inbound": "Credit"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -357,7 +374,7 @@ class TransactionHandlerTest : FunSpec({
                         "source": "Work"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -413,7 +430,7 @@ class TransactionHandlerTest : FunSpec({
                         "quantity": 1
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -447,7 +464,7 @@ class TransactionHandlerTest : FunSpec({
                         "recipient": "Family"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -481,7 +498,7 @@ class TransactionHandlerTest : FunSpec({
                         "inbound": "Credit"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 
@@ -513,7 +530,7 @@ class TransactionHandlerTest : FunSpec({
                         "source": "Work"
                     }
                 ]
-            """.trimIndent()
+                """.trimIndent()
             )
         )
 

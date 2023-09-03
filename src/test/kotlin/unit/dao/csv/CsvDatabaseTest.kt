@@ -1,16 +1,15 @@
 package unit.dao.csv
 
+import dao.csv.CsvDatabase
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import dao.csv.CsvDatabase
-import unit.fixtures.TestDomain
+import unit.fixtures.Doubles.TestDomain
 import unit.matchers.shouldContainDomain
 import java.io.File
 import java.util.*
 import kotlin.time.Duration
 
 class CsvDatabaseTest : FunSpec({
-
 
     beforeEach {
         if (file.exists()) file.delete()
@@ -19,13 +18,12 @@ class CsvDatabaseTest : FunSpec({
 
     afterEach { if (file.exists()) file.delete() }
 
-
     test("data is read on construction") {
         file.writeText(
             """
             id,name,age
-            ${id},Jacob,24
-        """.trimIndent()
+            $id,Jacob,24
+            """.trimIndent()
         )
 
         database().selectAll() shouldContainDomain TestDomain("Jacob", 24)
@@ -41,7 +39,7 @@ class CsvDatabaseTest : FunSpec({
 
         file.readText() shouldBe """
             id,name,age
-            ${newId},Jacob,24
+            $newId,Jacob,24
         """.trimIndent()
     }
 })

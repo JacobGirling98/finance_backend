@@ -3,6 +3,6 @@ package unit
 import io.kotest.core.config.AbstractProjectConfig
 import io.kotest.core.spec.IsolationMode
 
-class ProjectConfig : AbstractProjectConfig() {
+class Config : AbstractProjectConfig() {
     override val isolationMode = IsolationMode.InstancePerTest
 }

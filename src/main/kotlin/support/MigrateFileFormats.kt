@@ -5,15 +5,28 @@ import config.properties
 import dao.csv.DescriptionMappingCsvDatabase
 import dao.csv.StandingOrderCsvDatabase
 import dao.csv.TransactionCsvDatabase
-import domain.*
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.DescriptionMapping
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.StandingOrder
+import domain.Transaction
+import domain.Value
+import domain.frequencyFrom
+import domain.transactionTypeFrom
 import java.io.File
 import java.time.LocalDate
 import java.util.*
 import kotlin.time.Duration
 
 fun txtToCsv(txtFile: String, csvFile: String) {
-
     val lines = File(txtFile).readLines()
 
     val headers = "id,value"
@@ -38,7 +51,7 @@ fun standingOrders() {
                 Quantity(it[12].toInt()),
                 if (it[8].isEmpty()) null else Recipient(it[8]),
                 if (it[7].isEmpty()) null else Inbound(it[7]),
-                if (it[6].isEmpty()) null else Outbound(it[6]),
+                if (it[6].isEmpty()) null else Outbound(it[6])
             )
         }
     }
@@ -68,7 +81,7 @@ fun transactions() {
                 if (it[6].isEmpty()) null else Recipient(it[6]),
                 if (it[5].isEmpty()) null else Inbound(it[5]),
                 if (it[4].isEmpty()) null else Outbound(it[4]),
-                if (it[7].isEmpty()) null else Source(it[7]),
+                if (it[7].isEmpty()) null else Source(it[7])
             )
         }
     }

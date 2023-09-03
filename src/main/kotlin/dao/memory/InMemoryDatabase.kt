@@ -1,9 +1,9 @@
 package dao.memory
 
-import exceptions.NotFoundException
 import dao.Database
 import dao.Entity
 import dao.entityOf
+import exceptions.NotFoundException
 import java.util.*
 
 open class InMemoryDatabase<Domain>(
@@ -29,5 +29,6 @@ open class InMemoryDatabase<Domain>(
 
     override fun delete(id: UUID): NotFoundException? = data.remove(id).asNullableNotFound(id)
 
-    private fun <T> T?.asNullableNotFound(id: UUID): NotFoundException? = if (this == null) NotFoundException(id) else null
+    private fun <T> T?.asNullableNotFound(id: UUID): NotFoundException? =
+        if (this == null) NotFoundException(id) else null
 }

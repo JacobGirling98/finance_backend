@@ -1,14 +1,13 @@
 package http.handler
 
+import dao.Entity
 import domain.StandingOrder
 import http.lense.standingOrderLens
 import http.lense.standingOrderListLens
-import dao.Entity
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.with
-
 
 fun getStandingOrdersHandler(standingOrders: () -> List<Entity<StandingOrder>>): HttpHandler = {
     Response(Status.OK).with(standingOrderListLens of standingOrders())

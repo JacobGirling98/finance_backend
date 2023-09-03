@@ -1,8 +1,8 @@
 package unit.dao.csv
 
+import dao.csv.DateCsvDatabase
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import dao.csv.DateCsvDatabase
 import unit.matchers.shouldContainDomain
 import java.io.File
 import java.time.LocalDate
@@ -21,10 +21,12 @@ class DateCsvDatabaseTest : FunSpec({
     test("can read from a file") {
         val id = UUID.randomUUID()
 
-        file.writeText("""
+        file.writeText(
+            """
             id,value
             $id,2020-01-01
-        """.trimIndent())
+            """.trimIndent()
+        )
 
         database().selectAll() shouldContainDomain LocalDate.of(2020, 1, 1)
     }
@@ -41,7 +43,6 @@ class DateCsvDatabaseTest : FunSpec({
             $id,2020-01-01
         """.trimIndent()
     }
-
 })
 
 private const val FILE_LOCATION = "test.csv"

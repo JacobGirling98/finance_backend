@@ -1,9 +1,23 @@
-
 import config.environmentVariables
 import config.logger
 import config.properties
-import dao.csv.*
-import http.contract.*
+import dao.csv.DescriptionMappingCsvDatabase
+import dao.csv.LoginCsvDatabase
+import dao.csv.StandingOrderCsvDatabase
+import dao.csv.StringCsvDatabase
+import dao.csv.TransactionCsvDatabase
+import http.contract.accountsContract
+import http.contract.addDescriptionsContract
+import http.contract.categoriesContract
+import http.contract.dateRangeContracts
+import http.contract.getDescriptionsContract
+import http.contract.gitContracts
+import http.contract.headlineContracts
+import http.contract.loginContracts
+import http.contract.payeesContract
+import http.contract.sourcesContract
+import http.contract.standingOrdersContract
+import http.contract.transactionContracts
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import http.git.GitClient
@@ -47,7 +61,6 @@ val loginSynchroniser = LoginSynchroniser(loginDatabase)
 
 val standingOrderProcessor = StandingOrderProcessor(standingOrderDatabase, transactionDatabase, LocalDate::now)
 
-
 val contracts = listOf(
     listOf(
         categoriesContract { categoryDatabase.selectAll() },
@@ -67,7 +80,7 @@ val contracts = listOf(
 
 val swaggerUi = swaggerUi(
     Uri.of("spec"),
-    title = "Finances API",
+    title = "Finances API"
 )
 
 val api = contract {

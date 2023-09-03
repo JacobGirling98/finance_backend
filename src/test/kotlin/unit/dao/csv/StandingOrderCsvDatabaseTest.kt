@@ -2,8 +2,18 @@ package unit.dao.csv
 
 import dao.asEntity
 import dao.csv.StandingOrderCsvDatabase
-import domain.*
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Recipient
+import domain.StandingOrder
+import domain.TransactionType
+import domain.Value
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
@@ -38,7 +48,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
             $creditUUID,2020-01-02,1,weekly,Food,1,Bananas,Credit,true,1,,,
             $bankTransferUUID,2020-01-03,1,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
             $personalTransferUUID,2020-01-04,2,weekly,Food,1,Bananas,Personal Transfer,false,1,,Savings,Current
-        """.trimIndent()
+            """.trimIndent()
         )
 
         database().selectAll() shouldContainExactlyInAnyOrder listOf(
@@ -105,9 +115,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
             $bankTransferId,2020-01-01,1,monthly,Food,1,Bananas,Bank Transfer,true,1,Parents,,
             $personalTransferId,2020-01-01,1,monthly,Food,1,Bananas,Personal Transfer,false,1,,inbound,outbound
         """.trimIndent()
-
     }
-
 })
 
 private const val FILE_LOCATION = "test.csv"

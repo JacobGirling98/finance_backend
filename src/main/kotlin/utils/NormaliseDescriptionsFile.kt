@@ -5,7 +5,6 @@ import config.properties
 import domain.DescriptionMapping
 import java.io.File
 
-
 fun main() {
     val json = CustomJackson.mapper.readValue(
         File("${properties.dataLocation}/description_mappings.json").readText(),

@@ -1,10 +1,10 @@
 package http.handler
 
+import dao.Entity
 import domain.DescriptionMapping
 import http.lense.descriptionEntitiesLens
 import http.lense.descriptionsLens
 import http.lense.referenceEntitiesLens
-import dao.Entity
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status

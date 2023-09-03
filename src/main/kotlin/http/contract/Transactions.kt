@@ -1,19 +1,46 @@
 package http.contract
 
-import domain.*
+import dao.Database
+import dao.Entity
+import dao.entityOf
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Transaction
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
+import domain.Value
 import http.asTag
-import http.handler.*
-import http.lense.*
+import http.handler.postBankTransferHandler
+import http.handler.postBankTransferListHandler
+import http.handler.postCreditDebitHandler
+import http.handler.postCreditDebitListHandler
+import http.handler.postIncomeHandler
+import http.handler.postIncomeListHandler
+import http.handler.postPersonalTransferHandler
+import http.handler.postPersonalTransferListHandler
+import http.handler.transactionsHandler
+import http.lense.bankTransferLens
+import http.lense.bankTransferListLens
+import http.lense.creditDebitLens
+import http.lense.creditDebitListLens
+import http.lense.endDateQuery
+import http.lense.incomeLens
+import http.lense.incomeListLens
+import http.lense.personalTransferLens
+import http.lense.personalTransferListLens
+import http.lense.startDateQuery
+import http.lense.transactionEntityListLens
 import http.model.BankTransfer
 import http.model.CreditDebit
 import http.model.Income
 import http.model.PersonalTransfer
-import dao.Database
-import dao.Entity
-import dao.entityOf
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -49,7 +76,8 @@ private fun getDataRoute(data: () -> List<Entity<Transaction>>) = BASE_URL meta 
     queries += startDateQuery
     queries += endDateQuery
     returning(
-        OK, transactionEntityListLens to listOf(
+        OK,
+        transactionEntityListLens to listOf(
             entityOf(
                 Transaction(
                     date = Date(LocalDate.of(2023, 1, 1)),
@@ -79,7 +107,7 @@ private fun creditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit" met
             Category("String"),
             Value(BigDecimal.ZERO),
             Description("String"),
-            Quantity(1),
+            Quantity(1)
         )
     )
     returning(Status.NO_CONTENT)
@@ -96,7 +124,7 @@ private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$
                 Category("String"),
                 Value(BigDecimal.ZERO),
                 Description("String"),
-                Quantity(1),
+                Quantity(1)
             )
         )
     )
@@ -113,7 +141,7 @@ private fun debitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" meta 
             Category("String"),
             Value(BigDecimal.ZERO),
             Description("String"),
-            Quantity(1),
+            Quantity(1)
         )
     )
 } bindContract POST to postCreditDebitHandler(DEBIT, save)
@@ -129,7 +157,7 @@ private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$M
                 Category("String"),
                 Value(BigDecimal.ZERO),
                 Description("String"),
-                Quantity(1),
+                Quantity(1)
             )
         )
     )

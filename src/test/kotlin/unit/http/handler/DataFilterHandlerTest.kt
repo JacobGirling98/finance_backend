@@ -1,6 +1,7 @@
 package unit.http.handler
 
 import config.CustomJackson
+import dao.Entity
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
@@ -8,7 +9,6 @@ import domain.Transaction
 import http.handler.dateRangeHandler
 import http.handler.transactionsHandler
 import io.kotest.core.spec.style.FunSpec
-import dao.Entity
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.kotest.shouldHaveBody
@@ -30,7 +30,7 @@ class DataFilterHandlerTest : FunSpec({
         val transactions = { dateRange: DateRange ->
             listOf(
                 entity { aDebitTransaction().withADateOf(dateRange.startDate.value) },
-                entity { aDebitTransaction().withADateOf(dateRange.endDate.value) },
+                entity { aDebitTransaction().withADateOf(dateRange.endDate.value) }
             )
         }
         val startDate = LocalDate.of(2020, 1, 1)
@@ -40,7 +40,6 @@ class DataFilterHandlerTest : FunSpec({
         val request = Request(Method.GET, "/").query("start", startDate.toString()).query("end", endDate.toString())
         handler(request) shouldHaveBody transactions.withDateRange(startDate, endDate).asJson()
     }
-
 })
 
 private fun <T> T.asJson(): String =

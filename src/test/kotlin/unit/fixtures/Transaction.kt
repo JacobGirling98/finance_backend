@@ -1,9 +1,18 @@
 package unit.fixtures
 
-import domain.*
-import domain.Date
-import domain.TransactionType.*
 import dao.Entity
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Outgoing
+import domain.Source
+import domain.Transaction
+import domain.TransactionType.BANK_TRANSFER
+import domain.TransactionType.CREDIT
+import domain.TransactionType.DEBIT
+import domain.TransactionType.INCOME
+import domain.TransactionType.PERSONAL_TRANSFER
+import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*

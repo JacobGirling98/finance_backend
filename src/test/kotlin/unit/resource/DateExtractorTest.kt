@@ -22,7 +22,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 1, 20) },
+                    entity { aDebitTransaction().withADateOf(2020, 1, 20) }
                 )
             }
 
@@ -38,7 +38,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    entity { aDebitTransaction().withADateOf(2020, 2, 20) }
                 )
             }
 
@@ -58,7 +58,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 12, 10) },
-                    entity { aDebitTransaction().withADateOf(2021, 1, 10) },
+                    entity { aDebitTransaction().withADateOf(2021, 1, 10) }
                 )
             }
 
@@ -78,7 +78,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 12, 10) },
-                    entity { aDebitTransaction().withADateOf(2021, 12, 10) },
+                    entity { aDebitTransaction().withADateOf(2021, 12, 10) }
                 )
             }
 
@@ -100,7 +100,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    entity { aDebitTransaction().withADateOf(2020, 2, 20) }
                 )
             }
 
@@ -117,7 +117,7 @@ class DateExtractorTest : DescribeSpec({
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 1, 10) },
                     entity { aDebitTransaction().withADateOf(2021, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2022, 3, 20) },
+                    entity { aDebitTransaction().withADateOf(2022, 3, 20) }
                 )
             }
 
@@ -142,7 +142,7 @@ class DateExtractorTest : DescribeSpec({
         it("single month with wages paid on the regular day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    entity { aWagesIncome().withADateOf(2020, 1, 15) }
                 )
             }
 
@@ -174,7 +174,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 15) },
+                    entity { aWagesIncome().withADateOf(2020, 2, 15) }
                 )
             }
 
@@ -214,7 +214,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 14) },
+                    entity { aWagesIncome().withADateOf(2020, 2, 14) }
                 )
             }
 
@@ -235,7 +235,7 @@ class DateExtractorTest : DescribeSpec({
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 1, 15) },
                     entity { aWagesIncome().withADateOf(2020, 2, 13) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 14) },
+                    entity { aWagesIncome().withADateOf(2020, 3, 14) }
                 )
             }
 
@@ -272,7 +272,7 @@ class DateExtractorTest : DescribeSpec({
                 DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
-                ),
+                )
             )
         }
 
@@ -297,7 +297,7 @@ class DateExtractorTest : DescribeSpec({
                 DateRange(
                     StartDate.of(2020, 3, 15),
                     EndDate.of(2020, 4, 15)
-                ),
+                )
             )
         }
 
@@ -318,7 +318,7 @@ class DateExtractorTest : DescribeSpec({
                 DateRange(
                     StartDate.of(2020, 3, 15),
                     EndDate.of(2020, 4, 15)
-                ),
+                )
             )
         }
 
@@ -326,7 +326,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 1, 14) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 13) },
+                    entity { aWagesIncome().withADateOf(2020, 3, 13) }
                 )
             }
 
@@ -350,7 +350,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 15) },
+                    entity { aDebitTransaction().withADateOf(2020, 2, 15) }
                 )
             }
 
@@ -362,7 +362,7 @@ class DateExtractorTest : DescribeSpec({
                 DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
-                ),
+                )
             )
         }
 
@@ -374,7 +374,7 @@ class DateExtractorTest : DescribeSpec({
                     entity { aWagesIncome().withADateOf(2020, 3, 14) },
                     entity { aWagesIncome().withADateOf(2020, 6, 13) },
                     entity { aDebitTransaction().withADateOf(2020, 7, 14) },
-                    entity { aDebitTransaction().withADateOf(2020, 7, 15) },
+                    entity { aDebitTransaction().withADateOf(2020, 7, 15) }
                 )
             }
 
@@ -402,7 +402,7 @@ class DateExtractorTest : DescribeSpec({
                 DateRange(
                     StartDate.of(2020, 7, 15),
                     EndDate.of(2020, 8, 15)
-                ),
+                )
             )
         }
     }
@@ -427,7 +427,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aDebitTransaction().withADateOf(2020, 5, 1) },
-                    entity { aDebitTransaction().withADateOf(2021, 6, 10) },
+                    entity { aDebitTransaction().withADateOf(2021, 6, 10) }
                 )
             }
 
@@ -447,7 +447,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 4, 14) },
-                    entity { aDebitTransaction().withADateOf(2020, 6, 10) },
+                    entity { aDebitTransaction().withADateOf(2020, 6, 10) }
                 )
             }
 
@@ -463,7 +463,7 @@ class DateExtractorTest : DescribeSpec({
             val transactions = {
                 listOf(
                     entity { aWagesIncome().withADateOf(2020, 4, 14) },
-                    entity { aWagesIncome().withADateOf(2021, 4, 13) },
+                    entity { aWagesIncome().withADateOf(2021, 4, 13) }
                 )
             }
 

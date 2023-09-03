@@ -1,6 +1,17 @@
 package unit.http.assembler
 
-import domain.*
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import http.assembler.transactionFrom
 import http.model.BankTransfer
 import http.model.CreditDebit
@@ -21,7 +32,8 @@ class TransactionsTest : FunSpec({
                 Value(BigDecimal("12.50")),
                 Description("Grapes"),
                 Quantity(1)
-            ), TransactionType.CREDIT
+            ),
+            TransactionType.CREDIT
         ) shouldBe Transaction(
             Date(LocalDate.MIN),
             Category("Food"),

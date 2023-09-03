@@ -1,13 +1,21 @@
 package http.model
 
-import domain.*
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Value
 
 data class CreditDebit(
     val date: Date,
     val category: Category,
     val value: Value,
     val description: Description,
-    val quantity: Quantity,
+    val quantity: Quantity
 )
 
 data class BankTransfer(

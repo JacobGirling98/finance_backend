@@ -17,5 +17,4 @@ class DescriptionMappingCsvDatabase(
     )
 
     override fun DescriptionMapping.toRow(): String = "${fullDescription.value},${shortDescription.value}"
-
 }

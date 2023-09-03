@@ -1,6 +1,5 @@
 package domain
 
-
 data class Transaction(
     val date: Date,
     val category: Category,
@@ -16,4 +15,3 @@ data class Transaction(
 )
 
 fun List<Transaction>.totalValue() = map { it.value.value }.reduce { total, value -> total.add(value) }.toFloat()
-

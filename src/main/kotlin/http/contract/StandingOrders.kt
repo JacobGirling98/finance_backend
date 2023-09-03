@@ -3,8 +3,19 @@ package http.contract
 import dao.Database
 import dao.Entity
 import dao.entityOf
-import domain.*
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.StandingOrder
+import domain.TransactionType
+import domain.Value
 import http.asTag
 import http.handler.addStandingOrderHandler
 import http.handler.getStandingOrdersHandler
@@ -30,17 +41,17 @@ private fun addStandingOrderContract(addStandingOrder: (StandingOrder) -> Unit) 
     tags += BASE_URL.asTag()
     receiving(
         standingOrderLens to
-                StandingOrder(
-                    Date(LocalDate.of(2023, 1, 1)),
-                    FrequencyQuantity(1),
-                    Frequency.MONTHLY,
-                    Category("Food"),
-                    Value.of(20.00),
-                    Description("Shopping"),
-                    TransactionType.DEBIT,
-                    Outgoing(true),
-                    Quantity(1),
-                )
+            StandingOrder(
+                Date(LocalDate.of(2023, 1, 1)),
+                FrequencyQuantity(1),
+                Frequency.MONTHLY,
+                Category("Food"),
+                Value.of(20.00),
+                Description("Shopping"),
+                TransactionType.DEBIT,
+                Outgoing(true),
+                Quantity(1)
+            )
     )
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to addStandingOrderHandler(addStandingOrder)
@@ -50,7 +61,8 @@ private fun getStandingOrdersContract(standingOrders: () -> List<Entity<Standing
     summary = "Interact with standing orders"
     tags += BASE_URL.asTag()
     returning(
-        Status.OK, standingOrderListLens to listOf(
+        Status.OK,
+        standingOrderListLens to listOf(
             entityOf(
                 StandingOrder(
                     Date(LocalDate.of(2023, 1, 1)),

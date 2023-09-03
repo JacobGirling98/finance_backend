@@ -1,12 +1,12 @@
 package unit.dao.memory
 
+import dao.Entity
+import dao.memory.InMemoryDatabase
 import exceptions.NotFoundException
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import dao.Entity
-import dao.memory.InMemoryDatabase
-import unit.fixtures.TestDomain
+import unit.fixtures.Doubles.TestDomain
 import unit.fixtures.asEntity
 import unit.matchers.shouldContainDomain
 import java.util.*
@@ -67,5 +67,3 @@ class InMemoryDatabaseTest : FunSpec({
         database.delete(id) shouldBe NotFoundException(id)
     }
 })
-
-

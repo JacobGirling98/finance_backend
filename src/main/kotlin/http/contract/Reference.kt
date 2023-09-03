@@ -1,5 +1,7 @@
 package http.contract
 
+import dao.Entity
+import dao.entityOf
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
@@ -10,8 +12,6 @@ import http.handler.referenceHandler
 import http.lense.descriptionEntitiesLens
 import http.lense.descriptionsLens
 import http.lense.referenceEntitiesLens
-import dao.Entity
-import dao.entityOf
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -21,7 +21,6 @@ import java.util.*
 private const val BASE_URL = "/reference"
 private val tag = BASE_URL.asTag()
 private val descriptionsTag = "$BASE_URL/descriptions".asTag()
-
 
 fun categoriesContract(getCategories: () -> List<Entity<String>>) = "$BASE_URL/categories" meta {
     operationId = "$BASE_URL/categories"
@@ -68,17 +67,18 @@ fun getDescriptionsContract(getDescriptions: () -> List<Entity<DescriptionMappin
     )
 } bindContract GET to descriptionsHandler(getDescriptions)
 
-fun addDescriptionsContract(saveDescriptions: (List<DescriptionMapping>) -> List<UUID>) = "$BASE_URL/descriptions/multiple" meta {
-    operationId = "$BASE_URL/descriptions/multiple"
-    summary = "Post a list of description mappings"
-    tags += descriptionsTag
-    receiving(
-        descriptionsLens to listOf(
-            DescriptionMapping(
-                FullDescription("String"),
-                ShortDescription("String")
+fun addDescriptionsContract(saveDescriptions: (List<DescriptionMapping>) -> List<UUID>) =
+    "$BASE_URL/descriptions/multiple" meta {
+        operationId = "$BASE_URL/descriptions/multiple"
+        summary = "Post a list of description mappings"
+        tags += descriptionsTag
+        receiving(
+            descriptionsLens to listOf(
+                DescriptionMapping(
+                    FullDescription("String"),
+                    ShortDescription("String")
+                )
             )
         )
-    )
-    returning(OK)
-} bindContract POST to postDescriptionsHandler(saveDescriptions)
+        returning(OK)
+    } bindContract POST to postDescriptionsHandler(saveDescriptions)

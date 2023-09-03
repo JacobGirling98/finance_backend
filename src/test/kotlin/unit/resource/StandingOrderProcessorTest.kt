@@ -1,9 +1,11 @@
 package unit.resource
 
-
 import dao.Database
-import domain.*
 import domain.Date
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.StandingOrder
+import domain.Transaction
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.mockk
 import io.mockk.verify
@@ -116,7 +118,11 @@ class StandingOrderProcessorTest : FunSpec({
 
     test("can handle different frequency quantities") {
         val factory = Factory(date = Date(monthBeforeNow), id = uuid, frequencyQuantity = FrequencyQuantity(2))
-        val expected = Factory(date = Date(monthBeforeNow.plusMonths(2)), id = uuid, frequencyQuantity = FrequencyQuantity(2)).standingOrderEntity()
+        val expected = Factory(
+            date = Date(monthBeforeNow.plusMonths(2)),
+            id = uuid,
+            frequencyQuantity = FrequencyQuantity(2)
+        ).standingOrderEntity()
 
         processor.process(factory.standingOrderEntity())
 

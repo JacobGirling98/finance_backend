@@ -1,6 +1,17 @@
 package dao.csv
 
-import domain.*
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Transaction
+import domain.Value
+import domain.transactionTypeFrom
 import kotlin.time.Duration
 
 class TransactionCsvDatabase(syncPeriod: Duration, fileLoc: String) : CsvDatabase<Transaction>(syncPeriod, fileLoc) {

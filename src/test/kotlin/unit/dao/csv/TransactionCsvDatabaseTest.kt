@@ -1,13 +1,26 @@
 package unit.dao.csv
 
-import domain.*
+import dao.asEntity
+import dao.csv.TransactionCsvDatabase
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Recipient
+import domain.Source
+import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.shouldBe
-import dao.asEntity
-import dao.csv.TransactionCsvDatabase
-import unit.fixtures.*
+import unit.fixtures.aBankTransferTransaction
+import unit.fixtures.aCreditTransaction
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.aPersonalTransferTransaction
+import unit.fixtures.aWagesIncome
 import java.io.File
 import java.time.LocalDate
 import java.util.*
@@ -37,7 +50,7 @@ class TransactionCsvDatabaseTest : FunSpec({
             $bankTransferUUID,2020-01-03,true,1,Bank Transfer,,,Parents,,Bananas,Food,1
             $personalTransferUUID,2020-01-04,false,1,Personal Transfer,Current,Savings,,,Bananas,Food,1
             $incomeUUID,2020-01-05,false,1,Income,,,,Work,Bananas,Food,1
-        """.trimIndent()
+            """.trimIndent()
         )
 
         database().selectAll() shouldContainExactlyInAnyOrder listOf(
@@ -107,9 +120,7 @@ class TransactionCsvDatabaseTest : FunSpec({
             $personalTransferId,2020-01-01,false,1,Personal Transfer,outbound,inbound,,,Bananas,Food,1
             $incomeId,2020-01-01,false,1,Income,,,,Work,Bananas,Wages,1
         """.trimIndent()
-
     }
-
 })
 
 private const val FILE_LOCATION = "test.csv"

@@ -1,11 +1,11 @@
 package unit.dao.csv
 
+import dao.csv.DescriptionMappingCsvDatabase
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import dao.csv.DescriptionMappingCsvDatabase
 import unit.matchers.shouldContainDomain
 import java.io.File
 import java.util.*
@@ -23,10 +23,12 @@ class DescriptionMappingCsvDatabaseTest : FunSpec({
     test("can read from a file") {
         val id = UUID.randomUUID()
 
-        file.writeText("""
+        file.writeText(
+            """
             id,full_description,short_description
             $id,lots of bananas,bananas
-        """.trimIndent())
+            """.trimIndent()
+        )
 
         database().selectAll() shouldContainDomain DescriptionMapping(
             FullDescription("lots of bananas"),
@@ -46,7 +48,6 @@ class DescriptionMappingCsvDatabaseTest : FunSpec({
             $id,lots of bananas,bananas
         """.trimIndent()
     }
-
 })
 
 private const val FILE_LOCATION = "test.csv"

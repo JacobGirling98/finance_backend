@@ -1,7 +1,11 @@
 package resource
 
-import domain.*
 import dao.Entity
+import domain.Date
+import domain.DateRange
+import domain.EndDate
+import domain.StartDate
+import domain.Transaction
 import java.time.LocalDate
 
 fun monthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
@@ -71,7 +75,9 @@ private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndD
 private fun previousDateRange(earliestDateRange: DateRange): DateRange =
     earliestDateRange.startDate.value.let { previousStart ->
         EndDate.of(
-            previousStart.year, previousStart.monthValue, previousStart.dayOfMonth
+            previousStart.year,
+            previousStart.monthValue,
+            previousStart.dayOfMonth
         ).let { endDate ->
             DateRange(
                 endDate.previousFiscalMonth(),
@@ -83,7 +89,9 @@ private fun previousDateRange(earliestDateRange: DateRange): DateRange =
 private fun nextDateRange(latestDateRange: DateRange): DateRange =
     latestDateRange.endDate.value.let { previousEnd ->
         StartDate.of(
-            previousEnd.year, previousEnd.monthValue, previousEnd.dayOfMonth,
+            previousEnd.year,
+            previousEnd.monthValue,
+            previousEnd.dayOfMonth
         ).let { startDate ->
             DateRange(
                 startDate,

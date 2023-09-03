@@ -2,8 +2,17 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Entity
-import domain.*
-import http.model.*
+import domain.DateRange
+import domain.DescriptionMapping
+import domain.Headlines
+import domain.Login
+import domain.StandingOrder
+import domain.Transaction
+import http.model.BankTransfer
+import http.model.CreditDebit
+import http.model.Income
+import http.model.PersonalTransfer
+import http.model.TransactionConfirmation
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
 

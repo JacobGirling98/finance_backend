@@ -10,13 +10,17 @@ import resource.incomeBetween
 import resource.netIncomeBetween
 import resource.savingsBetween
 import resource.spendingBetween
-import unit.fixtures.*
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.aPersonalTransferTransaction
+import unit.fixtures.aWagesIncome
+import unit.fixtures.withADateOf
+import unit.fixtures.withAValueOf
 
 class TransactionAnalyserTest : FunSpec({
     test("excludes inbound transactions") {
         val transactions = listOf(
             aDebitTransaction().withAValueOf(10.0).withADateOf(2021, 1, 1),
-            aWagesIncome().withAValueOf(10.0).withADateOf(2021, 2, 1),
+            aWagesIncome().withAValueOf(10.0).withADateOf(2021, 2, 1)
         )
         transactions.spendingBetween(
             DateRange(
@@ -59,7 +63,7 @@ class TransactionAnalyserTest : FunSpec({
         val transactions = listOf(
             aWagesIncome().withAValueOf(10.0).withADateOf(2021, 1, 1),
             aDebitTransaction().withAValueOf(15.0).withADateOf(2021, 2, 1),
-            aWagesIncome().withAValueOf(20.0).withADateOf(2021, 3, 1),
+            aWagesIncome().withAValueOf(20.0).withADateOf(2021, 3, 1)
         )
         transactions.incomeBetween(
             DateRange(
@@ -74,7 +78,7 @@ class TransactionAnalyserTest : FunSpec({
             aPersonalTransferTransaction().withAValueOf(10.0).withADateOf(2021, 1, 1),
             aPersonalTransferTransaction().withAValueOf(15.0).withADateOf(2021, 2, 1),
             aWagesIncome().withAValueOf(30.0).withADateOf(2021, 3, 1),
-            aDebitTransaction().withAValueOf(40.0).withADateOf(2021, 4, 1),
+            aDebitTransaction().withAValueOf(40.0).withADateOf(2021, 4, 1)
         )
         transactions.savingsBetween(
             DateRange(
@@ -87,7 +91,7 @@ class TransactionAnalyserTest : FunSpec({
     test("can calculate net income") {
         val transactions = listOf(
             aWagesIncome().withAValueOf(30.0).withADateOf(2021, 3, 1),
-            aDebitTransaction().withAValueOf(20.0).withADateOf(2021, 4, 1),
+            aDebitTransaction().withAValueOf(20.0).withADateOf(2021, 4, 1)
         )
         transactions.netIncomeBetween(
             DateRange(
@@ -101,7 +105,7 @@ class TransactionAnalyserTest : FunSpec({
         val transactions = listOf(
             aPersonalTransferTransaction().withAValueOf(30.0).withADateOf(2021, 2, 1),
             aWagesIncome().withAValueOf(30.0).withADateOf(2021, 3, 1),
-            aDebitTransaction().withAValueOf(20.0).withADateOf(2021, 4, 1),
+            aDebitTransaction().withAValueOf(20.0).withADateOf(2021, 4, 1)
         )
         transactions.netIncomeBetween(
             DateRange(
