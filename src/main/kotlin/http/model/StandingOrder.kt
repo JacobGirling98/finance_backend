@@ -14,7 +14,7 @@ import domain.Value
 
 object StandingOrder {
     data class CreditDebit(
-        val nextDate: Date,
+        val date: Date,
         val frequencyQuantity: FrequencyQuantity,
         val frequencyUnit: Frequency,
         val category: Category,
@@ -24,7 +24,7 @@ object StandingOrder {
     )
 
     data class BankTransfer(
-        val nextDate: Date,
+        val date: Date,
         val frequencyQuantity: FrequencyQuantity,
         val frequencyUnit: Frequency,
         val category: Category,
@@ -35,7 +35,7 @@ object StandingOrder {
     )
 
     data class PersonalTransfer(
-        val nextDate: Date,
+        val date: Date,
         val frequencyQuantity: FrequencyQuantity,
         val frequencyUnit: Frequency,
         val category: Category,
@@ -46,7 +46,7 @@ object StandingOrder {
     )
 
     data class Income(
-        val nextDate: Date,
+        val date: Date,
         val frequencyQuantity: FrequencyQuantity,
         val frequencyUnit: Frequency,
         val category: Category,

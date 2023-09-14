@@ -6,7 +6,7 @@ import domain.StandingOrder
 import domain.TransactionType
 
 fun standingOrderFrom(transaction: http.model.StandingOrder.CreditDebit, transactionType: TransactionType) = StandingOrder(
-    transaction.nextDate,
+    transaction.date,
     transaction.frequencyQuantity,
     transaction.frequencyUnit,
     transaction.category,
@@ -18,7 +18,7 @@ fun standingOrderFrom(transaction: http.model.StandingOrder.CreditDebit, transac
 )
 
 fun standingOrderFrom(transaction: http.model.StandingOrder.BankTransfer) = StandingOrder(
-    transaction.nextDate,
+    transaction.date,
     transaction.frequencyQuantity,
     transaction.frequencyUnit,
     transaction.category,
@@ -31,7 +31,7 @@ fun standingOrderFrom(transaction: http.model.StandingOrder.BankTransfer) = Stan
 )
 
 fun standingOrderFrom(transaction: http.model.StandingOrder.PersonalTransfer) = StandingOrder(
-    transaction.nextDate,
+    transaction.date,
     transaction.frequencyQuantity,
     transaction.frequencyUnit,
     transaction.category,
@@ -45,7 +45,7 @@ fun standingOrderFrom(transaction: http.model.StandingOrder.PersonalTransfer) = 
 )
 
 fun standingOrderFrom(transaction: http.model.StandingOrder.Income) = StandingOrder(
-    transaction.nextDate,
+    transaction.date,
     transaction.frequencyQuantity,
     transaction.frequencyUnit,
     transaction.category,
