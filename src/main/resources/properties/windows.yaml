@@ -1,4 +1,0 @@
-dataLocation: C:/Users/jakeg/Documents/FinanceV3/data/prod
-mongo:
-  uri: mongodb://localhost:27017
-  database: testFinance

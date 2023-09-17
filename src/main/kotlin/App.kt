@@ -1,3 +1,4 @@
+
 import config.environmentVariables
 import config.logger
 import config.properties
@@ -41,20 +42,19 @@ import resource.LoginSynchroniser
 import resource.StandingOrderProcessor
 import java.time.LocalDate
 import kotlin.time.Duration.Companion.hours
-import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 
-val accountDatabase = StringCsvDatabase(1.hours, "${properties.dataLocation}/accounts.csv")
-val categoryDatabase = StringCsvDatabase(1.hours, "${properties.dataLocation}/categories.csv")
-val incomeSourceDatabase = StringCsvDatabase(1.hours, "${properties.dataLocation}/income_sources.csv")
-val payeeDatabase = StringCsvDatabase(1.hours, "${properties.dataLocation}/payees.csv")
+val accountDatabase = StringCsvDatabase(properties.csv.account.sync.milliseconds, "${properties.dataLocation}/accounts.csv")
+val categoryDatabase = StringCsvDatabase(properties.csv.category.sync.milliseconds, "${properties.dataLocation}/categories.csv")
+val incomeSourceDatabase = StringCsvDatabase(properties.csv.incomeSource.sync.milliseconds, "${properties.dataLocation}/income_sources.csv")
+val payeeDatabase = StringCsvDatabase(properties.csv.payee.sync.milliseconds, "${properties.dataLocation}/payees.csv")
 
 val descriptionMappingDatabase =
-    DescriptionMappingCsvDatabase(10.minutes, "${properties.dataLocation}/description_mappings.csv")
+    DescriptionMappingCsvDatabase(properties.csv.descriptionMapping.sync.milliseconds, "${properties.dataLocation}/description_mappings.csv")
 
-val transactionDatabase = TransactionCsvDatabase(10.seconds, "${properties.dataLocation}/transactions.csv")
+val transactionDatabase = TransactionCsvDatabase(properties.csv.transaction.sync.milliseconds, "${properties.dataLocation}/transactions.csv")
 
-val standingOrderDatabase = StandingOrderCsvDatabase(10.seconds, "${properties.dataLocation}/standing_orders.csv")
+val standingOrderDatabase = StandingOrderCsvDatabase(properties.csv.standingOrder.sync.milliseconds, "${properties.dataLocation}/standing_orders.csv")
 
 val loginDatabase = LoginCsvDatabase(1.hours, "${properties.dataLocation}/logins.csv")
 val loginSynchroniser = LoginSynchroniser(loginDatabase)

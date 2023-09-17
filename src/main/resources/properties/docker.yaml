@@ -2,3 +2,21 @@ dataLocation: /app/data/prod
 mongo:
   uri: mongodb://192.168.0.53:27017
   database: finance
+
+csv:
+  descriptionMapping:
+    sync: 600000
+  login:
+    sync: 3600000
+  standingOrder:
+    sync: 10000
+  transaction:
+    sync: 10000
+  account:
+    sync: 3600000
+  category:
+    sync: 3600000
+  incomeSource:
+    sync: 3600000
+  payee:
+    sync: 3600000

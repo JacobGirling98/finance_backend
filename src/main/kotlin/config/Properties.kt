@@ -10,9 +10,25 @@ data class MongoProperties(
     val database: String
 )
 
+data class SyncProperties(
+    val sync: Long
+)
+
+data class CsvProperties(
+    val descriptionMapping: SyncProperties,
+    val login: SyncProperties,
+    val standingOrder: SyncProperties,
+    val transaction: SyncProperties,
+    val account: SyncProperties,
+    val category: SyncProperties,
+    val incomeSource: SyncProperties,
+    val payee: SyncProperties
+)
+
 data class Properties(
     val dataLocation: String,
-    val mongo: MongoProperties
+    val mongo: MongoProperties,
+    val csv: CsvProperties
 )
 
 fun readProperties(profile: String): Properties {

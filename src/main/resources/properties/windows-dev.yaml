@@ -1,4 +1,23 @@
 dataLocation: C:/Users/jakeg/Documents/FinanceV3/data/dev
+
 mongo:
   uri: mongodb://localhost:27017
   database: testFinance
+
+csv:
+  descriptionMapping:
+    sync: 60000
+  login:
+    sync: 60000
+  standingOrder:
+    sync: 60000
+  transaction:
+    sync: 60000
+  account:
+    sync: 60000
+  category:
+    sync: 60000
+  incomeSource:
+    sync: 60000
+  payee:
+    sync: 60000
