@@ -20,6 +20,8 @@ inline fun <reified T : Any> biDiBodyLens(): BiDiBodyLens<T> = Body.auto<T>().to
 
 inline fun <reified T : Any> entitiesBiDiBodyLens(): BiDiBodyLens<List<Entity<T>>> = biDiBodyLens<List<Entity<T>>>()
 
+fun <T> entityLens() = biDiBodyLens<Entity<T>>()
+
 val referenceEntitiesLens = entitiesBiDiBodyLens<String>()
 
 val descriptionsLens = biDiBodyLens<List<DescriptionMapping>>()
@@ -57,3 +59,11 @@ val bankTransferStandingOrderLens = biDiBodyLens<http.model.StandingOrder.BankTr
 val personalTransferStandingOrderLens = biDiBodyLens<http.model.StandingOrder.PersonalTransfer>()
 
 val incomeStandingOrderLens = biDiBodyLens<http.model.StandingOrder.Income>()
+
+val entityCreditDebitStandingOrderLens = entityLens<http.model.StandingOrder.CreditDebit>()
+
+val entityBankTransferStandingOrderLens = entityLens<http.model.StandingOrder.BankTransfer>()
+
+val entityPersonalTransferStandingOrderLens = entityLens<http.model.StandingOrder.PersonalTransfer>()
+
+val entityIncomeStandingOrderLens = entityLens<http.model.StandingOrder.Income>()

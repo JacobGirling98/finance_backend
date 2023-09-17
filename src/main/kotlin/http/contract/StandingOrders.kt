@@ -2,6 +2,7 @@ package http.contract
 
 import dao.Database
 import dao.Entity
+import dao.asRandomEntity
 import dao.entityOf
 import domain.Category
 import domain.Date
@@ -23,8 +24,16 @@ import http.handler.postBankTransferStandingOrderHandler
 import http.handler.postCreditDebitStandingOrderHandler
 import http.handler.postIncomeStandingOrderHandler
 import http.handler.postPersonalTransferStandingOrderHandler
+import http.handler.putBankTransferStandingOrderHandler
+import http.handler.putCreditDebitStandingOrderHandler
+import http.handler.putIncomeStandingOrderHandler
+import http.handler.putPersonalTransferStandingOrderHandler
 import http.lense.bankTransferStandingOrderLens
 import http.lense.creditDebitStandingOrderLens
+import http.lense.entityBankTransferStandingOrderLens
+import http.lense.entityCreditDebitStandingOrderLens
+import http.lense.entityIncomeStandingOrderLens
+import http.lense.entityPersonalTransferStandingOrderLens
 import http.lense.incomeStandingOrderLens
 import http.lense.personalTransferStandingOrderLens
 import http.lense.standingOrderListLens
@@ -40,21 +49,25 @@ import java.time.LocalDate
 import java.util.*
 
 private const val BASE_URL = "/standing-orders"
-private val tag = BASE_URL.asTag()
 
 fun standingOrdersContract(repository: Database<StandingOrder, UUID>) = listOf(
     getStandingOrdersContract { repository.selectAll() },
-    creditContract { repository.save(it) },
-    debitContract { repository.save(it) },
-    bankTransferContract { repository.save(it) },
-    personalTransferContract { repository.save(it) },
-    incomeContract { repository.save(it) }
+    postCreditContract { repository.save(it) },
+    postDebitContract { repository.save(it) },
+    postBankTransferContract { repository.save(it) },
+    postPersonalTransferContract { repository.save(it) },
+    postIncomeContract { repository.save(it) },
+    putCreditContract { repository.update(it) },
+    putDebitContract { repository.update(it) },
+    putBankTransferContract { repository.update(it) },
+    putPersonalTransferContract { repository.update(it) },
+    putIncomeContract { repository.update(it) }
 )
 
-private fun creditContract(save: (StandingOrder) -> UUID) = "$BASE_URL/credit" meta {
-    operationId = "$BASE_URL/credit"
-    summary = "Post a credit standing order"
-    tags += tag
+private fun postCreditContract(save: (StandingOrder) -> UUID) = "$BASE_URL/credit" meta {
+    operationId = "$BASE_URL/credit/post"
+    summary = "Add a credit standing order"
+    tags += "$BASE_URL/credit".asTag()
     receiving(
         creditDebitStandingOrderLens to CreditDebit(
             Date(LocalDate.of(2020, 1, 1)),
@@ -69,10 +82,28 @@ private fun creditContract(save: (StandingOrder) -> UUID) = "$BASE_URL/credit" m
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to postCreditDebitStandingOrderHandler(TransactionType.CREDIT, save)
 
-private fun debitContract(save: (StandingOrder) -> UUID) = "$BASE_URL/debit" meta {
-    operationId = "$BASE_URL/debit"
-    summary = "Post a debit transaction"
-    tags += tag
+private fun putCreditContract(save: (Entity<StandingOrder>) -> Unit) = "$BASE_URL/credit" meta {
+    operationId = "$BASE_URL/credit/put"
+    summary = "Update a credit standing order"
+    tags += "$BASE_URL/credit".asTag()
+    receiving(
+        entityCreditDebitStandingOrderLens to CreditDebit(
+            Date(LocalDate.of(2020, 1, 1)),
+            FrequencyQuantity(1),
+            Frequency.MONTHLY,
+            Category("String"),
+            Value(BigDecimal.ZERO),
+            Description("String"),
+            Quantity(1)
+        ).asRandomEntity()
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to putCreditDebitStandingOrderHandler(TransactionType.CREDIT, save)
+
+private fun postDebitContract(save: (StandingOrder) -> UUID) = "$BASE_URL/debit" meta {
+    operationId = "$BASE_URL/debit/post"
+    summary = "Add a debit transaction"
+    tags += "$BASE_URL/debit".asTag()
     receiving(
         creditDebitStandingOrderLens to CreditDebit(
             Date(LocalDate.of(2020, 1, 1)),
@@ -87,10 +118,28 @@ private fun debitContract(save: (StandingOrder) -> UUID) = "$BASE_URL/debit" met
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to postCreditDebitStandingOrderHandler(TransactionType.DEBIT, save)
 
-private fun bankTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL/bank-transfer" meta {
-    operationId = "$BASE_URL/bank-transfer"
-    summary = "Post a bank transfer standing order"
-    tags += tag
+private fun putDebitContract(save: (Entity<StandingOrder>) -> Unit) = "$BASE_URL/debit" meta {
+    operationId = "$BASE_URL/debit/put"
+    summary = "Update a debit standing order"
+    tags += "$BASE_URL/debit".asTag()
+    receiving(
+        entityCreditDebitStandingOrderLens to CreditDebit(
+            Date(LocalDate.of(2020, 1, 1)),
+            FrequencyQuantity(1),
+            Frequency.MONTHLY,
+            Category("String"),
+            Value(BigDecimal.ZERO),
+            Description("String"),
+            Quantity(1)
+        ).asRandomEntity()
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to putCreditDebitStandingOrderHandler(TransactionType.DEBIT, save)
+
+private fun postBankTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL/bank-transfer" meta {
+    operationId = "$BASE_URL/bank-transfer/post"
+    summary = "Add a bank transfer standing order"
+    tags += "$BASE_URL/bank-transfer".asTag()
     receiving(
         bankTransferStandingOrderLens to BankTransfer(
             Date(LocalDate.of(2020, 1, 1)),
@@ -106,10 +155,29 @@ private fun bankTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL/ban
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to postBankTransferStandingOrderHandler(save)
 
-private fun personalTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL/personal-transfer" meta {
-    operationId = "$BASE_URL/personal-transfer"
-    summary = "Post a personal transfer standing order"
-    tags += tag
+private fun putBankTransferContract(save: (Entity<StandingOrder>) -> Unit) = "$BASE_URL/bank-transfer" meta {
+    operationId = "$BASE_URL/bank-transfer/put"
+    summary = "Update a bank transfer standing order"
+    tags += "$BASE_URL/bank-transfer".asTag()
+    receiving(
+        entityBankTransferStandingOrderLens to BankTransfer(
+            Date(LocalDate.of(2020, 1, 1)),
+            FrequencyQuantity(1),
+            Frequency.MONTHLY,
+            Category("String"),
+            Value(BigDecimal.ZERO),
+            Description("String"),
+            Quantity(1),
+            Recipient("String")
+        ).asRandomEntity()
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to putBankTransferStandingOrderHandler(save)
+
+private fun postPersonalTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL/personal-transfer" meta {
+    operationId = "$BASE_URL/personal-transfer/post"
+    summary = "Add a personal transfer standing order"
+    tags += "$BASE_URL/personal-transfer".asTag()
     receiving(
         personalTransferStandingOrderLens to PersonalTransfer(
             Date(LocalDate.of(2020, 1, 1)),
@@ -125,10 +193,29 @@ private fun personalTransferContract(save: (StandingOrder) -> UUID) = "$BASE_URL
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to postPersonalTransferStandingOrderHandler(save)
 
-private fun incomeContract(save: (StandingOrder) -> UUID) = "$BASE_URL/income" meta {
-    operationId = "$BASE_URL/income"
-    summary = "Post an income standing order"
-    tags += tag
+private fun putPersonalTransferContract(save: (Entity<StandingOrder>) -> Unit) = "$BASE_URL/personal-transfer" meta {
+    operationId = "$BASE_URL/personal-transfer/put"
+    summary = "Update a personal transfer standing order"
+    tags += "$BASE_URL/personal-transfer".asTag()
+    receiving(
+        entityPersonalTransferStandingOrderLens to PersonalTransfer(
+            Date(LocalDate.of(2020, 1, 1)),
+            FrequencyQuantity(1),
+            Frequency.MONTHLY,
+            Category("String"),
+            Value(BigDecimal.ZERO),
+            Description("String"),
+            Outbound("String"),
+            Inbound("String")
+        ).asRandomEntity()
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to putPersonalTransferStandingOrderHandler(save)
+
+private fun postIncomeContract(save: (StandingOrder) -> UUID) = "$BASE_URL/income" meta {
+    operationId = "$BASE_URL/income/post"
+    summary = "Add an income standing order"
+    tags += "$BASE_URL/income".asTag()
     receiving(
         incomeStandingOrderLens to Income(
             Date(LocalDate.of(2020, 1, 1)),
@@ -142,6 +229,24 @@ private fun incomeContract(save: (StandingOrder) -> UUID) = "$BASE_URL/income" m
     )
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to postIncomeStandingOrderHandler(save)
+
+private fun putIncomeContract(save: (Entity<StandingOrder>) -> Unit) = "$BASE_URL/income" meta {
+    operationId = "$BASE_URL/income/put"
+    summary = "Update an income standing order"
+    tags += "$BASE_URL/income".asTag()
+    receiving(
+        entityIncomeStandingOrderLens to Income(
+            Date(LocalDate.of(2020, 1, 1)),
+            FrequencyQuantity(1),
+            Frequency.MONTHLY,
+            Category("String"),
+            Value(BigDecimal.ZERO),
+            Description("String"),
+            Source("String")
+        ).asRandomEntity()
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to putIncomeStandingOrderHandler(save)
 
 private fun getStandingOrdersContract(standingOrders: () -> List<Entity<StandingOrder>>) = BASE_URL meta {
     operationId = "Get all standing orders"

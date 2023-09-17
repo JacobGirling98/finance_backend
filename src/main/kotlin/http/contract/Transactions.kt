@@ -56,15 +56,15 @@ private val tag = BASE_URL.asTag()
 private val multipleTag = MULTIPLE_URL.asTag()
 
 fun transactionContracts(database: Database<Transaction, UUID>) = listOf(
-    creditContract { database.save(it) },
+    postCreditContract { database.save(it) },
     multipleCreditContract { database.save(it) },
-    debitContract { database.save(it) },
+    postDebitContract { database.save(it) },
     multipleDebitContract { database.save(it) },
-    bankTransferContract { database.save(it) },
+    postBankTransferContract { database.save(it) },
     multipleBankTransferContract { database.save(it) },
     personalTransferRouteContract { database.save(it) },
     multiplePersonalTransferContract { database.save(it) },
-    incomeContract { database.save(it) },
+    postIncomeContract { database.save(it) },
     multipleIncomeContract { database.save(it) },
     getDataRoute { database.selectAll() }
 )
@@ -97,7 +97,7 @@ private fun getDataRoute(data: () -> List<Entity<Transaction>>) = BASE_URL meta 
     )
 } bindContract GET to transactionsHandler { data() }
 
-private fun creditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit" meta {
+private fun postCreditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit" meta {
     operationId = "$BASE_URL/credit"
     summary = "Post a credit transaction"
     tags += tag
@@ -131,7 +131,7 @@ private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$
     returning(Status.NO_CONTENT)
 } bindContract POST to postCreditDebitListHandler(CREDIT, save)
 
-private fun debitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" meta {
+private fun postDebitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" meta {
     operationId = "$BASE_URL/debit"
     summary = "Post a debit transaction"
     tags += tag
@@ -163,7 +163,7 @@ private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$M
     )
 } bindContract POST to postCreditDebitListHandler(DEBIT, save)
 
-private fun bankTransferContract(save: (Transaction) -> UUID) = "$BASE_URL/bank-transfer" meta {
+private fun postBankTransferContract(save: (Transaction) -> UUID) = "$BASE_URL/bank-transfer" meta {
     operationId = "$BASE_URL/bank-transfer"
     summary = "Post a bank transfer transaction"
     tags += tag
@@ -234,7 +234,7 @@ private fun multiplePersonalTransferContract(save: (List<Transaction>) -> List<U
         )
     } bindContract POST to postPersonalTransferListHandler(save)
 
-private fun incomeContract(save: (Transaction) -> UUID) = "$BASE_URL/income" meta {
+private fun postIncomeContract(save: (Transaction) -> UUID) = "$BASE_URL/income" meta {
     operationId = "$BASE_URL/income"
     summary = "Post an income transaction"
     tags += tag
