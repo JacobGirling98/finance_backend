@@ -2,6 +2,7 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Entity
+import domain.Date
 import domain.DateRange
 import domain.DescriptionMapping
 import domain.Headlines
@@ -65,3 +66,5 @@ val entityBankTransferStandingOrderLens = biDiBodyLens<Entity<http.model.Standin
 val entityPersonalTransferStandingOrderLens = biDiBodyLens<Entity<http.model.StandingOrder.PersonalTransfer>>()
 
 val entityIncomeStandingOrderLens = biDiBodyLens<Entity<http.model.StandingOrder.Income>>()
+
+val dateLens = biDiBodyLens<Date>()

@@ -14,6 +14,7 @@ import http.contract.dateRangeContracts
 import http.contract.getDescriptionsContract
 import http.contract.gitContracts
 import http.contract.headlineContracts
+import http.contract.lastTransactionContract
 import http.contract.loginContracts
 import http.contract.payeesContract
 import http.contract.sourcesContract
@@ -40,6 +41,7 @@ import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 import resource.LoginSynchroniser
 import resource.StandingOrderProcessor
+import resource.mostRecent
 import java.time.LocalDate
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -75,7 +77,8 @@ val contracts = listOf(
     gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dateRangeContracts { transactionDatabase.selectAll() },
     headlineContracts { transactionDatabase.selectAll().map { it.domain } },
-    standingOrdersContract(standingOrderDatabase)
+    standingOrdersContract(standingOrderDatabase),
+    lastTransactionContract { transactionDatabase.selectAll().map { it.domain }.mostRecent() }
 )
 
 val swaggerUi = swaggerUi(

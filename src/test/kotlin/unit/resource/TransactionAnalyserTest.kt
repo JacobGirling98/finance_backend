@@ -1,5 +1,6 @@
 package unit.resource
 
+import domain.Date
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
@@ -7,6 +8,7 @@ import domain.Value
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import resource.incomeBetween
+import resource.mostRecent
 import resource.netIncomeBetween
 import resource.savingsBetween
 import resource.spendingBetween
@@ -15,6 +17,7 @@ import unit.fixtures.aPersonalTransferTransaction
 import unit.fixtures.aWagesIncome
 import unit.fixtures.withADateOf
 import unit.fixtures.withAValueOf
+import java.time.LocalDate
 
 class TransactionAnalyserTest : FunSpec({
     test("excludes inbound transactions") {
@@ -113,5 +116,14 @@ class TransactionAnalyserTest : FunSpec({
                 EndDate.of(2022, 1, 1)
             )
         ) shouldBe Value.of(10.0)
+    }
+
+    test("can get most recent transaction") {
+        val transactions = listOf(
+            aDebitTransaction().withADateOf(LocalDate.of(2023, 1, 1)),
+            aDebitTransaction().withADateOf(LocalDate.of(2023, 3, 1)),
+            aDebitTransaction().withADateOf(LocalDate.of(2023, 2, 1))
+        )
+        transactions.mostRecent() shouldBe Date(LocalDate.of(2023, 3, 1))
     }
 })

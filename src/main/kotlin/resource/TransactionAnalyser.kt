@@ -1,5 +1,6 @@
 package resource
 
+import domain.Date
 import domain.DateRange
 import domain.Transaction
 import domain.TransactionType
@@ -14,6 +15,8 @@ fun List<Transaction>.savingsBetween(dates: DateRange): Value =
 
 fun List<Transaction>.netIncomeBetween(dates: DateRange): Value =
     this.incomeBetween(dates) - this.spendingBetween(dates)
+
+fun List<Transaction>.mostRecent(): Date? = maxByOrNull { it.date.value }?.date
 
 private fun List<Transaction>.valueBetween(dates: DateRange, predicate: (_: Transaction) -> Boolean): Value =
     filter(dates).filter { predicate(it) }.map { it.value }.reduce { acc, value -> acc + value }
