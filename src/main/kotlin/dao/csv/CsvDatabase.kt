@@ -2,6 +2,8 @@ package dao.csv
 
 import dao.Entity
 import dao.memory.InMemoryDatabase
+import http.google.MimeType
+import http.google.Synchronisable
 import java.io.File
 import java.time.LocalDate
 import java.util.*
@@ -10,10 +12,11 @@ import kotlin.time.Duration
 
 abstract class CsvDatabase<Domain>(
     private val syncPeriod: Duration,
-    fileLoc: String
-) : InMemoryDatabase<Domain>() {
+    fileName: String
+) : InMemoryDatabase<Domain>(), Synchronisable {
 
-    private val file = File(fileLoc)
+    private val file = File(fileName)
+
     private lateinit var columns: List<String>
 
     init {
@@ -24,7 +27,20 @@ abstract class CsvDatabase<Domain>(
     protected abstract fun headers(): String
 
     protected abstract fun Domain.toRow(): String
+
     protected abstract fun domainFromCommaSeparatedList(row: List<String>): Domain
+
+    override fun latestFile(): File {
+        flush()
+        return file
+    }
+
+    override fun overwrite(data: String) {
+        this.data = data.split("\n").drop(1).map { readRow(it) }.associate { it.id to it.domain }.toMutableMap()
+        flush()
+    }
+
+    override val mimeType: MimeType = MimeType.TEXT_CSV
 
     fun indexOfColumn(column: String) =
         columns.indexOf(column)
@@ -42,7 +58,7 @@ abstract class CsvDatabase<Domain>(
     private fun loadDataFromFile() {
         val lines = file.readLines()
         columns = lines.first().split(",")
-        super.data = lines
+        this.data = lines
             .drop(1)
             .map { readRow(it) }
             .associate { it.id to it.domain }

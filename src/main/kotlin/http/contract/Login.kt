@@ -19,7 +19,7 @@ fun loginContracts(lastLogin: () -> LocalDate?) = listOf(
     lastLoginRoute(lastLogin)
 )
 
-fun lastTransactionContract(lastTransaction: () -> Date?) = listOf(
+fun lastTransactionContracts(lastTransaction: () -> Date?) = listOf(
     lastTransactionRoute(lastTransaction)
 )
 

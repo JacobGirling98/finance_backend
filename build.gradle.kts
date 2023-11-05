@@ -32,6 +32,11 @@ dependencies {
 
     implementation("org.mongodb:mongodb-driver-sync:4.9.1")
 
+    implementation("com.google.api-client:google-api-client:2.2.0")
+    implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
+    implementation("com.google.api-client:google-api-client-jackson2:1.20.0")
+    implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+
     testImplementation(kotlin("test"))
     testImplementation("org.http4k:http4k-testing-kotest")
     testImplementation("io.kotest:kotest-runner-junit5:5.6.2")

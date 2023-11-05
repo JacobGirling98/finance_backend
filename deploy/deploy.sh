@@ -16,4 +16,4 @@ finance_dir=/home/jacobg/Programming/finance
 
 ssh pi "cd $finance_dir && docker load < backend.tar.gz"
 
-./start-container.sh
+./install-on-pi.sh

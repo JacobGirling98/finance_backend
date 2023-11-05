@@ -25,10 +25,16 @@ data class CsvProperties(
     val payee: SyncProperties
 )
 
+data class Google(
+    val credentialsFile: String
+)
+
 data class Properties(
     val dataLocation: String,
     val mongo: MongoProperties,
-    val csv: CsvProperties
+    val csv: CsvProperties,
+    val appMode: AppMode,
+    val google: Google
 )
 
 fun readProperties(profile: String): Properties {

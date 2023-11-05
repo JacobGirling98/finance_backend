@@ -50,7 +50,7 @@ import java.util.*
 
 private const val BASE_URL = "/standing-orders"
 
-fun standingOrdersContract(repository: Database<StandingOrder, UUID>) = listOf(
+fun standingOrdersContracts(repository: Database<StandingOrder, UUID>) = listOf(
     getStandingOrdersContract { repository.selectAll() },
     postCreditContract { repository.save(it) },
     postDebitContract { repository.save(it) },

@@ -17,3 +17,5 @@ csv:
     sync: 60000
   payee:
     sync: 60000
+
+appMode: PROD

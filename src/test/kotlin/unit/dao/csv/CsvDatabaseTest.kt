@@ -42,6 +42,20 @@ class CsvDatabaseTest : FunSpec({
             $newId,Jacob,24
         """.trimIndent()
     }
+
+    test("can overwrite file") {
+        file.writeText("id,name,age")
+        val overwrittenContents = """
+            id,name,age
+            ${UUID.randomUUID()},Jacob,24
+        """.trimIndent()
+
+        val database = database()
+
+        database.overwrite(overwrittenContents)
+
+        file.readText() shouldBe overwrittenContents
+    }
 })
 
 private const val FILE_LOCATION = "test.csv"

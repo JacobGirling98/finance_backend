@@ -20,3 +20,8 @@ csv:
     sync: 3600000
   payee:
     sync: 3600000
+
+appMode: PROD
+
+google:
+  credentialsFile: /app/config/finance-app-403218-7a3d0a952f8c.json

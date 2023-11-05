@@ -21,3 +21,8 @@ csv:
     sync: 60000
   payee:
     sync: 60000
+
+appMode: DEV
+
+google:
+  credentialsFile: C:\Users\jakeg\Documents\FinanceV3\google-credentials\finance-app-403218-7a3d0a952f8c.json
