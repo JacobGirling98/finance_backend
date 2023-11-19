@@ -13,4 +13,6 @@ data class StandingOrder(
     val recipient: Recipient? = null,
     val inbound: Inbound? = null,
     val outbound: Outbound? = null
-)
+) : Comparable<StandingOrder> {
+    override fun compareTo(other: StandingOrder): Int = nextDate.value.compareTo(other.nextDate.value)
+}

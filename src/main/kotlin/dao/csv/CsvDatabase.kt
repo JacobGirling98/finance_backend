@@ -10,7 +10,7 @@ import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.time.Duration
 
-abstract class CsvDatabase<Domain>(
+abstract class CsvDatabase<Domain : Comparable<Domain>>(
     private val syncPeriod: Duration,
     fileName: String
 ) : InMemoryDatabase<Domain>(), Synchronisable {

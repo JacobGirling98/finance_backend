@@ -6,7 +6,7 @@ import dao.entityOf
 import exceptions.NotFoundException
 import java.util.*
 
-open class InMemoryDatabase<Domain>(
+open class InMemoryDatabase<Domain : Comparable<Domain>>(
     initialData: List<Entity<Domain>> = emptyList()
 ) : Database<Domain, UUID> {
 
@@ -22,7 +22,7 @@ open class InMemoryDatabase<Domain>(
 
     override fun findById(id: UUID): Entity<Domain>? = data[id]?.let { Entity(id, it) }
 
-    override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }
+    override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }.sortedBy { it.domain }
 
     override fun update(entity: Entity<Domain>): NotFoundException? =
         data.replace(entity.id, entity.domain).asNullableNotFound(entity.id)

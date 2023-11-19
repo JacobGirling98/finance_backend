@@ -114,7 +114,7 @@ fun addSourceContact(addSource: (String) -> UUID) = "$BASE_URL/sources" meta {
     returning(NO_CONTENT)
 } bindContract POST to addTextTypeHandler(addSource)
 
-fun addPayeesContact(addPayee: (String) -> UUID) = "$BASE_URL/payee" meta {
+fun addPayeesContact(addPayee: (String) -> UUID) = "$BASE_URL/payees" meta {
     operationId = "$BASE_URL/payees/post"
     summary = "Add a new payee"
     tags += payeesTag

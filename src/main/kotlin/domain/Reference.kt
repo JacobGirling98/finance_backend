@@ -11,4 +11,7 @@ data class ShortDescription(
 data class DescriptionMapping(
     val fullDescription: FullDescription,
     val shortDescription: ShortDescription
-)
+) : Comparable<DescriptionMapping> {
+    override fun compareTo(other: DescriptionMapping): Int =
+        fullDescription.value.compareTo(other.fullDescription.value)
+}

@@ -2,7 +2,7 @@ package dao
 
 import exceptions.DatabaseException
 
-interface Database<Domain, Id> {
+interface Database<Domain : Comparable<Domain>, Id> {
     fun save(domain: Domain): Id
     fun save(domains: List<Domain>): List<Id>
     fun findById(id: Id): Entity<Domain>?
