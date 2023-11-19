@@ -13,7 +13,7 @@ import http.handler.referenceHandler
 import http.lense.descriptionEntitiesLens
 import http.lense.descriptionsLens
 import http.lense.referenceEntitiesLens
-import http.lense.stringLens
+import http.lense.stringListLens
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
@@ -90,34 +90,34 @@ fun addDescriptionsContract(saveDescriptions: (List<DescriptionMapping>) -> List
         returning(OK)
     } bindContract POST to postDescriptionsHandler(saveDescriptions)
 
-fun addCategoryContact(addCategory: (String) -> UUID) = "$BASE_URL/categories" meta {
+fun addCategoryContact(addCategory: (List<String>) -> List<UUID>) = "$BASE_URL/categories" meta {
     operationId = "$BASE_URL/categories/post"
     summary = "Add a new category"
     tags += categoriesTag
-    receiving(stringLens to "Category")
+    receiving(stringListLens to listOf("Category"))
     returning(NO_CONTENT)
 } bindContract POST to addTextTypeHandler(addCategory)
 
-fun addAccountContact(addAccount: (String) -> UUID) = "$BASE_URL/accounts" meta {
+fun addAccountContact(addAccount: (List<String>) -> List<UUID>) = "$BASE_URL/accounts" meta {
     operationId = "$BASE_URL/accounts/post"
-    summary = "Add a new account"
+    summary = "Add new accounts"
     tags += accountsTag
-    receiving(stringLens to "Account")
+    receiving(stringListLens to listOf("Account"))
     returning(NO_CONTENT)
 } bindContract POST to addTextTypeHandler(addAccount)
 
-fun addSourceContact(addSource: (String) -> UUID) = "$BASE_URL/sources" meta {
+fun addSourceContact(addSource: (List<String>) -> List<UUID>) = "$BASE_URL/sources" meta {
     operationId = "$BASE_URL/sources/post"
-    summary = "Add a new source"
+    summary = "Add new sources"
     tags += sourcesTag
-    receiving(stringLens to "Source")
+    receiving(stringListLens to listOf("Source"))
     returning(NO_CONTENT)
 } bindContract POST to addTextTypeHandler(addSource)
 
-fun addPayeesContact(addPayee: (String) -> UUID) = "$BASE_URL/payees" meta {
+fun addPayeesContact(addPayee: (List<String>) -> List<UUID>) = "$BASE_URL/payees" meta {
     operationId = "$BASE_URL/payees/post"
-    summary = "Add a new payee"
+    summary = "Add new payees"
     tags += payeesTag
-    receiving(stringLens to "Payees")
+    receiving(stringListLens to listOf("Payees"))
     returning(NO_CONTENT)
 } bindContract POST to addTextTypeHandler(addPayee)
