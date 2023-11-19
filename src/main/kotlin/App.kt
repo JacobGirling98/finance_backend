@@ -1,3 +1,4 @@
+
 import config.environmentVariables
 import config.logger
 import config.properties
@@ -6,18 +7,22 @@ import dao.csv.LoginCsvDatabase
 import dao.csv.StandingOrderCsvDatabase
 import dao.csv.StringCsvDatabase
 import dao.csv.TransactionCsvDatabase
-import http.contract.accountsContract
+import http.contract.addAccountContact
+import http.contract.addCategoryContact
 import http.contract.addDescriptionsContract
-import http.contract.categoriesContract
+import http.contract.addPayeesContact
+import http.contract.addSourceContact
 import http.contract.dateRangeContracts
+import http.contract.getAccountsContract
+import http.contract.getCategoriesContract
 import http.contract.getDescriptionsContract
+import http.contract.getPayeesContract
+import http.contract.getSourcesContract
 import http.contract.gitContracts
 import http.contract.googleBackupContracts
 import http.contract.headlineContracts
 import http.contract.lastTransactionContracts
 import http.contract.loginContracts
-import http.contract.payeesContract
-import http.contract.sourcesContract
 import http.contract.standingOrdersContracts
 import http.contract.transactionContracts
 import http.filter.lastLoginFilter
@@ -81,17 +86,25 @@ val synchronisableDatabases: List<Synchronisable> = listOf(
     descriptionMappingDatabase,
     transactionDatabase,
     standingOrderDatabase,
-    loginDatabase
+    loginDatabase,
+    accountDatabase,
+    categoryDatabase,
+    payeeDatabase,
+    incomeSourceDatabase
 )
 
 val contracts = listOf(
     listOf(
-        categoriesContract { categoryDatabase.selectAll() },
-        accountsContract { accountDatabase.selectAll() },
-        sourcesContract { incomeSourceDatabase.selectAll() },
-        payeesContract { payeeDatabase.selectAll() },
+        getCategoriesContract { categoryDatabase.selectAll() },
+        getAccountsContract { accountDatabase.selectAll() },
+        getSourcesContract { incomeSourceDatabase.selectAll() },
+        getPayeesContract { payeeDatabase.selectAll() },
         getDescriptionsContract { descriptionMappingDatabase.selectAll() },
-        addDescriptionsContract { descriptionMappingDatabase.save(it) }
+        addDescriptionsContract { descriptionMappingDatabase.save(it) },
+        addCategoryContact { categoryDatabase.save(it) },
+        addAccountContact { accountDatabase.save(it) },
+        addSourceContact { incomeSourceDatabase.save(it) },
+        addPayeesContact { payeeDatabase.save(it) }
     ),
     transactionContracts(transactionDatabase),
     loginContracts { loginDatabase.lastLogin() },

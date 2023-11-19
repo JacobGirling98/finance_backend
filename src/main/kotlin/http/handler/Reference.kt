@@ -5,6 +5,7 @@ import domain.DescriptionMapping
 import http.lense.descriptionEntitiesLens
 import http.lense.descriptionsLens
 import http.lense.referenceEntitiesLens
+import http.lense.stringLens
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -22,4 +23,9 @@ fun descriptionsHandler(getDescriptions: () -> List<Entity<DescriptionMapping>>)
 fun postDescriptionsHandler(save: (descriptions: List<DescriptionMapping>) -> List<UUID>): HttpHandler = { request ->
     save(descriptionsLens.extract(request))
     Response(Status.OK)
+}
+
+fun addTextTypeHandler(save: (String) -> UUID): HttpHandler = { request ->
+    save(stringLens.extract(request))
+    Response(Status.NO_CONTENT)
 }

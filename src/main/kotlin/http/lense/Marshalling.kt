@@ -68,3 +68,5 @@ val entityPersonalTransferStandingOrderLens = biDiBodyLens<Entity<http.model.Sta
 val entityIncomeStandingOrderLens = biDiBodyLens<Entity<http.model.StandingOrder.Income>>()
 
 val dateLens = biDiBodyLens<Date>()
+
+val stringLens = biDiBodyLens<String>()
