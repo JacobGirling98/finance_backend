@@ -4,6 +4,7 @@ import dao.Entity
 import dao.memory.InMemoryDatabase
 import exceptions.NotFoundException
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import unit.fixtures.Doubles.TestDomain
@@ -65,5 +66,80 @@ class InMemoryDatabaseTest : FunSpec({
     test("deleting an entity that doesn't exist returns a NotFoundException") {
         val id = UUID.randomUUID()
         database.delete(id) shouldBe NotFoundException(id)
+    }
+
+    context("pagination") {
+        test("can get a subset of the data") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(1, 5)
+
+            page.data shouldHaveSize 5
+            page.data.map { it.domain.age } shouldBe listOf(0, 1, 2, 3, 4)
+        }
+
+        test("can get next subset of the data") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(2, 5)
+
+            page.data shouldHaveSize 5
+            page.data.map { it.domain.age } shouldBe listOf(5, 6, 7, 8, 9)
+        }
+
+        test("can get all data if page size exceeds data") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(1, 25)
+
+            page.data shouldHaveSize 21
+        }
+
+        test("final page may not contain full page size") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(5, 5)
+
+            page.data shouldHaveSize 1
+        }
+
+        test("first page metadata is correct") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(1, 5)
+
+            page.pageSize shouldBe 5
+            page.pageNumber shouldBe 1
+            page.hasNextPage shouldBe true
+            page.hasPreviousPage shouldBe false
+            page.totalElements shouldBe 21
+            page.totalPages shouldBe 5
+        }
+
+        test("middle page metadata is correct") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(2, 5)
+
+            page.pageSize shouldBe 5
+            page.pageNumber shouldBe 2
+            page.hasNextPage shouldBe true
+            page.hasPreviousPage shouldBe true
+            page.totalElements shouldBe 21
+            page.totalPages shouldBe 5
+        }
+
+        test("final page metadata is correct") {
+            database.save((0..20).map { TestDomain("Jacob", it) })
+
+            val page = database.selectAll(5, 5)
+
+            page.pageSize shouldBe 1
+            page.pageNumber shouldBe 5
+            page.hasNextPage shouldBe false
+            page.hasPreviousPage shouldBe true
+            page.totalElements shouldBe 21
+            page.totalPages shouldBe 5
+        }
     }
 })

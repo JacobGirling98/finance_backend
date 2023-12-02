@@ -2,9 +2,11 @@ package dao.memory
 
 import dao.Database
 import dao.Entity
+import dao.Page
 import dao.entityOf
 import exceptions.NotFoundException
 import java.util.*
+import kotlin.math.ceil
 
 open class InMemoryDatabase<Domain : Comparable<Domain>>(
     initialData: List<Entity<Domain>> = emptyList()
@@ -24,6 +26,21 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }.sortedBy { it.domain }
 
+    override fun selectAll(pageNumber: Int, pageSize: Int): Page<Domain> {
+        val allElements = selectAll()
+        val data = allElements.drop((pageNumber - 1) * pageSize).safeSublist(0, pageSize)
+        val totalPages = ceil(allElements.size.toDouble() / pageSize).toInt()
+        return Page(
+            data,
+            pageNumber,
+            data.size,
+            allElements.size,
+            totalPages,
+            pageNumber > 1,
+            totalPages != pageNumber
+        )
+    }
+
     override fun update(entity: Entity<Domain>): NotFoundException? =
         data.replace(entity.id, entity.domain).asNullableNotFound(entity.id)
 
@@ -31,4 +48,10 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     private fun <T> T?.asNullableNotFound(id: UUID): NotFoundException? =
         if (this == null) NotFoundException(id) else null
+
+    private fun <T> List<T>.safeSublist(start: Int, end: Int) = try {
+        subList(start, end)
+    } catch (e: IndexOutOfBoundsException) {
+        subList(0, this.size)
+    }
 }
