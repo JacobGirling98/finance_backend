@@ -1,11 +1,18 @@
 package unit.fixtures
 
 import dao.Entity
+import dao.Page
 import domain.Category
 import domain.Date
 import domain.Description
+import domain.HasNextPage
+import domain.HasPreviousPage
 import domain.Outgoing
+import domain.PageNumber
+import domain.PageSize
 import domain.Source
+import domain.TotalElements
+import domain.TotalPages
 import domain.Transaction
 import domain.TransactionType.BANK_TRANSFER
 import domain.TransactionType.CREDIT
@@ -19,7 +26,7 @@ import java.util.*
 
 val uuid: UUID = UUID.randomUUID()
 
-fun entity(id: UUID = uuid, transaction: () -> Transaction) = Entity(id, transaction())
+fun anEntity(id: UUID = uuid, transaction: () -> Transaction) = Entity(id, transaction())
 
 fun aDebitTransaction() = Transaction(
     date,
@@ -89,6 +96,18 @@ fun aBankTransferTransaction() = Transaction(
     null,
     null,
     null
+)
+
+fun aPage(transaction: Transaction) = Page(
+    listOf(
+        anEntity { transaction }
+    ),
+    PageNumber(1),
+    PageSize(5),
+    TotalElements(20),
+    TotalPages(4),
+    HasPreviousPage(false),
+    HasNextPage(true)
 )
 
 fun Transaction.withAValueOf(value: Double) = copy(value = Value(BigDecimal.valueOf(value)))

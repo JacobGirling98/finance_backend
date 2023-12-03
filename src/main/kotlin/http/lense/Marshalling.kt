@@ -2,6 +2,7 @@ package http.lense
 
 import config.CustomJackson.auto
 import dao.Entity
+import dao.Page
 import domain.Date
 import domain.DateRange
 import domain.DescriptionMapping
@@ -70,3 +71,5 @@ val entityIncomeStandingOrderLens = biDiBodyLens<Entity<http.model.StandingOrder
 val dateLens = biDiBodyLens<Date>()
 
 val stringListLens = biDiBodyLens<List<String>>()
+
+val transactionPageLens = biDiBodyLens<Page<Transaction>>()

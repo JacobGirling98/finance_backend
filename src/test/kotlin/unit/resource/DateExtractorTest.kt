@@ -12,7 +12,7 @@ import resource.monthsOf
 import resource.yearsOf
 import unit.fixtures.aDebitTransaction
 import unit.fixtures.aWagesIncome
-import unit.fixtures.entity
+import unit.fixtures.anEntity
 import unit.fixtures.withADateOf
 
 class DateExtractorTest : DescribeSpec({
@@ -21,8 +21,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract single date range") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 1, 20) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 20) }
                 )
             }
 
@@ -37,8 +37,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range over two months") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) }
                 )
             }
 
@@ -57,8 +57,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range over two years") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 12, 10) },
-                    entity { aDebitTransaction().withADateOf(2021, 1, 10) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 12, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2021, 1, 10) }
                 )
             }
 
@@ -77,8 +77,8 @@ class DateExtractorTest : DescribeSpec({
         it("can handle same month in different years") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 12, 10) },
-                    entity { aDebitTransaction().withADateOf(2021, 12, 10) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 12, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2021, 12, 10) }
                 )
             }
 
@@ -99,8 +99,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range for single year") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) }
                 )
             }
 
@@ -115,9 +115,9 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range for multiple years") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 1, 10) },
-                    entity { aDebitTransaction().withADateOf(2021, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2022, 3, 20) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 10) },
+                    anEntity { aDebitTransaction().withADateOf(2021, 2, 20) },
+                    anEntity { aDebitTransaction().withADateOf(2022, 3, 20) }
                 )
             }
 
@@ -142,7 +142,7 @@ class DateExtractorTest : DescribeSpec({
         it("single month with wages paid on the regular day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) }
                 )
             }
 
@@ -157,8 +157,8 @@ class DateExtractorTest : DescribeSpec({
         it("single month with wages paid on the regular day and other transactions") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aDebitTransaction().withADateOf(2020, 1, 20) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 1, 20) }
                 )
             }
 
@@ -173,8 +173,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with wages paid on the regular day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 15) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aWagesIncome().withADateOf(2020, 2, 15) }
                 )
             }
 
@@ -193,8 +193,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with first wage paid on a different day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 14) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 15) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 14) },
+                    anEntity { aWagesIncome().withADateOf(2020, 2, 15) }
                 )
             }
 
@@ -213,8 +213,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with second wage paid on a different day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 14) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aWagesIncome().withADateOf(2020, 2, 14) }
                 )
             }
 
@@ -233,9 +233,9 @@ class DateExtractorTest : DescribeSpec({
         it("three months with middle wage paid on a different day") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aWagesIncome().withADateOf(2020, 2, 13) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 14) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aWagesIncome().withADateOf(2020, 2, 13) },
+                    anEntity { aWagesIncome().withADateOf(2020, 3, 14) }
                 )
             }
 
@@ -258,9 +258,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer next fiscal month if income is missing") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2020, 3, 12) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 3, 12) }
                 )
             }
 
@@ -279,9 +279,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer multiple next fiscal months if incomes are missing") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2020, 3, 20) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 3, 20) }
                 )
             }
 
@@ -304,9 +304,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer previous fiscal month if income is missing") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2020, 3, 12) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 15) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 3, 12) },
+                    anEntity { aWagesIncome().withADateOf(2020, 3, 15) }
                 )
             }
 
@@ -325,8 +325,8 @@ class DateExtractorTest : DescribeSpec({
         it("can infer fiscal month in-between existing ones") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 14) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 13) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 14) },
+                    anEntity { aWagesIncome().withADateOf(2020, 3, 13) }
                 )
             }
 
@@ -349,8 +349,8 @@ class DateExtractorTest : DescribeSpec({
         it("can infer next fiscal month if transaction is on the 15th") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 1, 15) },
-                    entity { aDebitTransaction().withADateOf(2020, 2, 15) }
+                    anEntity { aWagesIncome().withADateOf(2020, 1, 15) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 15) }
                 )
             }
 
@@ -369,12 +369,12 @@ class DateExtractorTest : DescribeSpec({
         it("a mega test!") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 2, 20) },
-                    entity { aDebitTransaction().withADateOf(2020, 3, 12) },
-                    entity { aWagesIncome().withADateOf(2020, 3, 14) },
-                    entity { aWagesIncome().withADateOf(2020, 6, 13) },
-                    entity { aDebitTransaction().withADateOf(2020, 7, 14) },
-                    entity { aDebitTransaction().withADateOf(2020, 7, 15) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 2, 20) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 3, 12) },
+                    anEntity { aWagesIncome().withADateOf(2020, 3, 14) },
+                    anEntity { aWagesIncome().withADateOf(2020, 6, 13) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 7, 14) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 7, 15) }
                 )
             }
 
@@ -411,7 +411,7 @@ class DateExtractorTest : DescribeSpec({
         it("single year") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 5, 1) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 5, 1) }
                 )
             }
 
@@ -426,8 +426,8 @@ class DateExtractorTest : DescribeSpec({
         it("multiple years") {
             val transactions = {
                 listOf(
-                    entity { aDebitTransaction().withADateOf(2020, 5, 1) },
-                    entity { aDebitTransaction().withADateOf(2021, 6, 10) }
+                    anEntity { aDebitTransaction().withADateOf(2020, 5, 1) },
+                    anEntity { aDebitTransaction().withADateOf(2021, 6, 10) }
                 )
             }
 
@@ -446,8 +446,8 @@ class DateExtractorTest : DescribeSpec({
         it("april transaction on irregular date") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 4, 14) },
-                    entity { aDebitTransaction().withADateOf(2020, 6, 10) }
+                    anEntity { aWagesIncome().withADateOf(2020, 4, 14) },
+                    anEntity { aDebitTransaction().withADateOf(2020, 6, 10) }
                 )
             }
 
@@ -462,8 +462,8 @@ class DateExtractorTest : DescribeSpec({
         it("two wages on an irregular date") {
             val transactions = {
                 listOf(
-                    entity { aWagesIncome().withADateOf(2020, 4, 14) },
-                    entity { aWagesIncome().withADateOf(2021, 4, 13) }
+                    anEntity { aWagesIncome().withADateOf(2020, 4, 14) },
+                    anEntity { aWagesIncome().withADateOf(2021, 4, 13) }
                 )
             }
 

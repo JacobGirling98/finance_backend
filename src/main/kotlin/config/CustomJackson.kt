@@ -8,15 +8,21 @@ import domain.Description
 import domain.EndDate
 import domain.FrequencyQuantity
 import domain.FullDescription
+import domain.HasNextPage
+import domain.HasPreviousPage
 import domain.Inbound
 import domain.Login
 import domain.Outbound
 import domain.Outgoing
+import domain.PageNumber
+import domain.PageSize
 import domain.Quantity
 import domain.Recipient
 import domain.ShortDescription
 import domain.Source
 import domain.StartDate
+import domain.TotalElements
+import domain.TotalPages
 import domain.Value
 import org.http4k.format.ConfigurableJackson
 import org.http4k.format.asConfigurable
@@ -47,6 +53,12 @@ object CustomJackson : ConfigurableJackson(
         .localDate(::Login, Login::value)
         .boolean(::Outgoing, Outgoing::value)
         .int(::FrequencyQuantity, FrequencyQuantity::value)
+        .int(::PageNumber, PageNumber::value)
+        .int(::PageSize, PageSize::value)
+        .int(::TotalElements, TotalElements::value)
+        .int(::TotalPages, TotalPages::value)
+        .boolean(::HasPreviousPage, HasPreviousPage::value)
+        .boolean(::HasNextPage, HasNextPage::value)
         .done()
         .deactivateDefaultTyping()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

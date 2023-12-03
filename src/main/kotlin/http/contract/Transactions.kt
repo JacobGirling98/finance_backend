@@ -1,22 +1,29 @@
 package http.contract
 
 import dao.Database
-import dao.Entity
+import dao.Page
 import dao.entityOf
 import domain.Category
 import domain.Date
 import domain.Description
+import domain.HasNextPage
+import domain.HasPreviousPage
 import domain.Inbound
 import domain.Outbound
 import domain.Outgoing
+import domain.PageNumber
+import domain.PageSize
 import domain.Quantity
 import domain.Recipient
 import domain.Source
+import domain.TotalElements
+import domain.TotalPages
 import domain.Transaction
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
 import domain.Value
 import http.asTag
+import http.handler.paginatedTransactionsHandler
 import http.handler.postBankTransferHandler
 import http.handler.postBankTransferListHandler
 import http.handler.postCreditDebitHandler
@@ -25,18 +32,17 @@ import http.handler.postIncomeHandler
 import http.handler.postIncomeListHandler
 import http.handler.postPersonalTransferHandler
 import http.handler.postPersonalTransferListHandler
-import http.handler.transactionsHandler
 import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
 import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
-import http.lense.endDateQuery
 import http.lense.incomeLens
 import http.lense.incomeListLens
+import http.lense.pageNumberQuery
+import http.lense.pageSizeQuery
 import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
-import http.lense.startDateQuery
-import http.lense.transactionEntityListLens
+import http.lense.transactionPageLens
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -66,36 +72,47 @@ fun transactionContracts(database: Database<Transaction, UUID>) = listOf(
     multiplePersonalTransferContract { database.save(it) },
     postIncomeContract { database.save(it) },
     multipleIncomeContract { database.save(it) },
-    getDataRoute { database.selectAll() }
+    getPaginatedDataRoute { pageNumber, pageSize -> database.selectAll(pageNumber, pageSize) }
 )
 
-private fun getDataRoute(data: () -> List<Entity<Transaction>>) = BASE_URL meta {
+private fun getPaginatedDataRoute(
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Transaction>
+) = BASE_URL meta {
     operationId = BASE_URL
-    summary = "Get transactions between two dates"
+    summary = "Get paginated transactions"
     tags += tag
-    queries += startDateQuery
-    queries += endDateQuery
+    queries += pageNumberQuery
+    queries += pageSizeQuery
     returning(
         OK,
-        transactionEntityListLens to listOf(
-            entityOf(
-                Transaction(
-                    date = Date(LocalDate.of(2023, 1, 1)),
-                    Category("String"),
-                    Value(BigDecimal.ZERO),
-                    Description("String"),
-                    CREDIT,
-                    Outgoing(true),
-                    Quantity(1),
-                    Recipient("Nullable String"),
-                    Inbound("Nullable String"),
-                    Outbound("Nullable String"),
-                    Source("Nullable String")
+        transactionPageLens to Page(
+            listOf(
+                entityOf(
+                    Transaction(
+                        date = Date(LocalDate.of(2023, 1, 1)),
+                        Category("String"),
+                        Value(BigDecimal.ZERO),
+                        Description("String"),
+                        CREDIT,
+                        Outgoing(true),
+                        Quantity(1),
+                        Recipient("Nullable String"),
+                        Inbound("Nullable String"),
+                        Outbound("Nullable String"),
+                        Source("Nullable String")
+                    )
                 )
-            )
+            ),
+            PageNumber(1),
+            PageSize(5),
+            TotalElements(20),
+            TotalPages(4),
+            HasPreviousPage(false),
+            HasNextPage(true)
         )
+
     )
-} bindContract GET to transactionsHandler { data() }
+} bindContract GET to paginatedTransactionsHandler(selectAll)
 
 private fun postCreditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit" meta {
     operationId = "$BASE_URL/credit"

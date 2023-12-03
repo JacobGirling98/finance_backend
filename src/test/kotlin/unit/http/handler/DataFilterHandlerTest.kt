@@ -13,7 +13,7 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.kotest.shouldHaveBody
 import unit.fixtures.aDebitTransaction
-import unit.fixtures.entity
+import unit.fixtures.anEntity
 import unit.fixtures.withADateOf
 import java.time.LocalDate
 
@@ -29,8 +29,8 @@ class DataFilterHandlerTest : FunSpec({
     test("can use date ranges with filter transactions") {
         val transactions = { dateRange: DateRange ->
             listOf(
-                entity { aDebitTransaction().withADateOf(dateRange.startDate.value) },
-                entity { aDebitTransaction().withADateOf(dateRange.endDate.value) }
+                anEntity { aDebitTransaction().withADateOf(dateRange.startDate.value) },
+                anEntity { aDebitTransaction().withADateOf(dateRange.endDate.value) }
             )
         }
         val startDate = LocalDate.of(2020, 1, 1)

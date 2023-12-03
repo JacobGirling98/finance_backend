@@ -4,6 +4,12 @@ import dao.Database
 import dao.Entity
 import dao.Page
 import dao.entityOf
+import domain.HasNextPage
+import domain.HasPreviousPage
+import domain.PageNumber
+import domain.PageSize
+import domain.TotalElements
+import domain.TotalPages
 import exceptions.NotFoundException
 import java.util.*
 import kotlin.math.ceil
@@ -26,18 +32,18 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }.sortedBy { it.domain }
 
-    override fun selectAll(pageNumber: Int, pageSize: Int): Page<Domain> {
+    override fun selectAll(pageNumber: PageNumber, pageSize: PageSize): Page<Domain> {
         val allElements = selectAll()
-        val data = allElements.drop((pageNumber - 1) * pageSize).safeSublist(0, pageSize)
-        val totalPages = ceil(allElements.size.toDouble() / pageSize).toInt()
+        val data = allElements.drop((pageNumber.value - 1) * pageSize.value).safeSublist(0, pageSize.value)
+        val totalPages = ceil(allElements.size.toDouble() / pageSize.value).toInt()
         return Page(
             data,
             pageNumber,
-            data.size,
-            allElements.size,
-            totalPages,
-            pageNumber > 1,
-            totalPages != pageNumber
+            PageSize(data.size),
+            TotalElements(allElements.size),
+            TotalPages(totalPages),
+            HasPreviousPage(pageNumber.value > 1),
+            HasNextPage(totalPages != pageNumber.value)
         )
     }
 

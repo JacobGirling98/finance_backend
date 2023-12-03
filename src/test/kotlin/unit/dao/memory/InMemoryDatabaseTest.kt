@@ -2,6 +2,8 @@ package unit.dao.memory
 
 import dao.Entity
 import dao.memory.InMemoryDatabase
+import domain.PageNumber
+import domain.PageSize
 import exceptions.NotFoundException
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
@@ -72,7 +74,7 @@ class InMemoryDatabaseTest : FunSpec({
         test("can get a subset of the data") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(1, 5)
+            val page = database.selectAll(PageNumber(1), PageSize(5))
 
             page.data shouldHaveSize 5
             page.data.map { it.domain.age } shouldBe listOf(0, 1, 2, 3, 4)
@@ -81,7 +83,7 @@ class InMemoryDatabaseTest : FunSpec({
         test("can get next subset of the data") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(2, 5)
+            val page = database.selectAll(PageNumber(2), PageSize(5))
 
             page.data shouldHaveSize 5
             page.data.map { it.domain.age } shouldBe listOf(5, 6, 7, 8, 9)
@@ -90,7 +92,7 @@ class InMemoryDatabaseTest : FunSpec({
         test("can get all data if page size exceeds data") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(1, 25)
+            val page = database.selectAll(PageNumber(1), PageSize(25))
 
             page.data shouldHaveSize 21
         }
@@ -98,7 +100,7 @@ class InMemoryDatabaseTest : FunSpec({
         test("final page may not contain full page size") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(5, 5)
+            val page = database.selectAll(PageNumber(5), PageSize(5))
 
             page.data shouldHaveSize 1
         }
@@ -106,40 +108,40 @@ class InMemoryDatabaseTest : FunSpec({
         test("first page metadata is correct") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(1, 5)
+            val page = database.selectAll(PageNumber(1), PageSize(5))
 
-            page.pageSize shouldBe 5
-            page.pageNumber shouldBe 1
-            page.hasNextPage shouldBe true
-            page.hasPreviousPage shouldBe false
-            page.totalElements shouldBe 21
-            page.totalPages shouldBe 5
+            page.pageSize.value shouldBe 5
+            page.pageNumber.value shouldBe 1
+            page.hasNextPage.value shouldBe true
+            page.hasPreviousPage.value shouldBe false
+            page.totalElements.value shouldBe 21
+            page.totalPages.value shouldBe 5
         }
 
         test("middle page metadata is correct") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(2, 5)
+            val page = database.selectAll(PageNumber(2), PageSize(5))
 
-            page.pageSize shouldBe 5
-            page.pageNumber shouldBe 2
-            page.hasNextPage shouldBe true
-            page.hasPreviousPage shouldBe true
-            page.totalElements shouldBe 21
-            page.totalPages shouldBe 5
+            page.pageSize.value shouldBe 5
+            page.pageNumber.value shouldBe 2
+            page.hasNextPage.value shouldBe true
+            page.hasPreviousPage.value shouldBe true
+            page.totalElements.value shouldBe 21
+            page.totalPages.value shouldBe 5
         }
 
         test("final page metadata is correct") {
             database.save((0..20).map { TestDomain("Jacob", it) })
 
-            val page = database.selectAll(5, 5)
+            val page = database.selectAll(PageNumber(5), PageSize(5))
 
-            page.pageSize shouldBe 1
-            page.pageNumber shouldBe 5
-            page.hasNextPage shouldBe false
-            page.hasPreviousPage shouldBe true
-            page.totalElements shouldBe 21
-            page.totalPages shouldBe 5
+            page.pageSize.value shouldBe 1
+            page.pageNumber.value shouldBe 5
+            page.hasNextPage.value shouldBe false
+            page.hasPreviousPage.value shouldBe true
+            page.totalElements.value shouldBe 21
+            page.totalPages.value shouldBe 5
         }
     }
 })

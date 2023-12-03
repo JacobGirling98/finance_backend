@@ -1,4 +1,5 @@
 
+import config.AppMode
 import config.environmentVariables
 import config.logger
 import config.properties
@@ -148,4 +149,7 @@ fun main() {
     val server = printingApp.asServer(SunHttp(9000)).start()
 
     logger.info { "Server started on port ${server.port()}" }
+    if (properties.appMode == AppMode.DEV) {
+        logger.info { "Serving Swagger at http://localhost:9000" }
+    }
 }

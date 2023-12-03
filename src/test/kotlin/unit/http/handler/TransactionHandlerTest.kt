@@ -14,6 +14,7 @@ import domain.Transaction
 import domain.TransactionType
 import domain.TransactionType.DEBIT
 import domain.Value
+import http.handler.paginatedTransactionsHandler
 import http.handler.postBankTransferHandler
 import http.handler.postBankTransferListHandler
 import http.handler.postCreditDebitHandler
@@ -33,6 +34,8 @@ import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
+import unit.fixtures.aDebitTransaction
+import unit.fixtures.aPage
 import unit.fixtures.toObject
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -538,5 +541,22 @@ class TransactionHandlerTest : FunSpec({
             transactionCount = 2,
             value = 512.50f
         )
+    }
+
+    context("pagination") {
+        test("can extract page number and page size from the request") {
+            var pageNumber = 0
+            var pageSize = 0
+            val handler = paginatedTransactionsHandler { number, size ->
+                pageNumber = number.value
+                pageSize = size.value
+                aPage(aDebitTransaction())
+            }
+
+            handler(Request(Method.GET, "/").query("pageSize", "5").query("pageNumber", "1"))
+
+            pageNumber shouldBe 1
+            pageSize shouldBe 5
+        }
     }
 })

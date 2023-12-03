@@ -13,7 +13,7 @@ data class Transaction(
     val outbound: Outbound? = null,
     val source: Source? = null
 ) : Comparable<Transaction> {
-    override fun compareTo(other: Transaction): Int = date.value.compareTo(other.date.value)
+    override fun compareTo(other: Transaction): Int = other.date.value.compareTo(date.value)
 }
 
 fun List<Transaction>.totalValue() = map { it.value.value }.reduce { total, value -> total.add(value) }.toFloat()

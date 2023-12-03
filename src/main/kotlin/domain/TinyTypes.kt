@@ -83,3 +83,10 @@ data class Login(val value: LocalDate) {
 }
 
 data class FrequencyQuantity(val value: Int)
+
+data class PageNumber(val value: Int)
+data class PageSize(val value: Int)
+data class TotalElements(val value: Int)
+data class TotalPages(val value: Int)
+data class HasPreviousPage(val value: Boolean)
+data class HasNextPage(val value: Boolean)
