@@ -1,4 +1,5 @@
-dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/dev
+dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/prod
+
 mongo:
   uri: mongodb://localhost:27017
   database: testFinance
@@ -21,7 +22,7 @@ csv:
   payee:
     sync: 60000
 
-appMode: DEV
+appMode: PROD
 
 google:
   credentialsFile: /Users/jacobgirling/Documents/Programming/google-credentials/finance-app-403218-4acd41f86159.json
