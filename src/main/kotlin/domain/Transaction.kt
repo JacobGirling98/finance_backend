@@ -14,6 +14,10 @@ data class Transaction(
     val source: Source? = null
 ) : Comparable<Transaction> {
     override fun compareTo(other: Transaction): Int = other.date.value.compareTo(date.value)
+
+    fun anyMatch(searchTerm: String): Boolean {
+        return false
+    }
 }
 
 fun List<Transaction>.totalValue() = map { it.value.value }.reduce { total, value -> total.add(value) }.toFloat()
