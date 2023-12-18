@@ -2,24 +2,13 @@ package unit.fixtures
 
 import dao.Entity
 import dao.Page
-import domain.Category
+import domain.*
 import domain.Date
-import domain.Description
-import domain.HasNextPage
-import domain.HasPreviousPage
-import domain.Outgoing
-import domain.PageNumber
-import domain.PageSize
-import domain.Source
-import domain.TotalElements
-import domain.TotalPages
-import domain.Transaction
 import domain.TransactionType.BANK_TRANSFER
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
 import domain.TransactionType.INCOME
 import domain.TransactionType.PERSONAL_TRANSFER
-import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -119,3 +108,13 @@ fun Transaction.withADateOf(date: LocalDate) =
     copy(date = Date(date))
 
 fun Transaction.withADescriptionOf(value: String) = copy(description = Description(value))
+
+fun Transaction.withACategoryOf(value: String) = copy(category = Category(value))
+
+fun Transaction.withARecipientOf(value: String) = copy(recipient = Recipient(value))
+
+fun Transaction.withAnInboundAccountOf(value: String) = copy(inbound = Inbound(value))
+
+fun Transaction.withAnOutboundAccountOf(value: String) = copy(outbound = Outbound(value))
+
+fun Transaction.withAnIncomeSourceOf(value: String) = copy(source = Source(value))

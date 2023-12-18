@@ -8,7 +8,7 @@ import domain.TotalElements
 import domain.TotalPages
 
 data class Page<T>(
-    val data: List<Entity<T>>,
+    val data: List<T>,
     val pageNumber: PageNumber,
     val pageSize: PageSize,
     val totalElements: TotalElements,

@@ -1,5 +1,6 @@
 package http.handler
 
+import dao.Entity
 import dao.Page
 import domain.PageNumber
 import domain.PageSize
@@ -7,18 +8,7 @@ import domain.Transaction
 import domain.TransactionType
 import domain.totalValue
 import http.assembler.transactionFrom
-import http.lense.bankTransferLens
-import http.lense.bankTransferListLens
-import http.lense.creditDebitLens
-import http.lense.creditDebitListLens
-import http.lense.incomeLens
-import http.lense.incomeListLens
-import http.lense.pageNumberQuery
-import http.lense.pageSizeQuery
-import http.lense.personalTransferLens
-import http.lense.personalTransferListLens
-import http.lense.transactionConfirmationLens
-import http.lense.transactionPageLens
+import http.lense.*
 import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
@@ -104,10 +94,18 @@ fun postIncomeListHandler(
 }
 
 fun paginatedTransactionsHandler(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Transaction>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
 ): HttpHandler = { request ->
     val pageNumber = pageNumberQuery.extract(request)
     val pageSize = pageSizeQuery.extract(request)
     val data = selectAll(pageNumber, pageSize)
     Response(OK).with(transactionPageLens of data)
+}
+
+fun searchTransactionsHandler(
+    search: (term: String) -> Page<Entity<Transaction>>
+): HttpHandler = { request ->
+    val searchTerm = searchTermQuery.extract(request)
+    val results = search(searchTerm)
+    Response(OK).with(transactionPageLens of results)
 }

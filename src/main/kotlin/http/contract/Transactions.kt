@@ -1,6 +1,7 @@
 package http.contract
 
 import dao.Database
+import dao.Entity
 import dao.Page
 import dao.entityOf
 import domain.Category
@@ -52,6 +53,7 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Status
 import org.http4k.core.Status.Companion.OK
+import resource.TransactionProcessor
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -61,7 +63,7 @@ private const val MULTIPLE_URL = "$BASE_URL/multiple"
 private val tag = BASE_URL.asTag()
 private val multipleTag = MULTIPLE_URL.asTag()
 
-fun transactionContracts(database: Database<Transaction, UUID>) = listOf(
+fun transactionContracts(database: Database<Transaction, UUID>, processor: TransactionProcessor) = listOf(
     postCreditContract { database.save(it) },
     multipleCreditContract { database.save(it) },
     postDebitContract { database.save(it) },
@@ -72,11 +74,11 @@ fun transactionContracts(database: Database<Transaction, UUID>) = listOf(
     multiplePersonalTransferContract { database.save(it) },
     postIncomeContract { database.save(it) },
     multipleIncomeContract { database.save(it) },
-    getPaginatedDataRoute { pageNumber, pageSize -> database.selectAll(pageNumber, pageSize) }
+    getPaginatedDataRoute { pageNumber, pageSize -> processor.selectAll(pageNumber, pageSize) }
 )
 
 private fun getPaginatedDataRoute(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Transaction>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
 ) = BASE_URL meta {
     operationId = BASE_URL
     summary = "Get paginated transactions"

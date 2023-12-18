@@ -72,4 +72,4 @@ val dateLens = biDiBodyLens<Date>()
 
 val stringListLens = biDiBodyLens<List<String>>()
 
-val transactionPageLens = biDiBodyLens<Page<Transaction>>()
+val transactionPageLens = biDiBodyLens<Page<Entity<Transaction>>>()

@@ -11,6 +11,7 @@ import domain.PageSize
 import domain.TotalElements
 import domain.TotalPages
 import exceptions.NotFoundException
+import resource.paginate
 import java.util.*
 import kotlin.math.ceil
 
@@ -32,21 +33,6 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }.sortedBy { it.domain }
 
-    override fun selectAll(pageNumber: PageNumber, pageSize: PageSize): Page<Domain> {
-        val allElements = selectAll()
-        val data = allElements.drop((pageNumber.value - 1) * pageSize.value).safeSublist(0, pageSize.value)
-        val totalPages = ceil(allElements.size.toDouble() / pageSize.value).toInt()
-        return Page(
-            data,
-            pageNumber,
-            PageSize(data.size),
-            TotalElements(allElements.size),
-            TotalPages(totalPages),
-            HasPreviousPage(pageNumber.value > 1),
-            HasNextPage(totalPages != pageNumber.value)
-        )
-    }
-
     override fun update(entity: Entity<Domain>): NotFoundException? =
         data.replace(entity.id, entity.domain).asNullableNotFound(entity.id)
 
@@ -54,10 +40,4 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     private fun <T> T?.asNullableNotFound(id: UUID): NotFoundException? =
         if (this == null) NotFoundException(id) else null
-
-    private fun <T> List<T>.safeSublist(start: Int, end: Int) = try {
-        subList(start, end)
-    } catch (e: IndexOutOfBoundsException) {
-        subList(0, this.size)
-    }
 }

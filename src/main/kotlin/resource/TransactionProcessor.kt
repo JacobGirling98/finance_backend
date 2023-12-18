@@ -1,0 +1,16 @@
+package resource
+
+import dao.Database
+import domain.PageNumber
+import domain.PageSize
+import domain.Transaction
+import java.util.UUID
+
+class TransactionProcessor(private val transactionDatabase: Database<Transaction, UUID>) {
+
+    fun selectAll(pageNumber: PageNumber, pageSize: PageSize) =
+        paginate(transactionDatabase.selectAll(), pageNumber, pageSize)
+
+    fun search(term: String, pageNumber: PageNumber, pageSize: PageSize) =
+        paginate(transactionDatabase.selectAll().search(term), pageNumber, pageSize)
+}

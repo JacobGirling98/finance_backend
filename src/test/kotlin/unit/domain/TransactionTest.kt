@@ -3,8 +3,7 @@ package unit.domain
 import domain.totalValue
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.withAValueOf
+import unit.fixtures.*
 
 class TransactionTest : DescribeSpec({
 
@@ -18,6 +17,44 @@ class TransactionTest : DescribeSpec({
 
         it("Should calculate value of single transaction") {
             listOf(aDebitTransaction().withAValueOf(2.0)).totalValue() shouldBe 2.0f
+        }
+    }
+
+    describe("any match") {
+        it("for description") {
+            aDebitTransaction().withADescriptionOf("testing").anyMatch("est") shouldBe true
+            aDebitTransaction().withADescriptionOf("testing").anyMatch("EST") shouldBe true
+            aDebitTransaction().withADescriptionOf("testing").anyMatch("match") shouldBe false
+        }
+
+        it("for category") {
+            aDebitTransaction().withACategoryOf("food").anyMatch("food") shouldBe true
+            aDebitTransaction().withACategoryOf("food").anyMatch("FOOD") shouldBe true
+            aDebitTransaction().withACategoryOf("food").anyMatch("match") shouldBe false
+        }
+
+        it("for recipient") {
+            aDebitTransaction().withARecipientOf("friend").anyMatch("iend") shouldBe true
+            aDebitTransaction().withARecipientOf("friend").anyMatch("IEND") shouldBe true
+            aDebitTransaction().withARecipientOf("friend").anyMatch("match") shouldBe false
+        }
+
+        it("for inbound account") {
+            aDebitTransaction().withAnInboundAccountOf("current").anyMatch("urren") shouldBe true
+            aDebitTransaction().withAnInboundAccountOf("current").anyMatch("URREN") shouldBe true
+            aDebitTransaction().withAnInboundAccountOf("current").anyMatch("match") shouldBe false
+        }
+
+        it("for outbound account") {
+            aDebitTransaction().withAnOutboundAccountOf("current").anyMatch("urren") shouldBe true
+            aDebitTransaction().withAnOutboundAccountOf("current").anyMatch("URREN") shouldBe true
+            aDebitTransaction().withAnOutboundAccountOf("current").anyMatch("match") shouldBe false
+        }
+
+        it("for income source") {
+            aDebitTransaction().withAnIncomeSourceOf("work").anyMatch("work") shouldBe true
+            aDebitTransaction().withAnIncomeSourceOf("work").anyMatch("WORK") shouldBe true
+            aDebitTransaction().withAnIncomeSourceOf("work").anyMatch("match") shouldBe false
         }
     }
 })

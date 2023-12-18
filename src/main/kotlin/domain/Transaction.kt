@@ -16,7 +16,13 @@ data class Transaction(
     override fun compareTo(other: Transaction): Int = other.date.value.compareTo(date.value)
 
     fun anyMatch(searchTerm: String): Boolean {
-        return false
+        val loweredSearchTerm = searchTerm.trim().lowercase()
+        return description.value.lowercase().contains(loweredSearchTerm)
+                || category.value.lowercase().contains(loweredSearchTerm)
+                || recipient?.value?.lowercase()?.contains(loweredSearchTerm) == true
+                || inbound?.value?.lowercase()?.contains(loweredSearchTerm) == true
+                || outbound?.value?.lowercase()?.contains(loweredSearchTerm) == true
+                || source?.value?.lowercase()?.contains(loweredSearchTerm) == true
     }
 }
 
