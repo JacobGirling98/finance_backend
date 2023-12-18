@@ -1,6 +1,5 @@
 package resource
 
-import dao.Entity
 import dao.Page
 import domain.*
 import kotlin.math.ceil

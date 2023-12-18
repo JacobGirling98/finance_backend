@@ -103,9 +103,11 @@ fun paginatedTransactionsHandler(
 }
 
 fun searchTransactionsHandler(
-    search: (term: String) -> Page<Entity<Transaction>>
+    search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
 ): HttpHandler = { request ->
     val searchTerm = searchTermQuery.extract(request)
-    val results = search(searchTerm)
+    val pageNumber = pageNumberQuery.extract(request)
+    val pageSize = pageSizeQuery.extract(request)
+    val results = search(searchTerm, pageNumber, pageSize)
     Response(OK).with(transactionPageLens of results)
 }

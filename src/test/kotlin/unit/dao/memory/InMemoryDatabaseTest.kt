@@ -2,11 +2,8 @@ package unit.dao.memory
 
 import dao.Entity
 import dao.memory.InMemoryDatabase
-import domain.PageNumber
-import domain.PageSize
 import exceptions.NotFoundException
 import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import unit.fixtures.Doubles.TestDomain

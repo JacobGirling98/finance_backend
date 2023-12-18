@@ -2,18 +2,9 @@ package dao.memory
 
 import dao.Database
 import dao.Entity
-import dao.Page
 import dao.entityOf
-import domain.HasNextPage
-import domain.HasPreviousPage
-import domain.PageNumber
-import domain.PageSize
-import domain.TotalElements
-import domain.TotalPages
 import exceptions.NotFoundException
-import resource.paginate
 import java.util.*
-import kotlin.math.ceil
 
 open class InMemoryDatabase<Domain : Comparable<Domain>>(
     initialData: List<Entity<Domain>> = emptyList()

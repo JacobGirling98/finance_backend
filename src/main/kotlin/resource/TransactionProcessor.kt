@@ -4,7 +4,7 @@ import dao.Database
 import domain.PageNumber
 import domain.PageSize
 import domain.Transaction
-import java.util.UUID
+import java.util.*
 
 class TransactionProcessor(private val transactionDatabase: Database<Transaction, UUID>) {
 

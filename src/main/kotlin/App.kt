@@ -47,10 +47,7 @@ import org.http4k.filter.ServerFilters.Cors
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
-import resource.GoogleDriveSynchroniser
-import resource.LoginSynchroniser
-import resource.StandingOrderProcessor
-import resource.mostRecent
+import resource.*
 import java.time.LocalDate
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -70,6 +67,7 @@ val descriptionMappingDatabase =
 
 val transactionDatabase =
     TransactionCsvDatabase(properties.csv.transaction.sync.milliseconds, "${properties.dataLocation}/transactions.csv")
+val transactionsProcessor = TransactionProcessor(transactionDatabase)
 
 val standingOrderDatabase = StandingOrderCsvDatabase(
     properties.csv.standingOrder.sync.milliseconds,
@@ -107,7 +105,7 @@ val contracts = listOf(
         addSourceContact { incomeSourceDatabase.save(it) },
         addPayeesContact { payeeDatabase.save(it) }
     ),
-    transactionContracts(transactionDatabase),
+    transactionContracts(transactionDatabase, transactionsProcessor),
     loginContracts { loginDatabase.lastLogin() },
     gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dateRangeContracts { transactionDatabase.selectAll() },
