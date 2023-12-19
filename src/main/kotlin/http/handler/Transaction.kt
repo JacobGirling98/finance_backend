@@ -2,11 +2,8 @@ package http.handler
 
 import dao.Entity
 import dao.Page
-import domain.PageNumber
-import domain.PageSize
-import domain.Transaction
-import domain.TransactionType
-import domain.totalValue
+import domain.*
+import http.assembler.map
 import http.assembler.transactionFrom
 import http.lense.*
 import http.model.Transaction.TransactionConfirmation
@@ -110,4 +107,52 @@ fun searchTransactionsHandler(
     val pageSize = pageSizeQuery.extract(request)
     val results = search(searchTerm, pageNumber, pageSize)
     Response(OK).with(transactionPageLens of results)
+}
+
+fun putCreditDebitTransactionHandler(
+    transactionType: TransactionType,
+    updateTransaction: (Entity<Transaction>) -> Unit
+): HttpHandler = { request ->
+    updateTransaction(
+        entityCreditDebitLens(request).map { model ->
+            transactionFrom(
+                model,
+                transactionType
+            )
+        }
+    )
+    Response(NO_CONTENT)
+}
+
+fun putBankTransferTransactionHandler(
+    updateTransaction: (Entity<Transaction>) -> Unit
+): HttpHandler = { request ->
+    updateTransaction(
+        entityBankTransferLens(request).map { model ->
+            transactionFrom(model)
+        }
+    )
+    Response(NO_CONTENT)
+}
+
+fun putPersonalTransferTransactionHandler(
+    updateTransaction: (Entity<Transaction>) -> Unit
+): HttpHandler = { request ->
+    updateTransaction(
+        entityPersonalTransferLens(request).map { model ->
+            transactionFrom(model)
+        }
+    )
+    Response(NO_CONTENT)
+}
+
+fun putIncomeTransactionHandler(
+    updateTransaction: (Entity<Transaction>) -> Unit
+): HttpHandler = { request ->
+    updateTransaction(
+        entityIncomeLens(request).map { model ->
+            transactionFrom(model)
+        }
+    )
+    Response(NO_CONTENT)
 }

@@ -3,13 +3,7 @@ package http.lense
 import config.CustomJackson.auto
 import dao.Entity
 import dao.Page
-import domain.Date
-import domain.DateRange
-import domain.DescriptionMapping
-import domain.Headlines
-import domain.Login
-import domain.StandingOrder
-import domain.Transaction
+import domain.*
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -73,3 +67,11 @@ val dateLens = biDiBodyLens<Date>()
 val stringListLens = biDiBodyLens<List<String>>()
 
 val transactionPageLens = biDiBodyLens<Page<Entity<Transaction>>>()
+
+val entityCreditDebitLens = biDiBodyLens<Entity<CreditDebit>>()
+
+val entityBankTransferLens = biDiBodyLens<Entity<BankTransfer>>()
+
+val entityPersonalTransferLens = biDiBodyLens<Entity<PersonalTransfer>>()
+
+val entityIncomeLens = biDiBodyLens<Entity<Income>>()
