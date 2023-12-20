@@ -69,6 +69,6 @@ class StandingOrderProcessor(
         recipient,
         inbound,
         outbound,
-        addedBy = AddedBy("Jacob")
+        addedBy = AddedBy("standing-order-processor")
     )
 }

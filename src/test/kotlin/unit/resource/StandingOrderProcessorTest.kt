@@ -1,11 +1,8 @@
 package unit.resource
 
 import dao.Database
+import domain.*
 import domain.Date
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.StandingOrder
-import domain.Transaction
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.mockk
 import io.mockk.verify
@@ -34,7 +31,7 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process monthly standing order if current date is after standing order date") {
-        val factory = Factory(date = Date(monthBeforeNow), id = uuid)
+        val factory = Factory(date = Date(monthBeforeNow), id = uuid, addedBy = AddedBy("standing-order-processor"))
         val expected = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid).standingOrderEntity()
 
         processor.process(factory.standingOrderEntity())
@@ -44,7 +41,7 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process standing order if current date is equal to standing order date") {
-        val factory = Factory(date = Date(now()), id = uuid)
+        val factory = Factory(date = Date(now()), id = uuid, addedBy = AddedBy("standing-order-processor"))
         val expected = Factory(date = Date(now().plusMonths(1)), id = uuid).standingOrderEntity()
 
         processor.process(factory.standingOrderEntity())
@@ -54,8 +51,13 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process monthly standing order multiple times if current date is multiple time periods after standing order date") {
-        val firstFactory = Factory(date = Date(monthBeforeNow.minusMonths(1)), id = uuid)
-        val secondFactory = Factory(date = Date(monthBeforeNow), id = uuid)
+        val firstFactory = Factory(
+            date = Date(monthBeforeNow.minusMonths(1)),
+            id = uuid,
+            addedBy = AddedBy("standing-order-processor")
+        )
+        val secondFactory =
+            Factory(date = Date(monthBeforeNow), id = uuid, addedBy = AddedBy("standing-order-processor"))
         val thirdFactory = Factory(date = Date(monthBeforeNow.plusMonths(1)), id = uuid)
 
         processor.process(firstFactory.standingOrderEntity())
@@ -67,7 +69,12 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process weekly standing order if current date is after standing order date") {
-        val factory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
+        val factory = Factory(
+            date = Date(weekBeforeNow),
+            frequency = Frequency.WEEKLY,
+            id = uuid,
+            addedBy = AddedBy("standing-order-processor")
+        )
         val expected = Factory(
             date = Date(weekBeforeNow.plusWeeks(1)),
             frequency = Frequency.WEEKLY,
@@ -81,9 +88,24 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process weekly standing order multiple times if current date is multiple time periods after standing order date") {
-        val firstFactory = Factory(date = Date(weekBeforeNow.minusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid)
-        val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY, id = uuid)
-        val thirdFactory = Factory(date = Date(weekBeforeNow.plusWeeks(1)), frequency = Frequency.WEEKLY, id = uuid)
+        val firstFactory = Factory(
+            date = Date(weekBeforeNow.minusWeeks(1)),
+            frequency = Frequency.WEEKLY,
+            id = uuid,
+            addedBy = AddedBy("standing-order-processor")
+        )
+        val secondFactory = Factory(
+            date = Date(weekBeforeNow),
+            frequency = Frequency.WEEKLY,
+            id = uuid,
+            addedBy = AddedBy("standing-order-processor")
+        )
+        val thirdFactory = Factory(
+            date = Date(weekBeforeNow.plusWeeks(1)),
+            frequency = Frequency.WEEKLY,
+            id = uuid,
+            addedBy = AddedBy("standing-order-processor")
+        )
 
         processor.process(firstFactory.standingOrderEntity())
 
@@ -94,8 +116,12 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("will process all standing orders") {
-        val firstFactory = Factory(date = Date(monthBeforeNow))
-        val secondFactory = Factory(date = Date(weekBeforeNow), frequency = Frequency.WEEKLY)
+        val firstFactory = Factory(date = Date(monthBeforeNow), addedBy = AddedBy("standing-order-processor"))
+        val secondFactory = Factory(
+            date = Date(weekBeforeNow),
+            frequency = Frequency.WEEKLY,
+            addedBy = AddedBy("standing-order-processor")
+        )
 
         processor.processAll(listOf(firstFactory.standingOrderEntity(), secondFactory.standingOrderEntity()))
 
@@ -117,11 +143,29 @@ class StandingOrderProcessorTest : FunSpec({
     }
 
     test("can handle different frequency quantities") {
-        val factory = Factory(date = Date(monthBeforeNow), id = uuid, frequencyQuantity = FrequencyQuantity(2))
+        val factory = Factory(
+            date = Date(monthBeforeNow),
+            id = uuid,
+            frequencyQuantity = FrequencyQuantity(2),
+            addedBy = AddedBy("standing-order-processor")
+        )
         val expected = Factory(
             date = Date(monthBeforeNow.plusMonths(2)),
             id = uuid,
             frequencyQuantity = FrequencyQuantity(2)
+        ).standingOrderEntity()
+
+        processor.process(factory.standingOrderEntity())
+
+        verify { transactionsDatabase.save(factory.transaction()) }
+        verify { standingOrderDatabase.update(expected) }
+    }
+
+    test("added by uses 'standing-order-processor'") {
+        val factory = Factory(date = Date(monthBeforeNow), id = uuid, addedBy = AddedBy("standing-order-processor"))
+        val expected = Factory(
+            date = Date(monthBeforeNow.plusMonths(1)),
+            id = uuid
         ).standingOrderEntity()
 
         processor.process(factory.standingOrderEntity())
