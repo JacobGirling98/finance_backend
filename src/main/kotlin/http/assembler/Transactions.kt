@@ -1,24 +1,24 @@
 package http.assembler
 
-import domain.Outgoing
-import domain.Quantity
-import domain.Transaction
-import domain.TransactionType
-import domain.TransactionType.BANK_TRANSFER
-import domain.TransactionType.INCOME
-import domain.TransactionType.PERSONAL_TRANSFER
+import domain.*
+import domain.TransactionType.*
+import http.model.Transaction.BankTransfer
+import http.model.Transaction.CreditDebit
+import http.model.Transaction.Income
+import http.model.Transaction.PersonalTransfer
 
-fun transactionFrom(transaction: http.model.Transaction.CreditDebit, transactionType: TransactionType) = Transaction(
+fun transactionFrom(transaction: CreditDebit, transactionType: TransactionType, addedBy: AddedBy) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
     transaction.description,
     transactionType,
     Outgoing(true),
-    quantity = transaction.quantity
+    quantity = transaction.quantity,
+    addedBy = addedBy
 )
 
-fun transactionFrom(transaction: http.model.Transaction.BankTransfer) = Transaction(
+fun transactionFrom(transaction: BankTransfer, addedBy: AddedBy) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -26,10 +26,11 @@ fun transactionFrom(transaction: http.model.Transaction.BankTransfer) = Transact
     BANK_TRANSFER,
     Outgoing(true),
     quantity = transaction.quantity,
-    recipient = transaction.recipient
+    recipient = transaction.recipient,
+    addedBy = addedBy
 )
 
-fun transactionFrom(transaction: http.model.Transaction.PersonalTransfer) = Transaction(
+fun transactionFrom(transaction: PersonalTransfer, addedBy: AddedBy) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -38,10 +39,11 @@ fun transactionFrom(transaction: http.model.Transaction.PersonalTransfer) = Tran
     Outgoing(false),
     quantity = Quantity(1),
     outbound = transaction.outbound,
-    inbound = transaction.inbound
+    inbound = transaction.inbound,
+    addedBy = addedBy
 )
 
-fun transactionFrom(transaction: http.model.Transaction.Income) = Transaction(
+fun transactionFrom(transaction: Income, addedBy: AddedBy) = Transaction(
     transaction.date,
     transaction.category,
     transaction.value,
@@ -49,5 +51,6 @@ fun transactionFrom(transaction: http.model.Transaction.Income) = Transaction(
     INCOME,
     Outgoing(false),
     quantity = Quantity(1),
-    source = transaction.source
+    source = transaction.source,
+    addedBy = addedBy
 )

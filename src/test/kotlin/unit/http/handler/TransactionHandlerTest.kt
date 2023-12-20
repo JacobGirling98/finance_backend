@@ -1,28 +1,10 @@
 package unit.http.handler
 
 import dao.Database
-import domain.Category
+import domain.*
 import domain.Date
-import domain.Description
-import domain.Inbound
-import domain.Outbound
-import domain.Outgoing
-import domain.Quantity
-import domain.Recipient
-import domain.Source
-import domain.Transaction
-import domain.TransactionType
 import domain.TransactionType.DEBIT
-import domain.Value
-import http.handler.paginatedTransactionsHandler
-import http.handler.postBankTransferHandler
-import http.handler.postBankTransferListHandler
-import http.handler.postCreditDebitHandler
-import http.handler.postCreditDebitListHandler
-import http.handler.postIncomeHandler
-import http.handler.postIncomeListHandler
-import http.handler.postPersonalTransferHandler
-import http.handler.postPersonalTransferListHandler
+import http.handler.*
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -61,7 +43,7 @@ class TransactionHandlerTest : FunSpec({
                     "quantity": 2
                 }
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus NO_CONTENT
@@ -74,7 +56,8 @@ class TransactionHandlerTest : FunSpec({
                     Description("Cake"),
                     TransactionType.CREDIT,
                     Outgoing(true),
-                    Quantity(2)
+                    Quantity(2),
+                    addedBy = AddedBy("Jacob")
                 )
             )
         }
@@ -95,7 +78,7 @@ class TransactionHandlerTest : FunSpec({
                     "recipient": "Friend"
                 }
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus NO_CONTENT
@@ -109,7 +92,8 @@ class TransactionHandlerTest : FunSpec({
                     TransactionType.BANK_TRANSFER,
                     Outgoing(true),
                     Quantity(1),
-                    Recipient("Friend")
+                    Recipient("Friend"),
+                    addedBy = AddedBy("Jacob")
                 )
             )
         }
@@ -130,7 +114,7 @@ class TransactionHandlerTest : FunSpec({
                     "inbound": "Savings"
                 }
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus NO_CONTENT
@@ -145,7 +129,8 @@ class TransactionHandlerTest : FunSpec({
                     Outgoing(false),
                     Quantity(1),
                     outbound = Outbound("Current"),
-                    inbound = Inbound("Savings")
+                    inbound = Inbound("Savings"),
+                    addedBy = AddedBy("Jacob")
                 )
             )
         }
@@ -165,7 +150,7 @@ class TransactionHandlerTest : FunSpec({
                     "source": "Work"
                 }
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus NO_CONTENT
@@ -179,7 +164,8 @@ class TransactionHandlerTest : FunSpec({
                     TransactionType.INCOME,
                     Outgoing(false),
                     Quantity(1),
-                    source = Source("Work")
+                    source = Source("Work"),
+                    addedBy = AddedBy("Jacob")
                 )
             )
         }
@@ -208,7 +194,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus OK
@@ -222,7 +208,8 @@ class TransactionHandlerTest : FunSpec({
                         Description("Cake"),
                         TransactionType.CREDIT,
                         Outgoing(true),
-                        Quantity(2)
+                        Quantity(2),
+                        addedBy = AddedBy("Jacob")
                     ),
                     Transaction(
                         Date(LocalDate.of(2020, 10, 15)),
@@ -231,7 +218,8 @@ class TransactionHandlerTest : FunSpec({
                         Description("Speaker"),
                         TransactionType.CREDIT,
                         Outgoing(true),
-                        Quantity(1)
+                        Quantity(1),
+                        addedBy = AddedBy("Jacob")
                     )
                 )
             )
@@ -263,7 +251,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus OK
@@ -278,7 +266,8 @@ class TransactionHandlerTest : FunSpec({
                         TransactionType.BANK_TRANSFER,
                         Outgoing(true),
                         Quantity(1),
-                        Recipient("Friend")
+                        Recipient("Friend"),
+                        addedBy = AddedBy("Jacob")
                     ),
                     Transaction(
                         Date(LocalDate.of(2020, 10, 15)),
@@ -288,7 +277,8 @@ class TransactionHandlerTest : FunSpec({
                         TransactionType.BANK_TRANSFER,
                         Outgoing(true),
                         Quantity(1),
-                        Recipient("Family")
+                        Recipient("Family"),
+                        addedBy = AddedBy("Jacob")
                     )
                 )
             )
@@ -320,7 +310,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus OK
@@ -337,7 +327,8 @@ class TransactionHandlerTest : FunSpec({
                         Outgoing(false),
                         Quantity(1),
                         outbound = Outbound("Current"),
-                        inbound = Inbound("Savings")
+                        inbound = Inbound("Savings"),
+                        addedBy = AddedBy("Jacob")
                     ),
                     Transaction(
                         Date(LocalDate.of(2020, 10, 15)),
@@ -348,7 +339,8 @@ class TransactionHandlerTest : FunSpec({
                         Outgoing(false),
                         Quantity(1),
                         outbound = Outbound("Current"),
-                        inbound = Inbound("Credit")
+                        inbound = Inbound("Credit"),
+                        addedBy = AddedBy("Jacob")
                     )
                 )
             )
@@ -378,7 +370,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response shouldHaveStatus OK
@@ -393,7 +385,8 @@ class TransactionHandlerTest : FunSpec({
                         TransactionType.INCOME,
                         Outgoing(false),
                         Quantity(1),
-                        source = Source("Work")
+                        source = Source("Work"),
+                        addedBy = AddedBy("Jacob")
                     ),
                     Transaction(
                         Date(LocalDate.of(2020, 10, 15)),
@@ -403,7 +396,8 @@ class TransactionHandlerTest : FunSpec({
                         TransactionType.INCOME,
                         Outgoing(false),
                         Quantity(1),
-                        source = Source("Work")
+                        source = Source("Work"),
+                        addedBy = AddedBy("Jacob")
                     )
                 )
             )
@@ -434,7 +428,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
@@ -468,7 +462,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
@@ -502,7 +496,7 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
@@ -534,13 +528,47 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            )
+            ).header("user", "Jacob")
         )
 
         response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
             transactionCount = 2,
             value = 512.50f
         )
+    }
+
+    test("added by defaults if no header given") {
+        val handler = postCreditDebitHandler(TransactionType.CREDIT) { database.save(it) }
+
+        val response = handler(
+            Request(Method.POST, "/").body(
+                """
+                {
+                    "date": "2020-10-12",
+                    "category": "Food",
+                    "value": 12.50,
+                    "description": "Cake",
+                    "quantity": 2
+                }
+                """.trimIndent()
+            )
+        )
+
+        response shouldHaveStatus NO_CONTENT
+        verify {
+            database.save(
+                Transaction(
+                    Date(LocalDate.of(2020, 10, 12)),
+                    Category("Food"),
+                    Value(BigDecimal("12.50")),
+                    Description("Cake"),
+                    TransactionType.CREDIT,
+                    Outgoing(true),
+                    Quantity(2),
+                    addedBy = AddedBy("finance-app")
+                )
+            )
+        }
     }
 
     context("pagination") {

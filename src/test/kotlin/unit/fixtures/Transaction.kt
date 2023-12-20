@@ -4,11 +4,7 @@ import dao.Entity
 import dao.Page
 import domain.*
 import domain.Date
-import domain.TransactionType.BANK_TRANSFER
-import domain.TransactionType.CREDIT
-import domain.TransactionType.DEBIT
-import domain.TransactionType.INCOME
-import domain.TransactionType.PERSONAL_TRANSFER
+import domain.TransactionType.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -28,7 +24,8 @@ fun aDebitTransaction() = Transaction(
     null,
     null,
     null,
-    null
+    null,
+    addedBy
 )
 
 fun aCreditTransaction() = Transaction(
@@ -42,7 +39,8 @@ fun aCreditTransaction() = Transaction(
     null,
     null,
     null,
-    null
+    null,
+    addedBy
 )
 
 fun aWagesIncome() = Transaction(
@@ -56,7 +54,8 @@ fun aWagesIncome() = Transaction(
     null,
     null,
     null,
-    Source("Work")
+    Source("Work"),
+    addedBy
 )
 
 fun aPersonalTransferTransaction() = Transaction(
@@ -70,7 +69,8 @@ fun aPersonalTransferTransaction() = Transaction(
     null,
     inbound,
     outbound,
-    null
+    null,
+    addedBy
 )
 
 fun aBankTransferTransaction() = Transaction(
@@ -84,7 +84,8 @@ fun aBankTransferTransaction() = Transaction(
     recipient,
     null,
     null,
-    null
+    null,
+    addedBy
 )
 
 fun aPage(transaction: Transaction) = Page(

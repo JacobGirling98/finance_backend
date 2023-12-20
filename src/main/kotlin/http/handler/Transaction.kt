@@ -18,22 +18,22 @@ fun postCreditDebitHandler(
     transactionType: TransactionType,
     save: (transaction: Transaction) -> UUID
 ): HttpHandler = { request ->
-    save(transactionFrom(creditDebitLens.extract(request), transactionType))
+    save(transactionFrom(creditDebitLens.extract(request), transactionType, request.userHeader()))
     Response(NO_CONTENT)
 }
 
 fun postBankTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(bankTransferLens.extract(request)))
+    save(transactionFrom(bankTransferLens.extract(request), request.userHeader()))
     Response(NO_CONTENT)
 }
 
 fun postPersonalTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(personalTransferLens.extract(request)))
+    save(transactionFrom(personalTransferLens.extract(request), request.userHeader()))
     Response(NO_CONTENT)
 }
 
 fun postIncomeHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(incomeLens.extract(request)))
+    save(transactionFrom(incomeLens.extract(request), request.userHeader()))
     Response(NO_CONTENT)
 }
 
@@ -41,7 +41,8 @@ fun postCreditDebitListHandler(
     transactionType: TransactionType,
     save: (transaction: List<Transaction>) -> List<UUID>
 ): HttpHandler = { request ->
-    val transactions = creditDebitListLens.extract(request).map { transactionFrom(it, transactionType) }
+    val transactions =
+        creditDebitListLens.extract(request).map { transactionFrom(it, transactionType, request.userHeader()) }
     val ids = save(transactions)
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
@@ -54,7 +55,7 @@ fun postCreditDebitListHandler(
 fun postBankTransferListHandler(
     save: (transaction: List<Transaction>) -> List<UUID>
 ): HttpHandler = { request ->
-    val transactions = bankTransferListLens.extract(request).map { transactionFrom(it) }
+    val transactions = bankTransferListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
@@ -67,7 +68,7 @@ fun postBankTransferListHandler(
 fun postPersonalTransferListHandler(
     save: (transaction: List<Transaction>) -> List<UUID>
 ): HttpHandler = { request ->
-    val transactions = personalTransferListLens.extract(request).map { transactionFrom(it) }
+    val transactions = personalTransferListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
@@ -80,7 +81,7 @@ fun postPersonalTransferListHandler(
 fun postIncomeListHandler(
     save: (transaction: List<Transaction>) -> List<UUID>
 ): HttpHandler = { request ->
-    val transactions = incomeListLens.extract(request).map { transactionFrom(it) }
+    val transactions = incomeListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
@@ -117,7 +118,8 @@ fun putCreditDebitTransactionHandler(
         entityCreditDebitLens(request).map { model ->
             transactionFrom(
                 model,
-                transactionType
+                transactionType,
+                request.userHeader()
             )
         }
     )
@@ -129,7 +131,7 @@ fun putBankTransferTransactionHandler(
 ): HttpHandler = { request ->
     updateTransaction(
         entityBankTransferLens(request).map { model ->
-            transactionFrom(model)
+            transactionFrom(model, request.userHeader())
         }
     )
     Response(NO_CONTENT)
@@ -140,7 +142,7 @@ fun putPersonalTransferTransactionHandler(
 ): HttpHandler = { request ->
     updateTransaction(
         entityPersonalTransferLens(request).map { model ->
-            transactionFrom(model)
+            transactionFrom(model, request.userHeader())
         }
     )
     Response(NO_CONTENT)
@@ -151,7 +153,7 @@ fun putIncomeTransactionHandler(
 ): HttpHandler = { request ->
     updateTransaction(
         entityIncomeLens(request).map { model ->
-            transactionFrom(model)
+            transactionFrom(model, request.userHeader())
         }
     )
     Response(NO_CONTENT)

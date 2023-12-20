@@ -1,17 +1,6 @@
 package unit.http.assembler
 
-import domain.Category
-import domain.Date
-import domain.Description
-import domain.Inbound
-import domain.Outbound
-import domain.Outgoing
-import domain.Quantity
-import domain.Recipient
-import domain.Source
-import domain.Transaction
-import domain.TransactionType
-import domain.Value
+import domain.*
 import http.assembler.transactionFrom
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
@@ -33,7 +22,8 @@ class TransactionsTest : FunSpec({
                 Description("Grapes"),
                 Quantity(1)
             ),
-            TransactionType.CREDIT
+            TransactionType.CREDIT,
+            AddedBy("Jacob")
         ) shouldBe Transaction(
             Date(LocalDate.MIN),
             Category("Food"),
@@ -41,7 +31,8 @@ class TransactionsTest : FunSpec({
             Description("Grapes"),
             TransactionType.CREDIT,
             Outgoing(true),
-            Quantity(1)
+            Quantity(1),
+            addedBy = AddedBy("Jacob")
         )
     }
 
@@ -54,7 +45,8 @@ class TransactionsTest : FunSpec({
                 Description("Grapes"),
                 Quantity(1),
                 Recipient("Friend")
-            )
+            ),
+            AddedBy("Jacob")
         ) shouldBe Transaction(
             Date(LocalDate.MIN),
             Category("Food"),
@@ -63,7 +55,8 @@ class TransactionsTest : FunSpec({
             TransactionType.BANK_TRANSFER,
             Outgoing(true),
             Quantity(1),
-            recipient = Recipient("Friend")
+            recipient = Recipient("Friend"),
+            addedBy = AddedBy("Jacob")
         )
     }
 
@@ -76,7 +69,8 @@ class TransactionsTest : FunSpec({
                 Description("Grapes"),
                 Outbound("Current"),
                 Inbound("Savings")
-            )
+            ),
+            AddedBy("Jacob")
         ) shouldBe Transaction(
             Date(LocalDate.MIN),
             Category("Food"),
@@ -86,7 +80,8 @@ class TransactionsTest : FunSpec({
             Outgoing(false),
             Quantity(1),
             outbound = Outbound("Current"),
-            inbound = Inbound("Savings")
+            inbound = Inbound("Savings"),
+            addedBy = AddedBy("Jacob")
         )
     }
 
@@ -98,7 +93,8 @@ class TransactionsTest : FunSpec({
                 Value(BigDecimal("12.50")),
                 Description("Grapes"),
                 Source("Work")
-            )
+            ),
+            AddedBy("Jacob")
         ) shouldBe Transaction(
             Date(LocalDate.MIN),
             Category("Food"),
@@ -107,7 +103,8 @@ class TransactionsTest : FunSpec({
             TransactionType.INCOME,
             Outgoing(false),
             Quantity(1),
-            source = Source("Work")
+            source = Source("Work"),
+            addedBy = AddedBy("Jacob")
         )
     }
 })

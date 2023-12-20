@@ -73,7 +73,8 @@ private fun getPaginatedDataRoute(
                         Recipient("Nullable String"),
                         Inbound("Nullable String"),
                         Outbound("Nullable String"),
-                        Source("Nullable String")
+                        Source("Nullable String"),
+                        AddedBy("Jacob")
                     )
                 )
             ),
@@ -113,7 +114,8 @@ private fun getPaginatedSearchDataRoute(
                         Recipient("Nullable String"),
                         Inbound("Nullable String"),
                         Outbound("Nullable String"),
-                        Source("Nullable String")
+                        Source("Nullable String"),
+                        AddedBy("Jacob")
                     )
                 )
             ),

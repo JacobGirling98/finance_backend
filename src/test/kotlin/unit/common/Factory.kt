@@ -1,21 +1,8 @@
 package unit.common
 
 import dao.Entity
-import domain.Category
+import domain.*
 import domain.Date
-import domain.Description
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Inbound
-import domain.Outbound
-import domain.Outgoing
-import domain.Quantity
-import domain.Recipient
-import domain.Source
-import domain.StandingOrder
-import domain.Transaction
-import domain.TransactionType
-import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -34,7 +21,8 @@ class Factory(
     private val inbound: Inbound? = null,
     private val outbound: Outbound? = null,
     private val source: Source? = null,
-    private val id: UUID = UUID.randomUUID()
+    private val id: UUID = UUID.randomUUID(),
+    private val addedBy: AddedBy = AddedBy("Jacob")
 ) {
     fun standingOrder() = StandingOrder(
         nextDate = date,
@@ -64,6 +52,7 @@ class Factory(
         recipient,
         inbound,
         outbound,
-        source
+        source,
+        addedBy
     )
 }

@@ -4,6 +4,7 @@ import config.logger
 import dao.Database
 import dao.Entity
 import dao.asEntity
+import domain.AddedBy
 import domain.Date
 import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
@@ -67,6 +68,7 @@ class StandingOrderProcessor(
         quantity,
         recipient,
         inbound,
-        outbound
+        outbound,
+        addedBy = AddedBy("Jacob")
     )
 }

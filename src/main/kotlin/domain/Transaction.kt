@@ -11,7 +11,8 @@ data class Transaction(
     val recipient: Recipient? = null,
     val inbound: Inbound? = null,
     val outbound: Outbound? = null,
-    val source: Source? = null
+    val source: Source? = null,
+    val addedBy: AddedBy
 ) : Comparable<Transaction> {
     override fun compareTo(other: Transaction): Int = other.date.value.compareTo(date.value)
 
