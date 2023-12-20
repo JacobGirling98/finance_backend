@@ -1,34 +1,11 @@
 
 import config.AppMode
-import config.environmentVariables
 import config.logger
 import config.properties
-import dao.csv.DescriptionMappingCsvDatabase
-import dao.csv.LoginCsvDatabase
-import dao.csv.StandingOrderCsvDatabase
-import dao.csv.StringCsvDatabase
-import dao.csv.TransactionCsvDatabase
-import http.contract.addAccountContact
-import http.contract.addCategoryContact
-import http.contract.addDescriptionsContract
-import http.contract.addPayeesContact
-import http.contract.addSourceContact
-import http.contract.dateRangeContracts
-import http.contract.getAccountsContract
-import http.contract.getCategoriesContract
-import http.contract.getDescriptionsContract
-import http.contract.getPayeesContract
-import http.contract.getSourcesContract
-import http.contract.gitContracts
-import http.contract.googleBackupContracts
-import http.contract.headlineContracts
-import http.contract.lastTransactionContracts
-import http.contract.loginContracts
-import http.contract.standingOrdersContracts
-import http.contract.transactionContracts
+import dao.csv.*
+import http.contract.*
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
-import http.git.GitClient
 import http.google.GoogleDrive
 import http.google.Synchronisable
 import org.http4k.contract.contract
@@ -107,7 +84,6 @@ val contracts = listOf(
     ),
     transactionContracts(transactionDatabase, transactionsProcessor),
     loginContracts { loginDatabase.lastLogin() },
-    gitContracts(GitClient("${properties.dataLocation}/..", environmentVariables.githubToken)),
     dateRangeContracts { transactionDatabase.selectAll() },
     headlineContracts { transactionDatabase.selectAll().map { it.domain } },
     standingOrdersContracts(standingOrderDatabase),
