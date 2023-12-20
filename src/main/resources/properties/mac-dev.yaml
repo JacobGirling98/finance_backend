@@ -5,21 +5,21 @@ mongo:
 
 csv:
   descriptionMapping:
-    sync: 60000
+    sync: 10000
   login:
-    sync: 60000
+    sync: 10000
   standingOrder:
-    sync: 60000
+    sync: 10000
   transaction:
-    sync: 60000
+    sync: 10000
   account:
-    sync: 60000
+    sync: 10000
   category:
-    sync: 60000
+    sync: 10000
   incomeSource:
-    sync: 60000
+    sync: 10000
   payee:
-    sync: 60000
+    sync: 10000
 
 appMode: DEV
 
