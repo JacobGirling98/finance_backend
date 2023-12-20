@@ -16,7 +16,7 @@ import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
-import org.http4k.core.Status
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import resource.TransactionProcessor
 import java.math.BigDecimal
@@ -46,6 +46,7 @@ fun transactionContracts(database: Database<Transaction, UUID>, processor: Trans
     putBankTransferContract { database.update(it) },
     putPersonalTransferContract { database.update(it) },
     putIncomeContract { database.update(it) },
+    deleteContract { database.delete(it) }
 )
 
 private fun getPaginatedDataRoute(
@@ -140,7 +141,7 @@ private fun postCreditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit"
             Quantity(1)
         )
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract POST to postCreditDebitHandler(CREDIT, save)
 
 private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/credit" meta {
@@ -158,7 +159,7 @@ private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$
             )
         )
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract POST to postCreditDebitListHandler(CREDIT, save)
 
 private fun postDebitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" meta {
@@ -309,7 +310,7 @@ private fun putCreditContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/
             Quantity(1)
         ).asRandomEntity()
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract Method.PUT to putCreditDebitTransactionHandler(CREDIT, save)
 
 private fun putDebitContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/debit" meta {
@@ -325,7 +326,7 @@ private fun putDebitContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/d
             Quantity(1)
         ).asRandomEntity()
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract Method.PUT to putCreditDebitTransactionHandler(DEBIT, save)
 
 private fun putBankTransferContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/bank-transfer" meta {
@@ -342,7 +343,7 @@ private fun putBankTransferContract(save: (Entity<Transaction>) -> Unit) = "$BAS
             Recipient("String")
         ).asRandomEntity()
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract Method.PUT to putBankTransferTransactionHandler(save)
 
 private fun putPersonalTransferContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/personal-transfer" meta {
@@ -359,7 +360,7 @@ private fun putPersonalTransferContract(save: (Entity<Transaction>) -> Unit) = "
             Inbound("String")
         ).asRandomEntity()
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract Method.PUT to putPersonalTransferTransactionHandler(save)
 
 private fun putIncomeContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/income" meta {
@@ -375,5 +376,13 @@ private fun putIncomeContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/
             Source("String")
         ).asRandomEntity()
     )
-    returning(Status.NO_CONTENT)
+    returning(NO_CONTENT)
 } bindContract Method.PUT to putIncomeTransactionHandler(save)
+
+private fun deleteContract(delete: (UUID) -> Unit) = BASE_URL meta {
+    operationId = "$BASE_URL/delete"
+    summary = "Delete a transaction"
+    tags += tag
+    queries += idQuery
+    returning(NO_CONTENT)
+} bindContract Method.DELETE to deleteEntityHandler(delete)

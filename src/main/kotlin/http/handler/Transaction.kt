@@ -156,3 +156,9 @@ fun putIncomeTransactionHandler(
     )
     Response(NO_CONTENT)
 }
+
+fun deleteEntityHandler(delete: (UUID) -> Unit): HttpHandler = { request ->
+    val id = idQuery.extract(request)
+    delete(id)
+    Response(NO_CONTENT)
+}

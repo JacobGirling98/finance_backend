@@ -4,39 +4,11 @@ import dao.Database
 import dao.Entity
 import dao.asRandomEntity
 import dao.entityOf
-import domain.Category
+import domain.*
 import domain.Date
-import domain.Description
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Inbound
-import domain.Outbound
-import domain.Outgoing
-import domain.Quantity
-import domain.Recipient
-import domain.Source
-import domain.StandingOrder
-import domain.TransactionType
-import domain.Value
 import http.asTag
-import http.handler.getStandingOrdersHandler
-import http.handler.postBankTransferStandingOrderHandler
-import http.handler.postCreditDebitStandingOrderHandler
-import http.handler.postIncomeStandingOrderHandler
-import http.handler.postPersonalTransferStandingOrderHandler
-import http.handler.putBankTransferStandingOrderHandler
-import http.handler.putCreditDebitStandingOrderHandler
-import http.handler.putIncomeStandingOrderHandler
-import http.handler.putPersonalTransferStandingOrderHandler
-import http.lense.bankTransferStandingOrderLens
-import http.lense.creditDebitStandingOrderLens
-import http.lense.entityBankTransferStandingOrderLens
-import http.lense.entityCreditDebitStandingOrderLens
-import http.lense.entityIncomeStandingOrderLens
-import http.lense.entityPersonalTransferStandingOrderLens
-import http.lense.incomeStandingOrderLens
-import http.lense.personalTransferStandingOrderLens
-import http.lense.standingOrderListLens
+import http.handler.*
+import http.lense.*
 import http.model.StandingOrder.BankTransfer
 import http.model.StandingOrder.CreditDebit
 import http.model.StandingOrder.Income
@@ -61,7 +33,8 @@ fun standingOrdersContracts(repository: Database<StandingOrder, UUID>) = listOf(
     putDebitContract { repository.update(it) },
     putBankTransferContract { repository.update(it) },
     putPersonalTransferContract { repository.update(it) },
-    putIncomeContract { repository.update(it) }
+    putIncomeContract { repository.update(it) },
+    deleteContract { repository.delete(it) }
 )
 
 private fun postCreditContract(save: (StandingOrder) -> UUID) = "$BASE_URL/credit" meta {
@@ -274,3 +247,11 @@ private fun getStandingOrdersContract(standingOrders: () -> List<Entity<Standing
         )
     )
 } bindContract Method.GET to getStandingOrdersHandler(standingOrders)
+
+private fun deleteContract(delete: (UUID) -> Unit) = BASE_URL meta {
+    operationId = "$BASE_URL/delete"
+    summary = "Delete a standing order"
+    tags += BASE_URL.asTag()
+    queries += idQuery
+    returning(Status.NO_CONTENT)
+} bindContract Method.DELETE to deleteEntityHandler(delete)

@@ -5,15 +5,7 @@ import domain.StandingOrder
 import domain.TransactionType
 import http.assembler.map
 import http.assembler.standingOrderFrom
-import http.lense.bankTransferStandingOrderLens
-import http.lense.creditDebitStandingOrderLens
-import http.lense.entityBankTransferStandingOrderLens
-import http.lense.entityCreditDebitStandingOrderLens
-import http.lense.entityIncomeStandingOrderLens
-import http.lense.entityPersonalTransferStandingOrderLens
-import http.lense.incomeStandingOrderLens
-import http.lense.personalTransferStandingOrderLens
-import http.lense.standingOrderListLens
+import http.lense.*
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status

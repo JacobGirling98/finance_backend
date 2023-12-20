@@ -13,3 +13,5 @@ val pageNumberQuery = Query.int().map(::PageNumber) { it.value }.required("pageN
 val pageSizeQuery = Query.int().map(::PageSize) { it.value }.required("pageSize")
 
 val searchTermQuery = Query.string().required("value")
+
+val idQuery = Query.uuid().required("id")
