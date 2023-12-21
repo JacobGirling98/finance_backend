@@ -13,8 +13,8 @@ fun loginHandler(lastLogin: () -> Login): HttpHandler = {
     Response(Status.OK).with(loginLens of lastLogin())
 }
 
-fun lastTransactionHandler(lastTransaction: () -> Date?): HttpHandler = {
-    lastTransaction()?.let {
+fun lastTransactionHandler(lastUserTransaction: () -> Date?): HttpHandler = {
+    lastUserTransaction()?.let {
         Response(Status.OK).with(dateLens of it)
     } ?: Response(Status.BAD_REQUEST).body("Could not find a transaction")
 }

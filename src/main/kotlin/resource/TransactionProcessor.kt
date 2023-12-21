@@ -13,4 +13,10 @@ class TransactionProcessor(private val transactionDatabase: Database<Transaction
 
     fun search(term: String, pageNumber: PageNumber, pageSize: PageSize) =
         paginate(transactionDatabase.selectAll().search(term), pageNumber, pageSize)
+
+    fun mostRecentUserTransaction() = transactionDatabase
+        .selectAll()
+        .filter { it.domain.addedBy.value == "Jacob" }
+        .map { it.domain }
+        .mostRecent()
 }

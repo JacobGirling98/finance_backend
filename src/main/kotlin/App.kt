@@ -24,7 +24,10 @@ import org.http4k.filter.ServerFilters.Cors
 import org.http4k.routing.routes
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
-import resource.*
+import resource.GoogleDriveSynchroniser
+import resource.LoginSynchroniser
+import resource.StandingOrderProcessor
+import resource.TransactionProcessor
 import java.time.LocalDate
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -87,7 +90,7 @@ val contracts = listOf(
     dateRangeContracts { transactionDatabase.selectAll() },
     headlineContracts { transactionDatabase.selectAll().map { it.domain } },
     standingOrdersContracts(standingOrderDatabase),
-    lastTransactionContracts { transactionDatabase.selectAll().map { it.domain }.mostRecent() },
+    lastTransactionContracts { transactionsProcessor.mostRecentUserTransaction() },
     googleBackupContracts(synchronisableDatabases, googleDriveSynchroniser)
 )
 

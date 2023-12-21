@@ -19,8 +19,8 @@ fun loginContracts(lastLogin: () -> LocalDate?) = listOf(
     lastLoginRoute(lastLogin)
 )
 
-fun lastTransactionContracts(lastTransaction: () -> Date?) = listOf(
-    lastTransactionRoute(lastTransaction)
+fun lastTransactionContracts(lastUserTransaction: () -> Date?) = listOf(
+    lastTransactionRoute(lastUserTransaction)
 )
 
 private fun lastLoginRoute(lastLogin: () -> LocalDate?) = LOGIN_URL meta {
@@ -30,9 +30,9 @@ private fun lastLoginRoute(lastLogin: () -> LocalDate?) = LOGIN_URL meta {
     returning(OK, biDiBodyLens<LocalDate>() to LocalDate.of(2023, 1, 1))
 } bindContract GET to loginHandler { Login(lastLogin()!!) }
 
-private fun lastTransactionRoute(lastTransaction: () -> Date?) = TRANSACTION_URL meta {
+private fun lastTransactionRoute(lastUserTransaction: () -> Date?) = TRANSACTION_URL meta {
     operationId = TRANSACTION_URL
     summary = "Get the latest transaction"
     tags += TRANSACTION_URL.asTag()
     returning(OK, dateLens to Date(LocalDate.of(2023, 1, 1)))
-} bindContract GET to lastTransactionHandler { lastTransaction() }
+} bindContract GET to lastTransactionHandler { lastUserTransaction() }

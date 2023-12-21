@@ -119,3 +119,5 @@ fun Transaction.withAnInboundAccountOf(value: String) = copy(inbound = Inbound(v
 fun Transaction.withAnOutboundAccountOf(value: String) = copy(outbound = Outbound(value))
 
 fun Transaction.withAnIncomeSourceOf(value: String) = copy(source = Source(value))
+
+fun Transaction.addedBy(value: String) = copy(addedBy = AddedBy(value))
