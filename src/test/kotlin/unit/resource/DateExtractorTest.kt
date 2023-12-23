@@ -44,12 +44,12 @@ class DateExtractorTest : DescribeSpec({
 
             monthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 1),
-                    EndDate.of(2020, 2, 1)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 1),
                     EndDate.of(2020, 3, 1)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 1),
+                    EndDate.of(2020, 2, 1)
                 )
             )
         }
@@ -64,12 +64,12 @@ class DateExtractorTest : DescribeSpec({
 
             monthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 12, 1),
-                    EndDate.of(2021, 1, 1)
-                ),
-                DateRange(
                     StartDate.of(2021, 1, 1),
                     EndDate.of(2021, 2, 1)
+                ),
+                DateRange(
+                    StartDate.of(2020, 12, 1),
+                    EndDate.of(2021, 1, 1)
                 )
             )
         }
@@ -84,12 +84,12 @@ class DateExtractorTest : DescribeSpec({
 
             monthsOf(transactions)() shouldContainAll listOf(
                 DateRange(
-                    StartDate.of(2020, 12, 1),
-                    EndDate.of(2021, 1, 1)
-                ),
-                DateRange(
                     StartDate.of(2021, 12, 1),
                     EndDate.of(2022, 1, 1)
+                ),
+                DateRange(
+                    StartDate.of(2020, 12, 1),
+                    EndDate.of(2021, 1, 1)
                 )
             )
         }
@@ -123,16 +123,16 @@ class DateExtractorTest : DescribeSpec({
 
             yearsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 1),
-                    EndDate.of(2021, 1, 1)
+                    StartDate.of(2022, 1, 1),
+                    EndDate.of(2023, 1, 1)
                 ),
                 DateRange(
                     StartDate.of(2021, 1, 1),
                     EndDate.of(2022, 1, 1)
                 ),
                 DateRange(
-                    StartDate.of(2022, 1, 1),
-                    EndDate.of(2023, 1, 1)
+                    StartDate.of(2020, 1, 1),
+                    EndDate.of(2021, 1, 1)
                 )
             )
         }
@@ -180,12 +180,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 15)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -200,12 +200,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 14),
-                    EndDate.of(2020, 2, 15)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 14),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -220,12 +220,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 14)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 14),
                     EndDate.of(2020, 3, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 14)
                 )
             )
         }
@@ -241,16 +241,16 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 13)
+                    StartDate.of(2020, 3, 14),
+                    EndDate.of(2020, 4, 15)
                 ),
                 DateRange(
                     StartDate.of(2020, 2, 13),
                     EndDate.of(2020, 3, 14)
                 ),
                 DateRange(
-                    StartDate.of(2020, 3, 14),
-                    EndDate.of(2020, 4, 15)
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 13)
                 )
             )
         }
@@ -266,12 +266,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 15)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -287,16 +287,16 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 15)
+                    StartDate.of(2020, 3, 15),
+                    EndDate.of(2020, 4, 15)
                 ),
                 DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
                 ),
                 DateRange(
-                    StartDate.of(2020, 3, 15),
-                    EndDate.of(2020, 4, 15)
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -312,12 +312,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 2, 15),
-                    EndDate.of(2020, 3, 15)
-                ),
-                DateRange(
                     StartDate.of(2020, 3, 15),
                     EndDate.of(2020, 4, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 2, 15),
+                    EndDate.of(2020, 3, 15)
                 )
             )
         }
@@ -332,16 +332,16 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 14),
-                    EndDate.of(2020, 2, 15)
+                    StartDate.of(2020, 3, 13),
+                    EndDate.of(2020, 4, 15)
                 ),
                 DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 13)
                 ),
                 DateRange(
-                    StartDate.of(2020, 3, 13),
-                    EndDate.of(2020, 4, 15)
+                    StartDate.of(2020, 1, 14),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -356,12 +356,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 1, 15),
-                    EndDate.of(2020, 2, 15)
-                ),
-                DateRange(
                     StartDate.of(2020, 2, 15),
                     EndDate.of(2020, 3, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 1, 15),
+                    EndDate.of(2020, 2, 15)
                 )
             )
         }
@@ -380,28 +380,28 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalMonthsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 2, 15),
-                    EndDate.of(2020, 3, 14)
-                ),
-                DateRange(
-                    StartDate.of(2020, 3, 14),
-                    EndDate.of(2020, 4, 15)
-                ),
-                DateRange(
-                    StartDate.of(2020, 4, 15),
-                    EndDate.of(2020, 5, 15)
-                ),
-                DateRange(
-                    StartDate.of(2020, 5, 15),
-                    EndDate.of(2020, 6, 13)
+                    StartDate.of(2020, 7, 15),
+                    EndDate.of(2020, 8, 15)
                 ),
                 DateRange(
                     StartDate.of(2020, 6, 13),
                     EndDate.of(2020, 7, 15)
                 ),
                 DateRange(
-                    StartDate.of(2020, 7, 15),
-                    EndDate.of(2020, 8, 15)
+                    StartDate.of(2020, 5, 15),
+                    EndDate.of(2020, 6, 13)
+                ),
+                DateRange(
+                    StartDate.of(2020, 4, 15),
+                    EndDate.of(2020, 5, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 3, 14),
+                    EndDate.of(2020, 4, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 2, 15),
+                    EndDate.of(2020, 3, 14)
                 )
             )
         }
@@ -433,12 +433,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 4, 15),
-                    EndDate.of(2021, 4, 15)
-                ),
-                DateRange(
                     StartDate.of(2021, 4, 15),
                     EndDate.of(2022, 4, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 4, 15),
+                    EndDate.of(2021, 4, 15)
                 )
             )
         }
@@ -469,12 +469,12 @@ class DateExtractorTest : DescribeSpec({
 
             fiscalYearsOf(transactions)() shouldBe listOf(
                 DateRange(
-                    StartDate.of(2020, 4, 14),
-                    EndDate.of(2021, 4, 13)
-                ),
-                DateRange(
                     StartDate.of(2021, 4, 13),
                     EndDate.of(2022, 4, 15)
+                ),
+                DateRange(
+                    StartDate.of(2020, 4, 14),
+                    EndDate.of(2021, 4, 13)
                 )
             )
         }

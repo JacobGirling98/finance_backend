@@ -1,11 +1,7 @@
 package resource
 
 import dao.Entity
-import domain.Date
-import domain.DateRange
-import domain.EndDate
-import domain.StartDate
-import domain.Transaction
+import domain.*
 import java.time.LocalDate
 
 fun monthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
@@ -16,7 +12,7 @@ fun monthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRang
                 startDate.nextMonth()
             )
         }
-    }
+    }.sortedByDescending { it.startDate.value }
 }
 
 fun yearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
@@ -27,7 +23,7 @@ fun yearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange
                 startDate.nextYear()
             )
         }
-    }
+    }.sortedByDescending { it.startDate.value }
 }
 
 fun fiscalMonthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
@@ -47,7 +43,7 @@ fun fiscalMonthsOf(transactions: () -> List<Entity<Transaction>>): () -> List<Da
         dateRanges.add(previousDateRange(dateRanges.earliest()))
     }
 
-    dateRanges.sortedBy { it.startDate.value }
+    dateRanges.sortedByDescending { it.startDate.value }
 }
 
 fun fiscalYearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<DateRange> = {
@@ -61,7 +57,7 @@ fun fiscalYearsOf(transactions: () -> List<Entity<Transaction>>): () -> List<Dat
         }
         .forEach { dateRanges.add(it, StartDate::nextFiscalYear) }
 
-    dateRanges
+    dateRanges.sortedByDescending { it.startDate.value }
 }
 
 private fun MutableList<DateRange>.add(date: Date, nextDate: (StartDate) -> EndDate) {
