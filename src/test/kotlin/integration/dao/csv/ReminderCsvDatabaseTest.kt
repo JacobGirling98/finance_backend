@@ -1,11 +1,9 @@
 package integration.dao.csv
 
 import dao.asEntity
-import dao.csv.StandingOrderReminderCsvDatabase
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.NextReminder
-import domain.StandingOrderReminder
+import dao.csv.ReminderCsvDatabase
+import domain.*
+import domain.Date
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.shouldBe
@@ -14,7 +12,7 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.time.Duration
 
-class StandingOrderReminderCsvDatabaseTest : FunSpec({
+class ReminderCsvDatabaseTest : FunSpec({
     beforeEach {
         if (file.exists()) file.delete()
         file.createNewFile()
@@ -27,34 +25,36 @@ class StandingOrderReminderCsvDatabaseTest : FunSpec({
 
         file.writeText(
             """
-            id,next_reminder,frequency_unit,frequency_quantity
-            $uuid,2020-01-01,monthly,1
+            id,next_reminder,frequency_unit,frequency_quantity,description
+            $uuid,2020-01-01,monthly,1,Refresh Standing Orders
             """.trimIndent()
         )
 
-        database().selectAll() shouldHaveSingleElement StandingOrderReminder(
-            NextReminder(LocalDate.of(2020, 1, 1)),
+        database().selectAll() shouldHaveSingleElement Reminder(
+            Date(LocalDate.of(2020, 1, 1)),
             Frequency.MONTHLY,
-            FrequencyQuantity(1)
+            FrequencyQuantity(1),
+            Description("Refresh Standing Orders")
         ).asEntity(uuid)
     }
 
     test("can flush a standing order reminder to a file") {
-        file.writeText("id,next_reminder,frequency_unit,frequency_quantity")
+        file.writeText("id,next_reminder,frequency_unit,frequency_quantity,description")
         val database = database()
         val id = database.save(
-            StandingOrderReminder(
-                NextReminder(LocalDate.of(2020, 1, 1)),
+            Reminder(
+                Date(LocalDate.of(2020, 1, 1)),
                 Frequency.MONTHLY,
-                FrequencyQuantity(1)
+                FrequencyQuantity(1),
+                Description("Refresh Standing Orders")
             )
         )
 
         database.flush()
 
         file.readText() shouldBe """
-            id,next_reminder,frequency_unit,frequency_quantity
-            $id,2020-01-01,monthly,1
+            id,next_reminder,frequency_unit,frequency_quantity,description
+            $id,2020-01-01,monthly,1,Refresh Standing Orders
         """.trimIndent()
     }
 })
@@ -62,4 +62,4 @@ class StandingOrderReminderCsvDatabaseTest : FunSpec({
 private const val FILE_LOCATION = "test.csv"
 private val file = File(FILE_LOCATION)
 
-private fun database() = StandingOrderReminderCsvDatabase(Duration.ZERO, FILE_LOCATION)
+private fun database() = ReminderCsvDatabase(Duration.ZERO, FILE_LOCATION)
