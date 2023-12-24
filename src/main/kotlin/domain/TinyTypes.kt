@@ -77,3 +77,5 @@ data class HasPreviousPage(override val value: Boolean) : TinyType<Boolean>
 data class HasNextPage(override val value: Boolean) : TinyType<Boolean>
 
 data class AddedBy(override val value: String) : TinyType<String>
+
+data class NextReminder(override val value: LocalDate) : TinyType<LocalDate>

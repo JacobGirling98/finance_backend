@@ -1,4 +1,4 @@
-package unit.dao.csv
+package integration.dao.csv
 
 import dao.csv.DescriptionMappingCsvDatabase
 import domain.DescriptionMapping

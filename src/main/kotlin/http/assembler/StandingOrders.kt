@@ -53,6 +53,6 @@ fun standingOrderFrom(transaction: http.model.StandingOrder.Income) = StandingOr
     transaction.description,
     TransactionType.INCOME,
     Outgoing(false),
-    quantity = Quantity(1)
-    // source = transaction.source
+    quantity = Quantity(1),
+    source = transaction.source
 )
