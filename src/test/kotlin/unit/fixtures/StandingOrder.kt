@@ -1,10 +1,6 @@
 package unit.fixtures
 
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Outgoing
-import domain.StandingOrder
-import domain.TransactionType
+import domain.*
 
 fun aDebitStandingOrder() = StandingOrder(
     date,
@@ -64,4 +60,17 @@ fun aPersonalTransferStandingOrder() = StandingOrder(
     null,
     inbound,
     outbound
+)
+
+fun anIncomeStandingOrder() = StandingOrder(
+    date,
+    FrequencyQuantity(1),
+    Frequency.MONTHLY,
+    category,
+    value,
+    description,
+    TransactionType.INCOME,
+    Outgoing(false),
+    quantity,
+    source = source
 )
