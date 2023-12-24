@@ -241,7 +241,8 @@ private fun getStandingOrdersContract(standingOrders: () -> List<Entity<Standing
                     Quantity(1),
                     Recipient("String"),
                     Inbound("String"),
-                    Outbound("String")
+                    Outbound("String"),
+                    Source("String")
                 )
             )
         )
