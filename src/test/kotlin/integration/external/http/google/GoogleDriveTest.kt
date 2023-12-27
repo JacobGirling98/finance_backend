@@ -1,4 +1,4 @@
-package integration.http.google
+package integration.external.http.google
 
 import config.properties
 import http.google.GoogleDrive

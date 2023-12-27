@@ -1,4 +1,4 @@
-package integration.dao.csv
+package integration.memory.dao.csv
 
 import dao.csv.DateCsvDatabase
 import io.kotest.core.spec.style.FunSpec
