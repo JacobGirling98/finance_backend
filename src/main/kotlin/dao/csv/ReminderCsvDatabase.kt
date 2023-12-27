@@ -18,6 +18,6 @@ class ReminderCsvDatabase(
     )
 
     override fun Reminder.toRow(): String =
-        "${nextReminder.value},${frequency.value},${frequencyQuantity.value},${description.value}"
+        "${date.value},${frequency.value},${frequencyQuantity.value},${description.value}"
 
 }

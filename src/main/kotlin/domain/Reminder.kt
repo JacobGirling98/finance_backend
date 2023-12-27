@@ -1,11 +1,11 @@
 package domain
 
 data class Reminder(
-    val nextReminder: Date,
-    val frequency: Frequency,
-    val frequencyQuantity: FrequencyQuantity,
+    override val date: Date,
+    override val frequency: Frequency,
+    override val frequencyQuantity: FrequencyQuantity,
     val description: Description
-) : Comparable<Reminder> {
-    override fun compareTo(other: Reminder): Int = nextReminder.value.compareTo(other.nextReminder.value)
+) : Comparable<Reminder>, Advancable {
+    override fun compareTo(other: Reminder): Int = date.value.compareTo(other.date.value)
 
 }
