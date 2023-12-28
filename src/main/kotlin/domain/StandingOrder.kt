@@ -1,9 +1,9 @@
 package domain
 
 data class StandingOrder(
-    val nextDate: Date,
-    val frequencyQuantity: FrequencyQuantity,
-    val frequencyUnit: Frequency,
+    override val date: Date,
+    override val frequencyQuantity: FrequencyQuantity,
+    override val frequency: Frequency,
     val category: Category,
     val value: Value,
     val description: Description,
@@ -14,6 +14,6 @@ data class StandingOrder(
     val inbound: Inbound? = null,
     val outbound: Outbound? = null,
     val source: Source? = null
-) : Comparable<StandingOrder> {
-    override fun compareTo(other: StandingOrder): Int = nextDate.value.compareTo(other.nextDate.value)
+) : Comparable<StandingOrder>, Advancable {
+    override fun compareTo(other: StandingOrder): Int = date.value.compareTo(other.date.value)
 }

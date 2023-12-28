@@ -25,9 +25,9 @@ class Factory(
     private val addedBy: AddedBy = AddedBy("Jacob")
 ) {
     fun standingOrder() = StandingOrder(
-        nextDate = date,
+        date = date,
         frequencyQuantity = frequencyQuantity,
-        frequencyUnit = frequency,
+        frequency = frequency,
         category = category,
         value = value,
         description = description,

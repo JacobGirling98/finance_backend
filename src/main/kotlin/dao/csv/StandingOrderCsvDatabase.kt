@@ -25,5 +25,5 @@ class StandingOrderCsvDatabase(syncPeriod: Duration, file: String) : CsvDatabase
     )
 
     override fun StandingOrder.toRow(): String =
-        "${nextDate.value},${frequencyQuantity.value},${frequencyUnit.value},${category.value},${value.value},${description.value},${type.type},${outgoing.value},${quantity.value},${recipient?.value.orEmpty()},${inbound?.value.orEmpty()},${outbound?.value.orEmpty()},${source?.value.orEmpty()}"
+        "${date.value},${frequencyQuantity.value},${frequency.value},${category.value},${value.value},${description.value},${type.type},${outgoing.value},${quantity.value},${recipient?.value.orEmpty()},${inbound?.value.orEmpty()},${outbound?.value.orEmpty()},${source?.value.orEmpty()}"
 }

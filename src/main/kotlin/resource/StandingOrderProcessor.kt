@@ -21,17 +21,17 @@ class StandingOrderProcessor(
     private val now: () -> LocalDate
 ) {
     fun process(standingOrder: Entity<StandingOrder>) {
-        if (standingOrder.domain.nextDate.value > now()) {
+        if (standingOrder.domain.date.value > now()) {
             return
         }
         var standingOrderToChange: StandingOrder = standingOrder.domain.copy()
-        while (standingOrderToChange.nextDate.value <= now()) {
-            logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.nextDate.value}" }
+        while (standingOrderToChange.date.value <= now()) {
+            logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.date.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
             standingOrderToChange = standingOrderToChange.copy(
-                nextDate = when (standingOrderToChange.frequencyUnit) {
-                    MONTHLY -> Date(standingOrderToChange.nextDate.value.plusMonths(standingOrderToChange.frequencyQuantity.value.toLong()))
-                    WEEKLY -> Date(standingOrderToChange.nextDate.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
+                date = when (standingOrderToChange.frequency) {
+                    MONTHLY -> Date(standingOrderToChange.date.value.plusMonths(standingOrderToChange.frequencyQuantity.value.toLong()))
+                    WEEKLY -> Date(standingOrderToChange.date.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
                 }
             )
             standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))
@@ -59,7 +59,7 @@ class StandingOrderProcessor(
     }
 
     private fun StandingOrder.toTransaction() = Transaction(
-        nextDate,
+        date,
         category,
         value,
         description,

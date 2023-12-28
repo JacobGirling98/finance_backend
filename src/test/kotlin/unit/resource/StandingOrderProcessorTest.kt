@@ -128,12 +128,12 @@ class StandingOrderProcessorTest : FunSpec({
         val firstStandingOrder = firstFactory.standingOrderEntity()
             .copy(
                 domain = firstFactory.standingOrder()
-                    .copy(nextDate = Date(firstFactory.standingOrder().nextDate.value.plusMonths(1)))
+                    .copy(date = Date(firstFactory.standingOrder().date.value.plusMonths(1)))
             )
         val secondStandingOrder = secondFactory.standingOrderEntity()
             .copy(
                 domain = secondFactory.standingOrder()
-                    .copy(nextDate = Date(secondFactory.standingOrder().nextDate.value.plusWeeks(1)))
+                    .copy(date = Date(secondFactory.standingOrder().date.value.plusWeeks(1)))
             )
 
         verify { transactionsDatabase.save(firstFactory.transaction()) }
