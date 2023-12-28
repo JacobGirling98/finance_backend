@@ -3,7 +3,7 @@ package domain
 import domain.Frequency.MONTHLY
 import domain.Frequency.WEEKLY
 
-interface Advancable {
+interface Temporal {
     val date: Date
     val frequency: Frequency
     val frequencyQuantity: FrequencyQuantity

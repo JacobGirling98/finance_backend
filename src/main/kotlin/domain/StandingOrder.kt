@@ -14,6 +14,6 @@ data class StandingOrder(
     val inbound: Inbound? = null,
     val outbound: Outbound? = null,
     val source: Source? = null
-) : Comparable<StandingOrder>, Advancable {
+) : Comparable<StandingOrder>, Temporal {
     override fun compareTo(other: StandingOrder): Int = date.value.compareTo(other.date.value)
 }

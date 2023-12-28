@@ -1,17 +1,17 @@
 package unit.domain
 
-import domain.Advancable
 import domain.Date
 import domain.Frequency
 import domain.FrequencyQuantity
+import domain.Temporal
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import java.time.LocalDate
 
-class AdvancableTest : FunSpec({
+class TemporalTest : FunSpec({
 
     test("can advance by months") {
-        val testObj = object : Advancable {
+        val testObj = object : Temporal {
             override val date: Date = Date(LocalDate.of(2023, 1, 1))
             override val frequency: Frequency = Frequency.MONTHLY
             override val frequencyQuantity: FrequencyQuantity = FrequencyQuantity(2)
@@ -21,7 +21,7 @@ class AdvancableTest : FunSpec({
     }
 
     test("can advance by weeks") {
-        val testObj = object : Advancable {
+        val testObj = object : Temporal {
             override val date: Date = Date(LocalDate.of(2023, 1, 1))
             override val frequency: Frequency = Frequency.WEEKLY
             override val frequencyQuantity: FrequencyQuantity = FrequencyQuantity(2)

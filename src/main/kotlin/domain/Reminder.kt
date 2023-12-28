@@ -5,7 +5,7 @@ data class Reminder(
     override val frequency: Frequency,
     override val frequencyQuantity: FrequencyQuantity,
     val description: Description
-) : Comparable<Reminder>, Advancable {
+) : Comparable<Reminder>, Temporal {
     override fun compareTo(other: Reminder): Int = date.value.compareTo(other.date.value)
 
 }
