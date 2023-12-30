@@ -1,9 +1,5 @@
 dataLocation: C:/Users/jakeg/Documents/FinanceV3/data/dev
 
-mongo:
-  uri: mongodb://localhost:27017
-  database: testFinance
-
 csv:
   descriptionMapping:
     sync: 60000

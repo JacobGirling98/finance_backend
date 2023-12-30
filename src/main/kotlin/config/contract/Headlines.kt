@@ -1,4 +1,4 @@
-package http.contract
+package config.contract
 
 import domain.Headlines
 import domain.Transaction

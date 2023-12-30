@@ -5,10 +5,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.io.File
 
-data class MongoProperties(
-    val uri: String,
-    val database: String
-)
 
 data class SyncProperties(
     val sync: Long
@@ -31,7 +27,6 @@ data class Google(
 
 data class Properties(
     val dataLocation: String,
-    val mongo: MongoProperties,
     val csv: CsvProperties,
     val appMode: AppMode,
     val google: Google

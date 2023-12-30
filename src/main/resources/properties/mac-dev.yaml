@@ -1,7 +1,4 @@
 dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/dev
-mongo:
-  uri: mongodb://localhost:27017
-  database: testFinance
 
 csv:
   descriptionMapping:

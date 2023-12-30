@@ -1,9 +1,5 @@
 dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/prod
 
-mongo:
-  uri: mongodb://localhost:27017
-  database: testFinance
-
 csv:
   descriptionMapping:
     sync: 60000

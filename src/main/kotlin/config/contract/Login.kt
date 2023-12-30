@@ -1,4 +1,4 @@
-package http.contract
+package config.contract
 
 import domain.Date
 import domain.Login
