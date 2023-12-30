@@ -4,6 +4,7 @@ import config.CustomJackson.auto
 import dao.Entity
 import dao.Page
 import domain.*
+import http.model.ReminderId
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -75,3 +76,7 @@ val entityBankTransferLens = biDiBodyLens<Entity<BankTransfer>>()
 val entityPersonalTransferLens = biDiBodyLens<Entity<PersonalTransfer>>()
 
 val entityIncomeLens = biDiBodyLens<Entity<Income>>()
+
+val reminderIdLens = biDiBodyLens<ReminderId>()
+
+val reminderEntityListLens = biDiBodyLens<List<Entity<Reminder>>>()

@@ -30,10 +30,12 @@ class ReminderProcessorTest : FunSpec({
             FrequencyQuantity(1),
             Description("A reminder")
         ).asEntity(id)
+        every { database.findById(id) } returns reminder
         every { database.update(any()) } returns null
 
-        processor.markAsRead(reminder)
+        processor.markAsRead(id)
 
+        verify { database.findById(id) }
         verify {
             database.update(
                 Reminder(
