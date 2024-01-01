@@ -1,7 +1,6 @@
 package acceptance
 
 import acceptance.setup.E2ETest
-import config.reminderDatabase
 import dao.Entity
 import domain.*
 import helpers.fixtures.deserialize
@@ -14,8 +13,6 @@ import org.http4k.kotest.shouldHaveStatus
 import java.time.LocalDate
 
 class ReminderTest : E2ETest({
-
-    beforeEach { reminderDatabase.deleteAll() }
 
     test("can add a reminder, get it back, advance the reminder and then not get it back") {
         val before = LocalDate.now().minusWeeks(1)
