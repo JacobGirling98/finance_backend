@@ -6,10 +6,13 @@ import dao.asEntity
 import domain.*
 import domain.Date
 import helpers.fixtures.aReminder
+import helpers.fixtures.deserialize
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
+import http.model.ReminderId
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -68,7 +71,8 @@ class ReminderHandlersTest : FunSpec({
 
         val response = addReminderHandler(addReminder)(request)
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus OK
+        response.deserialize<ReminderId>().id shouldBe id
         verify {
             addReminder(
                 Reminder(

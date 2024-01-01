@@ -29,6 +29,10 @@ open class InMemoryDatabase<Domain : Comparable<Domain>>(
 
     override fun delete(id: UUID): NotFoundException? = data.remove(id).asNullableNotFound(id)
 
+    override fun deleteAll() {
+        data.clear()
+    }
+
     private fun <T> T?.asNullableNotFound(id: UUID): NotFoundException? =
         if (this == null) NotFoundException(id) else null
 }

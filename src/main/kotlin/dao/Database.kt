@@ -10,4 +10,6 @@ interface Database<Domain : Comparable<Domain>, Id> {
     fun selectAll(): List<Entity<Domain>>
     fun update(entity: Entity<Domain>): DatabaseException?
     fun delete(id: Id): DatabaseException?
+
+    fun deleteAll()
 }

@@ -5,6 +5,7 @@ import domain.Reminder
 import http.lense.reminderEntityListLens
 import http.lense.reminderIdLens
 import http.lense.reminderLens
+import http.model.ReminderId
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -23,6 +24,6 @@ fun outstandingRemindersHandler(outstandingReminders: () -> List<Entity<Reminder
 
 fun addReminderHandler(addReminder: (Reminder) -> UUID): HttpHandler = {
     val reminder = reminderLens.extract(it)
-    addReminder(reminder)
-    Response(Status.NO_CONTENT)
+    val id = addReminder(reminder)
+    Response(Status.OK).with(reminderIdLens of ReminderId(id))
 }

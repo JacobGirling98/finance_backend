@@ -7,6 +7,7 @@ import helpers.fixtures.Doubles.TestDomain
 import helpers.fixtures.asEntity
 import helpers.matchers.shouldContainDomain
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import java.util.*
@@ -65,5 +66,15 @@ class InMemoryDatabaseTest : FunSpec({
     test("deleting an entity that doesn't exist returns a NotFoundException") {
         val id = UUID.randomUUID()
         database.delete(id) shouldBe NotFoundException(id)
+    }
+
+    test("can delete all entities") {
+        database.save(TestDomain(), TestDomain(), TestDomain())
+
+        database.selectAll() shouldHaveSize 3
+
+        database.deleteAll()
+
+        database.selectAll() shouldHaveSize 0
     }
 })
