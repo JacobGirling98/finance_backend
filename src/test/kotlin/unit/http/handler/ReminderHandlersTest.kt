@@ -3,7 +3,10 @@ package unit.http.handler
 import config.CustomJackson.mapper
 import dao.Entity
 import dao.asEntity
-import domain.Reminder
+import domain.*
+import domain.Date
+import helpers.fixtures.aReminder
+import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
 import io.kotest.core.spec.style.FunSpec
@@ -16,7 +19,7 @@ import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveBody
 import org.http4k.kotest.shouldHaveStatus
-import unit.fixtures.aReminder
+import java.time.LocalDate
 import java.util.*
 
 class ReminderHandlersTest : FunSpec({
@@ -46,6 +49,36 @@ class ReminderHandlersTest : FunSpec({
 
         response shouldHaveStatus OK
         response shouldHaveBody mapper.writeValueAsString(listOf(aReminder().asEntity(id)))
+    }
+
+    test("can add a reminder") {
+        val addReminder = mockk<(Reminder) -> UUID>()
+        val id = UUID.randomUUID()
+        val request = Request(Method.POST, "/").body(
+            """
+            {
+                "date": "2023-01-01",
+                "frequency": "MONTHLY",
+                "frequencyQuantity": 1,
+                "description": "Remind me"
+            }    
+        """.trimIndent()
+        )
+        every { addReminder(any()) } returns id
+
+        val response = addReminderHandler(addReminder)(request)
+
+        response shouldHaveStatus NO_CONTENT
+        verify {
+            addReminder(
+                Reminder(
+                    Date(LocalDate.of(2023, 1, 1)),
+                    Frequency.MONTHLY,
+                    FrequencyQuantity(1),
+                    Description("Remind me")
+                )
+            )
+        }
     }
 
 })

@@ -17,4 +17,6 @@ class ReminderProcessor(private val database: Database<Reminder, UUID>, private 
     fun allRemindersDue(): List<Entity<Reminder>> =
         database.selectAll().filter { it.domain.date.value.isBefore(now()) }
 
+    fun addReminder(reminder: Reminder): UUID = database.save(reminder)
+
 }

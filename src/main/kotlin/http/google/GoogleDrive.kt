@@ -33,10 +33,11 @@ class GoogleDrive(private val credentialsFile: String) {
 
     private val folderIds = mapOf(
         AppMode.DEV to "17t5C6CFBmXXk79wPKOQOoCsCbL7yKk9R",
+        AppMode.TEST to "17t5C6CFBmXXk79wPKOQOoCsCbL7yKk9R",
         AppMode.PROD to "17GWICqqUNRDRDWN_RzVO3hdN6Tjrt1jR"
     )
 
-    private val targetDirectoryId = folderIds[properties.appMode]!!
+    private val targetDirectoryId by lazy { folderIds[properties.appMode]!! }
 
     private val idMappings = mutableMapOf<String, String>()
 

@@ -1,4 +1,4 @@
-package unit.fixtures
+package helpers.fixtures
 
 import dao.Entity
 import java.util.*

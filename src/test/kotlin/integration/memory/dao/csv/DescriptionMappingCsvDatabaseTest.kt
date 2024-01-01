@@ -4,9 +4,9 @@ import dao.csv.DescriptionMappingCsvDatabase
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
+import helpers.matchers.shouldContainDomain
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import unit.matchers.shouldContainDomain
 import java.io.File
 import java.util.*
 import kotlin.time.Duration

@@ -18,7 +18,8 @@ data class CsvProperties(
     val account: SyncProperties,
     val category: SyncProperties,
     val incomeSource: SyncProperties,
-    val payee: SyncProperties
+    val payee: SyncProperties,
+    val reminder: SyncProperties
 )
 
 data class Google(

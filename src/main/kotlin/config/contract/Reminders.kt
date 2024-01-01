@@ -3,8 +3,10 @@ package config.contract
 import dao.entityOf
 import domain.*
 import http.asTag
+import http.handler.addReminderHandler
 import http.handler.outstandingRemindersHandler
 import http.lense.reminderEntityListLens
+import http.lense.reminderLens
 import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Status
@@ -13,6 +15,11 @@ import java.time.LocalDate
 
 private const val BASE_URL = "/reminders"
 private val tag = BASE_URL.asTag()
+
+fun reminderContracts(processor: ReminderProcessor) = listOf(
+    addReminder(processor),
+    getOutstandingReminders(processor)
+)
 
 fun getOutstandingReminders(processor: ReminderProcessor) = BASE_URL meta {
     operationId = BASE_URL
@@ -33,3 +40,18 @@ fun getOutstandingReminders(processor: ReminderProcessor) = BASE_URL meta {
                 )
     )
 } bindContract Method.GET to outstandingRemindersHandler { processor.allRemindersDue() }
+
+fun addReminder(processor: ReminderProcessor) = BASE_URL meta {
+    operationId = "$BASE_URL/post"
+    summary = "Add a new reminder"
+    tags += tag
+    receiving(
+        reminderLens to Reminder(
+            Date(LocalDate.of(2023, 1, 1)),
+            Frequency.MONTHLY,
+            FrequencyQuantity(1),
+            Description("String")
+        )
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.POST to addReminderHandler { processor.addReminder(it) }

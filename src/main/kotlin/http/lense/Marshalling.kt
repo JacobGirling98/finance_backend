@@ -79,4 +79,6 @@ val entityIncomeLens = biDiBodyLens<Entity<Income>>()
 
 val reminderIdLens = biDiBodyLens<ReminderId>()
 
+val reminderLens = biDiBodyLens<Reminder>()
+
 val reminderEntityListLens = biDiBodyLens<List<Entity<Reminder>>>()

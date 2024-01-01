@@ -20,12 +20,16 @@ import org.http4k.server.Http4kServer
 import org.http4k.server.SunHttp
 import org.http4k.server.asServer
 
-class FinanceServer(private val port: Int) {
+class FinanceServer(port: Int) {
 
     fun start(): Http4kServer {
-        val server = printingApp.asServer(SunHttp(port)).start()
+        val server = server.start()
         logger.info { "Server started on port ${server.port()}" }
         return server
+    }
+
+    fun stop() {
+        server.stop()
     }
 
     private val contracts = listOf(
@@ -47,7 +51,8 @@ class FinanceServer(private val port: Int) {
         headlineContracts { transactionDatabase.selectAll().map { it.domain } },
         standingOrdersContracts(standingOrderDatabase),
         lastTransactionContracts { transactionsProcessor.mostRecentUserTransaction() },
-        googleBackupContracts(synchronisableDatabases, googleDriveSynchroniser)
+        googleBackupContracts(synchronisableDatabases, googleDriveSynchroniser),
+        reminderContracts(reminderProcessor)
     )
 
     private val swaggerUi = swaggerUi(
@@ -75,4 +80,6 @@ class FinanceServer(private val port: Int) {
         .then(lastLoginFilter { loginSynchroniser.addLogin(it) })
         .then(logResponseFilter())
         .then(routes)
+
+    private val server = printingApp.asServer(SunHttp(port))
 }

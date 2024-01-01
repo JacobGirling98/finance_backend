@@ -1,10 +1,10 @@
 package integration.memory.dao.csv
 
 import dao.csv.CsvDatabase
+import helpers.fixtures.Doubles.TestDomain
+import helpers.matchers.shouldContainDomain
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import unit.fixtures.Doubles.TestDomain
-import unit.matchers.shouldContainDomain
 import java.io.File
 import java.util.*
 import kotlin.time.Duration

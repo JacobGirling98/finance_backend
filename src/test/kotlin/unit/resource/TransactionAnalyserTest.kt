@@ -1,22 +1,10 @@
 package unit.resource
 
-import domain.Date
-import domain.DateRange
-import domain.EndDate
-import domain.StartDate
-import domain.Value
+import domain.*
+import helpers.fixtures.*
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import resource.incomeBetween
-import resource.mostRecent
-import resource.netIncomeBetween
-import resource.savingsBetween
-import resource.spendingBetween
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.aPersonalTransferTransaction
-import unit.fixtures.aWagesIncome
-import unit.fixtures.withADateOf
-import unit.fixtures.withAValueOf
+import resource.*
 import java.time.LocalDate
 
 class TransactionAnalyserTest : FunSpec({

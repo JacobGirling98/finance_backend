@@ -1,9 +1,9 @@
 package unit.domain
 
 import domain.totalValue
+import helpers.fixtures.*
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import unit.fixtures.*
 
 class TransactionTest : DescribeSpec({
 

@@ -1,13 +1,11 @@
 package config
 
 data class EnvironmentVariables(
-    val profile: String,
-    val githubToken: String
+    val profile: String
 )
 
 val environmentVariables = EnvironmentVariables(
-    System.getenv("PROFILE"),
-    System.getenv("GITHUB_TOKEN") ?: ""
+    System.getenv("PROFILE")
 )
 
 val properties = readProperties(environmentVariables.profile)

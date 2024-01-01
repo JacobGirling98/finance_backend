@@ -3,6 +3,10 @@ package unit.resource
 import domain.DateRange
 import domain.EndDate
 import domain.StartDate
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.aWagesIncome
+import helpers.fixtures.anEntity
+import helpers.fixtures.withADateOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
 import io.kotest.matchers.shouldBe
@@ -10,10 +14,6 @@ import resource.fiscalMonthsOf
 import resource.fiscalYearsOf
 import resource.monthsOf
 import resource.yearsOf
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.aWagesIncome
-import unit.fixtures.anEntity
-import unit.fixtures.withADateOf
 
 class DateExtractorTest : DescribeSpec({
 

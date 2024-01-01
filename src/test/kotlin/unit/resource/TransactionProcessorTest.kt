@@ -3,14 +3,14 @@ package unit.resource
 import dao.Database
 import dao.entityOf
 import domain.Transaction
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.addedBy
+import helpers.fixtures.withADateOf
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import resource.TransactionProcessor
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.addedBy
-import unit.fixtures.withADateOf
 import java.time.LocalDate
 import java.util.*
 

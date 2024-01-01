@@ -4,14 +4,14 @@ import dao.Database
 import dao.asEntity
 import domain.*
 import domain.Date
+import helpers.fixtures.aReminder
+import helpers.fixtures.withADateOf
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import resource.ReminderProcessor
-import unit.fixtures.aReminder
-import unit.fixtures.withADateOf
 import java.time.LocalDate
 import java.util.*
 

@@ -17,6 +17,8 @@ csv:
     sync: 60000
   payee:
     sync: 60000
+  reminder:
+    sync: 60000
 
 appMode: DEV
 

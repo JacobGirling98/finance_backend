@@ -41,3 +41,6 @@ val synchronisableDatabases: List<Synchronisable> = listOf(
     payeeDatabase,
     incomeSourceDatabase
 )
+
+val reminderDatabase =
+    ReminderCsvDatabase(properties.csv.reminder.sync.milliseconds, "${properties.dataLocation}/reminders.csv")

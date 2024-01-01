@@ -4,15 +4,15 @@ import domain.DateRange
 import domain.EndDate
 import domain.StartDate
 import domain.Transaction
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.withADateOf
+import helpers.fixtures.withADescriptionOf
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.Matcher
 import io.kotest.matchers.MatcherResult
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldNot
 import resource.filter
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.withADateOf
-import unit.fixtures.withADescriptionOf
 
 class TransactionFilterTest : FunSpec({
     test("can filter transactions") {

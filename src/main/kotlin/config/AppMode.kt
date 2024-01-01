@@ -1,5 +1,5 @@
 package config
 
 enum class AppMode {
-    DEV, PROD
+    DEV, PROD, TEST
 }

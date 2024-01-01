@@ -1,26 +1,26 @@
-dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/dev
+dataLocation: /Users/jacobgirling/Documents/Programming/finance_data/test
 
 csv:
   descriptionMapping:
-    sync: 10000
+    sync: 0
   login:
-    sync: 10000
+    sync: 0
   standingOrder:
-    sync: 10000
+    sync: 0
   transaction:
-    sync: 10000
+    sync: 0
   account:
-    sync: 10000
+    sync: 0
   category:
-    sync: 10000
+    sync: 0
   incomeSource:
-    sync: 10000
+    sync: 0
   payee:
-    sync: 10000
+    sync: 0
   reminder:
-    sync: 10000
+    sync: 0
 
-appMode: DEV
+appMode: TEST
 
 google:
   credentialsFile: /Users/jacobgirling/Documents/Programming/google-credentials/finance-app-403218-4acd41f86159.json

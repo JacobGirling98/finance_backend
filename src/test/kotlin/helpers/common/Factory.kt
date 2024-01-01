@@ -1,4 +1,4 @@
-package unit.common
+package helpers.common
 
 import dao.Entity
 import domain.*

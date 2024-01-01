@@ -4,6 +4,9 @@ import dao.Database
 import domain.*
 import domain.Date
 import domain.TransactionType.DEBIT
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.aPage
+import helpers.fixtures.deserialize
 import http.handler.*
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
@@ -16,9 +19,6 @@ import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
-import unit.fixtures.aDebitTransaction
-import unit.fixtures.aPage
-import unit.fixtures.toObject
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -431,7 +431,7 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
             transactionCount = 2,
             value = 512.50f
         )
@@ -465,7 +465,7 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
             transactionCount = 2,
             value = 512.50f
         )
@@ -499,7 +499,7 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
             transactionCount = 2,
             value = 512.50f
         )
@@ -531,7 +531,7 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.body.toObject<TransactionConfirmation>() shouldBe TransactionConfirmation(
+        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
             transactionCount = 2,
             value = 512.50f
         )

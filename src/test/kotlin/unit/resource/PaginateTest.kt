@@ -2,11 +2,11 @@ package unit.resource
 
 import domain.PageNumber
 import domain.PageSize
+import helpers.fixtures.Doubles
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import resource.paginate
-import unit.fixtures.Doubles
 
 class PaginateTest : FunSpec({
 
