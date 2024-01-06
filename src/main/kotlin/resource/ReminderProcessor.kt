@@ -19,4 +19,8 @@ class ReminderProcessor(private val database: Database<Reminder, UUID>, private 
 
     fun addReminder(reminder: Reminder): UUID = database.save(reminder)
 
+    fun updateReminder(reminder: Entity<Reminder>) {
+        database.update(reminder)
+    }
+
 }

@@ -82,3 +82,5 @@ val reminderIdLens = biDiBodyLens<ReminderId>()
 val reminderLens = biDiBodyLens<Reminder>()
 
 val reminderEntityListLens = biDiBodyLens<List<Entity<Reminder>>>()
+
+val reminderEntityLens = biDiBodyLens<Entity<Reminder>>()

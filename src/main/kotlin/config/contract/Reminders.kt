@@ -1,5 +1,6 @@
 package config.contract
 
+import dao.asEntity
 import dao.entityOf
 import domain.*
 import domain.Date
@@ -7,6 +8,8 @@ import http.asTag
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
+import http.handler.updateReminderHandler
+import http.lense.reminderEntityLens
 import http.lense.reminderEntityListLens
 import http.lense.reminderIdLens
 import http.lense.reminderLens
@@ -24,7 +27,8 @@ private val tag = BASE_URL.asTag()
 fun reminderContracts(processor: ReminderProcessor) = listOf(
     addReminder(processor),
     getOutstandingReminders(processor),
-    advanceReminder(processor)
+    advanceReminder(processor),
+    editReminder(processor)
 )
 
 fun getOutstandingReminders(processor: ReminderProcessor) = BASE_URL meta {
@@ -69,3 +73,18 @@ fun advanceReminder(processor: ReminderProcessor) = "$BASE_URL/advance" meta {
     receiving(reminderIdLens to ReminderId(UUID.randomUUID()))
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to advanceReminderHandler { processor.markAsRead(it) }
+
+fun editReminder(processor: ReminderProcessor) = BASE_URL meta {
+    operationId = "$BASE_URL/put"
+    summary = "Update a reminder"
+    tags += tag
+    receiving(
+        reminderEntityLens to Reminder(
+            Date(LocalDate.of(2023, 1, 1)),
+            Frequency.MONTHLY,
+            FrequencyQuantity(1),
+            Description("String")
+        ).asEntity(UUID.randomUUID())
+    )
+    returning(Status.NO_CONTENT)
+} bindContract Method.PUT to updateReminderHandler { processor.updateReminder(it) }

@@ -31,6 +31,9 @@ val standingOrderDatabase = StandingOrderCsvDatabase(
 
 val loginDatabase = LoginCsvDatabase(properties.csv.login.sync.milliseconds, "${properties.dataLocation}/logins.csv")
 
+val reminderDatabase =
+    ReminderCsvDatabase(properties.csv.reminder.sync.milliseconds, "${properties.dataLocation}/reminders.csv")
+
 val synchronisableDatabases: List<Synchronisable> = listOf(
     descriptionMappingDatabase,
     transactionDatabase,
@@ -39,8 +42,6 @@ val synchronisableDatabases: List<Synchronisable> = listOf(
     accountDatabase,
     categoryDatabase,
     payeeDatabase,
-    incomeSourceDatabase
+    incomeSourceDatabase,
+    reminderDatabase
 )
-
-val reminderDatabase =
-    ReminderCsvDatabase(properties.csv.reminder.sync.milliseconds, "${properties.dataLocation}/reminders.csv")

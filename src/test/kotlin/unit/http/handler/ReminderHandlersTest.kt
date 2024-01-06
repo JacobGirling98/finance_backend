@@ -10,12 +10,11 @@ import helpers.fixtures.deserialize
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
+import http.handler.updateReminderHandler
 import http.model.ReminderId
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
@@ -85,4 +84,36 @@ class ReminderHandlersTest : FunSpec({
         }
     }
 
+    test("can update a reminder") {
+        val updateReminder = mockk<(Entity<Reminder>) -> Unit>()
+        val id = UUID.randomUUID()
+        val request = Request(Method.PUT, "/").body(
+            """
+            {
+                "id": "$id",
+                "domain": {
+                    "date": "2023-01-01",
+                    "frequency": "MONTHLY",
+                    "frequencyQuantity": 1,
+                    "description": "Remind me"
+                }
+            }    
+        """.trimIndent()
+        )
+        every { updateReminder(any()) } just runs
+
+        val response = updateReminderHandler(updateReminder)(request)
+
+        response shouldHaveStatus NO_CONTENT
+        verify {
+            updateReminder(
+                Reminder(
+                    Date(LocalDate.of(2023, 1, 1)),
+                    Frequency.MONTHLY,
+                    FrequencyQuantity(1),
+                    Description("Remind me")
+                ).asEntity(id)
+            )
+        }
+    }
 })
