@@ -52,6 +52,9 @@ import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
 import http.lense.incomeLens
 import http.lense.incomeListLens
+import http.lense.optionalEndDateQuery
+import http.lense.optionalStartDateQuery
+import http.lense.optionalTransactionTypeStringQuery
 import http.lense.pageNumberQuery
 import http.lense.pageSizeQuery
 import http.lense.personalTransferLens
@@ -108,6 +111,9 @@ private fun getPaginatedDataRoute(
     tags += tag
     queries += pageNumberQuery
     queries += pageSizeQuery
+    queries += optionalStartDateQuery
+    queries += optionalEndDateQuery
+    queries += optionalTransactionTypeStringQuery
     returning(
         OK,
         transactionPageLens to Page(

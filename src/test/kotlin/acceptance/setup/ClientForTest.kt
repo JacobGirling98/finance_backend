@@ -15,8 +15,16 @@ class ClientForTest(port: Int) {
         return client(request)
     }
 
-    fun get(url: String): Response {
-        val request = Request(Method.GET, "$baseUrl$url")
+    fun get(url: String, queries: Map<String, String> = emptyMap()): Response {
+        val request = Request(Method.GET, "$baseUrl$url").let {
+            queries.entries.fold(it) { req, query ->
+                req.query(
+                    query.key,
+                    query.value
+                )
+            }
+        }
+
         return client(request)
     }
 }
