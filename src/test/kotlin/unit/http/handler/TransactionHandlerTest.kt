@@ -3,11 +3,39 @@ package unit.http.handler
 import dao.Database
 import dao.Entity
 import dao.Page
-import domain.*
+import dao.entityOf
+import domain.AddedBy
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.PageNumber
+import domain.PageSize
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.Transaction
+import domain.TransactionType
 import domain.TransactionType.DEBIT
-import helpers.fixtures.*
-import http.handler.*
+import domain.Value
+import helpers.fixtures.aCreditTransaction
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.aPage
+import helpers.fixtures.deserialize
+import helpers.fixtures.pageNumber
+import helpers.fixtures.pageSize
+import helpers.fixtures.withADateOf
+import http.handler.paginatedTransactionsHandler
+import http.handler.postBankTransferHandler
+import http.handler.postBankTransferListHandler
+import http.handler.postCreditDebitHandler
+import http.handler.postCreditDebitListHandler
+import http.handler.postIncomeHandler
+import http.handler.postIncomeListHandler
+import http.handler.postPersonalTransferHandler
+import http.handler.postPersonalTransferListHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -617,7 +645,49 @@ class TransactionHandlerTest : FunSpec({
             handler(request)
 
             verify { selectBy(pageNumber, pageSize, capture(filterSlot)) }
+            filterSlot.captured.let { condition ->
+                condition(entityOf(aDebitTransaction().withADateOf(2022, 1, 1))) shouldBe false
+                condition(entityOf(aDebitTransaction().withADateOf(2024, 1, 1))) shouldBe true
+            }
+        }
 
+        test("can give end query") {
+            val request = getRequest().query("end", "2023-01-01")
+            val filterSlot = slot<(Entity<Transaction>) -> Boolean>()
+
+            handler(request)
+
+            verify { selectBy(pageNumber, pageSize, capture(filterSlot)) }
+            filterSlot.captured.let { condition ->
+                condition(entityOf(aDebitTransaction().withADateOf(2022, 1, 1))) shouldBe true
+                condition(entityOf(aDebitTransaction().withADateOf(2024, 1, 1))) shouldBe false
+            }
+        }
+
+        test("can give type query") {
+            val request = getRequest().query("type", "credit")
+            val filterSlot = slot<(Entity<Transaction>) -> Boolean>()
+
+            handler(request)
+
+            verify { selectBy(pageNumber, pageSize, capture(filterSlot)) }
+            filterSlot.captured.let { condition ->
+                condition(entityOf(aDebitTransaction())) shouldBe false
+                condition(entityOf(aCreditTransaction())) shouldBe true
+            }
+        }
+
+        test("type query is case-insensitive") {
+            val request = getRequest().query("type", "CREDIT")
+            val filterSlot = slot<(Entity<Transaction>) -> Boolean>()
+
+            handler(request)
+
+            verify { selectBy(pageNumber, pageSize, capture(filterSlot)) }
+            filterSlot.captured.let { condition ->
+                condition(entityOf(aDebitTransaction())) shouldBe false
+                condition(entityOf(aCreditTransaction())) shouldBe true
+            }
         }
     }
 })

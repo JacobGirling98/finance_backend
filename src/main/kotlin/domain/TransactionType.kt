@@ -8,4 +8,4 @@ enum class TransactionType(val type: String) {
     INCOME("Income")
 }
 
-fun transactionTypeFrom(value: String): TransactionType = TransactionType.values().first { it.type == value }
+fun transactionTypeFrom(value: String): TransactionType = TransactionType.values().first { it.type.lowercase() == value.lowercase() }

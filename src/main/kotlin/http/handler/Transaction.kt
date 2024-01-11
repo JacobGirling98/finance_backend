@@ -7,6 +7,7 @@ import domain.PageSize
 import domain.Transaction
 import domain.TransactionType
 import domain.totalValue
+import domain.transactionTypeFrom
 import http.assembler.map
 import http.assembler.transactionFrom
 import http.lense.bankTransferLens
@@ -22,7 +23,7 @@ import http.lense.incomeLens
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
 import http.lense.optionalStartDateQuery
-import http.lense.optionalTransactionTypeQuery
+import http.lense.optionalTransactionTypeStringQuery
 import http.lense.pageNumberQuery
 import http.lense.pageSizeQuery
 import http.lense.personalTransferLens
@@ -125,7 +126,7 @@ fun paginatedTransactionsHandler(
 
     val startDate = optionalStartDateQuery.extract(request)
     val endDate = optionalEndDateQuery.extract(request)
-    val type = optionalTransactionTypeQuery.extract(request)
+    val type = optionalTransactionTypeStringQuery.extract(request)?.let { transactionTypeFrom(it) }
 
     val selectFn: () -> Page<Entity<Transaction>> = if (startDate == null && endDate == null && type == null) {
         { selectAll(pageNumber, pageSize) }

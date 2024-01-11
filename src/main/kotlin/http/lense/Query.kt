@@ -4,9 +4,7 @@ import domain.EndDate
 import domain.PageNumber
 import domain.PageSize
 import domain.StartDate
-import domain.TransactionType
 import org.http4k.lens.Query
-import org.http4k.lens.enum
 import org.http4k.lens.int
 import org.http4k.lens.localDate
 import org.http4k.lens.string
@@ -22,6 +20,6 @@ val searchTermQuery = Query.string().required("value")
 
 val idQuery = Query.uuid().required("id")
 
-val optionalTransactionTypeQuery = Query.enum<TransactionType>().optional("type")
+val optionalTransactionTypeStringQuery = Query.string().optional("type")
 val optionalStartDateQuery = Query.localDate().map(::StartDate) { it.value }.optional("start")
 val optionalEndDateQuery = Query.localDate().map(::EndDate) { it.value }.optional("end")
