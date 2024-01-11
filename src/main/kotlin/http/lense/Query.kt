@@ -1,7 +1,16 @@
 package http.lense
 
-import domain.*
-import org.http4k.lens.*
+import domain.EndDate
+import domain.PageNumber
+import domain.PageSize
+import domain.StartDate
+import domain.TransactionType
+import org.http4k.lens.Query
+import org.http4k.lens.enum
+import org.http4k.lens.int
+import org.http4k.lens.localDate
+import org.http4k.lens.string
+import org.http4k.lens.uuid
 
 val startDateQuery = Query.localDate().map(::StartDate) { it.value }.required("start")
 val endDateQuery = Query.localDate().map(::EndDate) { it.value }.required("end")

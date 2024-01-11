@@ -1,13 +1,63 @@
 package config.contract
 
-import dao.*
-import domain.*
+import dao.Database
+import dao.Entity
+import dao.Page
+import dao.asRandomEntity
+import dao.entityOf
+import domain.AddedBy
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.HasNextPage
+import domain.HasPreviousPage
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.PageNumber
+import domain.PageSize
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.TotalElements
+import domain.TotalPages
+import domain.Transaction
 import domain.TransactionType.CREDIT
 import domain.TransactionType.DEBIT
+import domain.Value
 import http.asTag
-import http.handler.*
-import http.lense.*
+import http.handler.deleteEntityHandler
+import http.handler.paginatedTransactionsHandler
+import http.handler.postBankTransferHandler
+import http.handler.postBankTransferListHandler
+import http.handler.postCreditDebitHandler
+import http.handler.postCreditDebitListHandler
+import http.handler.postIncomeHandler
+import http.handler.postIncomeListHandler
+import http.handler.postPersonalTransferHandler
+import http.handler.postPersonalTransferListHandler
+import http.handler.putBankTransferTransactionHandler
+import http.handler.putCreditDebitTransactionHandler
+import http.handler.putIncomeTransactionHandler
+import http.handler.putPersonalTransferTransactionHandler
+import http.handler.searchTransactionsHandler
+import http.lense.bankTransferLens
+import http.lense.bankTransferListLens
+import http.lense.creditDebitLens
+import http.lense.creditDebitListLens
+import http.lense.entityBankTransferLens
+import http.lense.entityCreditDebitLens
+import http.lense.entityIncomeLens
+import http.lense.entityPersonalTransferLens
+import http.lense.idQuery
+import http.lense.incomeLens
+import http.lense.incomeListLens
+import http.lense.pageNumberQuery
+import http.lense.pageSizeQuery
+import http.lense.personalTransferLens
+import http.lense.personalTransferListLens
+import http.lense.searchTermQuery
+import http.lense.transactionPageLens
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -39,7 +89,7 @@ fun transactionContracts(database: Database<Transaction, UUID>, processor: Trans
     multiplePersonalTransferContract { database.save(it) },
     postIncomeContract { database.save(it) },
     multipleIncomeContract { database.save(it) },
-    getPaginatedDataRoute { pageNumber, pageSize -> processor.selectAll(pageNumber, pageSize) },
+    getPaginatedDataRoute(processor::selectAll, processor::selectBy),
     getPaginatedSearchDataRoute { term, pageNumber, pageSize -> processor.search(term, pageNumber, pageSize) },
     putDebitContract { database.update(it) },
     putCreditContract { database.update(it) },
@@ -50,7 +100,8 @@ fun transactionContracts(database: Database<Transaction, UUID>, processor: Trans
 )
 
 private fun getPaginatedDataRoute(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>,
+    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
 ) = BASE_URL meta {
     operationId = BASE_URL
     summary = "Get paginated transactions"
@@ -87,7 +138,7 @@ private fun getPaginatedDataRoute(
         )
 
     )
-} bindContract GET to paginatedTransactionsHandler(selectAll)
+} bindContract GET to paginatedTransactionsHandler(selectAll, selectBy)
 
 private fun getPaginatedSearchDataRoute(
     search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
