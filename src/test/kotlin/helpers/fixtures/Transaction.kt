@@ -92,8 +92,8 @@ fun aPage(transaction: Transaction) = Page(
     listOf(
         anEntity { transaction }
     ),
-    PageNumber(1),
-    PageSize(5),
+    pageNumber,
+    pageSize,
     TotalElements(20),
     TotalPages(4),
     HasPreviousPage(false),
