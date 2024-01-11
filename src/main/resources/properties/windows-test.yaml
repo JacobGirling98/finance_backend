@@ -1,0 +1,26 @@
+dataLocation: C:/Users/jakeg/Documents/FinanceV3/data/test
+
+csv:
+  descriptionMapping:
+    sync: 0
+  login:
+    sync: 0
+  standingOrder:
+    sync: 0
+  transaction:
+    sync: 0
+  account:
+    sync: 0
+  category:
+    sync: 0
+  incomeSource:
+    sync: 0
+  payee:
+    sync: 0
+  reminder:
+    sync: 0
+
+appMode: TEST
+
+google:
+  credentialsFile: C:\Users\jakeg\Documents\FinanceV3\google-credentials\finance-app-403218-7a3d0a952f8c.json
