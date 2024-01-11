@@ -1,18 +1,19 @@
 package unit.http.handler
 
 import dao.Database
+import dao.Entity
+import dao.Page
 import domain.*
 import domain.Date
 import domain.TransactionType.DEBIT
-import helpers.fixtures.aDebitTransaction
-import helpers.fixtures.aPage
-import helpers.fixtures.deserialize
+import helpers.fixtures.*
 import http.handler.*
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -575,11 +576,13 @@ class TransactionHandlerTest : FunSpec({
         test("can extract page number and page size from the request") {
             var pageNumber = 0
             var pageSize = 0
-            val handler = paginatedTransactionsHandler { number, size ->
+            val selectAll: SelectAll = { number, size ->
                 pageNumber = number.value
                 pageSize = size.value
                 aPage(aDebitTransaction())
             }
+            val selectBy = mockk<SelectBy>()
+            val handler = paginatedTransactionsHandler(selectAll, selectBy)
 
             handler(Request(Method.GET, "/").query("pageSize", "5").query("pageNumber", "1"))
 
@@ -587,4 +590,40 @@ class TransactionHandlerTest : FunSpec({
             pageSize shouldBe 5
         }
     }
+
+    context("filters") {
+        val selectAll = mockk<SelectAll>(relaxed = true)
+        val selectBy = mockk<SelectBy>(relaxed = true)
+        val handler = paginatedTransactionsHandler(selectAll, selectBy)
+
+        beforeEach {
+            every { selectAll(any(), any()) } returns aPage(aDebitTransaction())
+            every { selectBy(any(), any(), any()) } returns aPage(aDebitTransaction())
+        }
+
+        test("passing no filters calls selectAll") {
+            val request = getRequest()
+
+            handler(request)
+
+            verify { selectAll(pageNumber, pageSize) }
+            verify(exactly = 0) { selectBy(any(), any(), any()) }
+        }
+
+        test("can give start query") {
+            val request = getRequest().query("start", "2023-01-01")
+            val filterSlot = slot<(Entity<Transaction>) -> Boolean>()
+
+            handler(request)
+
+            verify { selectBy(pageNumber, pageSize, capture(filterSlot)) }
+
+        }
+    }
 })
+
+private typealias SelectBy = (PageNumber, PageSize, (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
+private typealias SelectAll = (PageNumber, PageSize) -> Page<Entity<Transaction>>
+
+private fun getRequest() =
+    Request(Method.GET, "/").query("pageNumber", "${pageNumber.value}").query("pageSize", "${pageSize.value}")

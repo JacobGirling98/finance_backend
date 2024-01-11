@@ -14,3 +14,6 @@ val inbound = Inbound("inbound")
 val recipient = Recipient("Parents")
 val addedBy = AddedBy("Jacob")
 val source = Source("Work")
+
+val pageNumber = PageNumber(1)
+val pageSize = PageSize(5)

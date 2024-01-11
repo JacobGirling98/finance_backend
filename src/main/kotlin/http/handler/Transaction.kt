@@ -12,6 +12,7 @@ import org.http4k.core.Response
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
+import resource.toFilter
 import java.util.*
 
 fun postCreditDebitHandler(
@@ -92,11 +93,23 @@ fun postIncomeListHandler(
 }
 
 fun paginatedTransactionsHandler(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>,
+    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
 ): HttpHandler = { request ->
     val pageNumber = pageNumberQuery.extract(request)
     val pageSize = pageSizeQuery.extract(request)
-    val data = selectAll(pageNumber, pageSize)
+
+    val startDate = optionalStartDateQuery.extract(request)
+    val endDate = optionalEndDateQuery.extract(request)
+    val type = optionalTransactionTypeQuery.extract(request)
+
+    val selectFn: () -> Page<Entity<Transaction>> = if (startDate == null && endDate == null && type == null) {
+        { selectAll(pageNumber, pageSize) }
+    } else {
+        { selectBy(pageNumber, pageSize, toFilter(endDate, startDate, type)) }
+    }
+
+    val data = selectFn()
     Response(OK).with(transactionPageLens of data)
 }
 
