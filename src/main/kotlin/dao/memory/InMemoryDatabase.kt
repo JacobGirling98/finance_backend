@@ -4,28 +4,30 @@ import dao.Database
 import dao.Entity
 import dao.entityOf
 import exceptions.NotFoundException
+import java.time.LocalDateTime
 import java.util.*
 
 open class InMemoryDatabase<Domain : Comparable<Domain>>(
-    initialData: List<Entity<Domain>> = emptyList()
+    initialData: List<Entity<Domain>> = emptyList(),
+    private val now: () -> LocalDateTime = { LocalDateTime.now() }
 ) : Database<Domain, UUID> {
 
-    protected var data: MutableMap<UUID, Domain> = initialData.associate { it.id to it.domain }.toMutableMap()
+    protected var data: MutableMap<UUID, Entity<Domain>> = initialData.associateBy { it.id }.toMutableMap()
 
     override fun save(domain: Domain): UUID {
-        val entity = entityOf(domain)
-        data[entity.id] = entity.domain
+        val entity = entityOf(domain, now)
+        data[entity.id] = entity
         return entity.id
     }
 
     override fun save(domains: List<Domain>): List<UUID> = domains.map { save(it) }
 
-    override fun findById(id: UUID): Entity<Domain>? = data[id]?.let { Entity(id, it) }
+    override fun findById(id: UUID): Entity<Domain>? = data[id]
 
-    override fun selectAll(): List<Entity<Domain>> = data.map { Entity(it.key, it.value) }.sortedBy { it.domain }
+    override fun selectAll(): List<Entity<Domain>> = data.values.sortedBy { it.domain }
 
     override fun update(entity: Entity<Domain>): NotFoundException? =
-        data.replace(entity.id, entity.domain).asNullableNotFound(entity.id)
+        data.replace(entity.id, entity.copy(lastModified = now())).asNullableNotFound(entity.id)
 
     override fun delete(id: UUID): NotFoundException? = data.remove(id).asNullableNotFound(id)
 

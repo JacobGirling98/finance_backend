@@ -1,9 +1,24 @@
 package dao.csv
 
-import domain.*
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.StandingOrder
+import domain.Value
+import domain.frequencyFrom
+import domain.transactionTypeFrom
+import java.time.LocalDateTime
 import kotlin.time.Duration
 
-class StandingOrderCsvDatabase(syncPeriod: Duration, file: String) : CsvDatabase<StandingOrder>(syncPeriod, file) {
+class StandingOrderCsvDatabase(syncPeriod: Duration, file: String, now: () -> LocalDateTime = { LocalDateTime.now() }) :
+    CsvDatabase<StandingOrder>(syncPeriod, file, now) {
 
     override fun headers(): String =
         "next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound,source"

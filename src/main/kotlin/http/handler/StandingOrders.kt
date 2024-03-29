@@ -3,7 +3,6 @@ package http.handler
 import dao.Entity
 import domain.StandingOrder
 import domain.TransactionType
-import http.assembler.map
 import http.assembler.standingOrderFrom
 import http.lense.*
 import org.http4k.core.HttpHandler

@@ -34,7 +34,7 @@ class StandingOrderProcessor(
                     WEEKLY -> Date(standingOrderToChange.date.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
                 }
             )
-            standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))
+            standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id) { standingOrder.lastModified })
         }
     }
 
@@ -70,6 +70,6 @@ class StandingOrderProcessor(
         inbound,
         outbound,
         source,
-        AddedBy("standing-order-processor"),
+        AddedBy("standing-order-processor")
     )
 }

@@ -1,10 +1,25 @@
 package helpers.common
 
 import dao.Entity
-import domain.*
+import domain.AddedBy
+import domain.Category
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
+import domain.StandingOrder
+import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class Factory(
@@ -22,7 +37,8 @@ class Factory(
     private val outbound: Outbound? = null,
     private val source: Source? = null,
     private val id: UUID = UUID.randomUUID(),
-    private val addedBy: AddedBy = AddedBy("Jacob")
+    private val addedBy: AddedBy = AddedBy("Jacob"),
+    private val now: () -> LocalDateTime = { LocalDateTime.now() }
 ) {
     fun standingOrder() = StandingOrder(
         date = date,
@@ -40,7 +56,7 @@ class Factory(
         source = source
     )
 
-    fun standingOrderEntity() = Entity(id, standingOrder())
+    fun standingOrderEntity() = Entity(id, standingOrder(), now())
 
     fun transaction() = Transaction(
         date,

@@ -2,8 +2,11 @@ package unit.resource
 
 import dao.Database
 import dao.asEntity
-import domain.*
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Reminder
 import helpers.fixtures.aReminder
 import helpers.fixtures.withADateOf
 import io.kotest.core.spec.style.FunSpec
@@ -29,7 +32,7 @@ class ReminderProcessorTest : FunSpec({
             Frequency.MONTHLY,
             FrequencyQuantity(1),
             Description("A reminder")
-        ).asEntity(id)
+        ).asEntity(id) { now().atStartOfDay() }
         every { database.findById(id) } returns reminder
         every { database.update(any()) } returns null
 
@@ -43,7 +46,7 @@ class ReminderProcessorTest : FunSpec({
                     Frequency.MONTHLY,
                     FrequencyQuantity(1),
                     Description("A reminder")
-                ).asEntity(id)
+                ).asEntity(id) { now().atStartOfDay() }
             )
         }
     }
@@ -64,5 +67,3 @@ class ReminderProcessorTest : FunSpec({
         processor.allRemindersDue().map { it.id } shouldContainExactlyInAnyOrder listOf(id, anotherId)
     }
 })
-
-

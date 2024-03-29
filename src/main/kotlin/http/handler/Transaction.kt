@@ -8,7 +8,6 @@ import domain.Transaction
 import domain.TransactionType
 import domain.totalValue
 import domain.transactionTypeFrom
-import http.assembler.map
 import http.assembler.transactionFrom
 import http.lense.bankTransferLens
 import http.lense.bankTransferListLens

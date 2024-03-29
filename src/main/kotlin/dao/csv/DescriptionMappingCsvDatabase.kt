@@ -3,12 +3,14 @@ package dao.csv
 import domain.DescriptionMapping
 import domain.FullDescription
 import domain.ShortDescription
+import java.time.LocalDateTime
 import kotlin.time.Duration
 
 class DescriptionMappingCsvDatabase(
     syncPeriod: Duration,
-    fileLoc: String
-) : CsvDatabase<DescriptionMapping>(syncPeriod, fileLoc) {
+    fileLoc: String,
+    now: () -> LocalDateTime = { LocalDateTime.now() }
+) : CsvDatabase<DescriptionMapping>(syncPeriod, fileLoc, now) {
     override fun headers(): String = "full_description,short_description"
 
     override fun domainFromCommaSeparatedList(row: List<String>): DescriptionMapping = DescriptionMapping(

@@ -10,11 +10,13 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import java.time.LocalDateTime
 import java.util.*
 
 class InMemoryDatabaseTest : FunSpec({
 
-    val database = InMemoryDatabase<TestDomain>()
+    val now = LocalDateTime.now()
+    val database = InMemoryDatabase<TestDomain>(now = { now })
 
     test("can save a domain to the database and select it") {
         database.save(TestDomain())
@@ -34,7 +36,7 @@ class InMemoryDatabaseTest : FunSpec({
     test("can find a saved entity by its id") {
         val id = database.save(TestDomain())
 
-        database.findById(id) shouldBe TestDomain().asEntity(id)
+        database.findById(id) shouldBe TestDomain().asEntity(id) { now }
     }
 
     test("finding an id that does not exist returns null") {
@@ -45,13 +47,13 @@ class InMemoryDatabaseTest : FunSpec({
         val entity = database.findById(database.save(TestDomain()))!!
         val newDomain = TestDomain("Jake", 25)
 
-        database.update(Entity(entity.id, newDomain)) shouldBe null
-        database.findById(entity.id) shouldBe newDomain.asEntity(entity.id)
+        database.update(Entity(entity.id, newDomain, now)) shouldBe null
+        database.findById(entity.id) shouldBe newDomain.asEntity(entity.id) { now }
     }
 
     test("updating an entity that doesn't exist returns a NotFoundException") {
         val id = UUID.randomUUID()
-        database.update(Entity(id, TestDomain())) shouldBe NotFoundException(id)
+        database.update(Entity(id, TestDomain(), now)) shouldBe NotFoundException(id)
     }
 
     test("can delete an entity") {

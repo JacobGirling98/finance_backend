@@ -10,7 +10,7 @@ class ReminderProcessor(private val database: Database<Reminder, UUID>, private 
     fun markAsRead(id: UUID) {
         val reminder = database.findById(id) ?: throw RuntimeException("No matching reminder found")
         val nextDate = reminder.domain.nextDate()
-        val newEntity = Entity(reminder.id, reminder.domain.copy(date = nextDate))
+        val newEntity = Entity(reminder.id, reminder.domain.copy(date = nextDate), reminder.lastModified)
         database.update(newEntity)
     }
 
@@ -22,5 +22,4 @@ class ReminderProcessor(private val database: Database<Reminder, UUID>, private 
     fun updateReminder(reminder: Entity<Reminder>) {
         database.update(reminder)
     }
-
 }

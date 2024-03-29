@@ -1,12 +1,18 @@
 package dao.csv
 
-import domain.*
+import domain.Date
+import domain.Description
+import domain.FrequencyQuantity
+import domain.Reminder
+import domain.frequencyFrom
+import java.time.LocalDateTime
 import kotlin.time.Duration
 
 class ReminderCsvDatabase(
     syncPeriod: Duration,
-    fileName: String
-) : CsvDatabase<Reminder>(syncPeriod, fileName) {
+    fileName: String,
+    now: () -> LocalDateTime = { LocalDateTime.now() }
+) : CsvDatabase<Reminder>(syncPeriod, fileName, now) {
     override fun headers(): String =
         "next_reminder,frequency_unit,frequency_quantity,description"
 
@@ -19,5 +25,4 @@ class ReminderCsvDatabase(
 
     override fun Reminder.toRow(): String =
         "${date.value},${frequency.value},${frequencyQuantity.value},${description.value}"
-
 }

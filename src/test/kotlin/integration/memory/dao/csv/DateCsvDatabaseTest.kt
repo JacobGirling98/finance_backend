@@ -1,8 +1,11 @@
 package integration.memory.dao.csv
 
+import dao.Entity
 import dao.csv.DateCsvDatabase
-import helpers.matchers.shouldContainDomain
+import helpers.fixtures.lastModified
+import helpers.fixtures.lastModifiedString
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import java.io.File
 import java.time.LocalDate
@@ -23,24 +26,24 @@ class DateCsvDatabaseTest : FunSpec({
 
         file.writeText(
             """
-            id,value
-            $id,2020-01-01
+            id,last_modified,value
+            $id,$lastModifiedString,2020-01-01
             """.trimIndent()
         )
 
-        database().selectAll() shouldContainDomain LocalDate.of(2020, 1, 1)
+        database().selectAll() shouldContain Entity(id, LocalDate.of(2020, 1, 1), lastModified)
     }
 
     test("can flush a single value to a file") {
-        file.writeText("id,string\n")
+        file.writeText("id,last_modified,string\n")
         val database = database()
         val id = database.save(LocalDate.of(2020, 1, 1))
 
         database.flush()
 
         file.readText() shouldBe """
-            id,value
-            $id,2020-01-01
+            id,last_modified,value
+            $id,$lastModifiedString,2020-01-01
         """.trimIndent()
     }
 })
@@ -48,4 +51,4 @@ class DateCsvDatabaseTest : FunSpec({
 private const val FILE_LOCATION = "test.csv"
 private val file = File(FILE_LOCATION)
 
-private fun database() = DateCsvDatabase(Duration.ZERO, FILE_LOCATION)
+private fun database() = DateCsvDatabase(Duration.ZERO, FILE_LOCATION) { lastModified }

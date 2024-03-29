@@ -2,16 +2,34 @@ package helpers.fixtures
 
 import dao.Entity
 import dao.Page
-import domain.*
+import domain.AddedBy
+import domain.Category
 import domain.Date
-import domain.TransactionType.*
+import domain.Description
+import domain.HasNextPage
+import domain.HasPreviousPage
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Recipient
+import domain.Source
+import domain.TotalElements
+import domain.TotalPages
+import domain.Transaction
+import domain.TransactionType.BANK_TRANSFER
+import domain.TransactionType.CREDIT
+import domain.TransactionType.DEBIT
+import domain.TransactionType.INCOME
+import domain.TransactionType.PERSONAL_TRANSFER
+import domain.Value
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 val uuid: UUID = UUID.randomUUID()
 
-fun anEntity(id: UUID = uuid, transaction: () -> Transaction) = Entity(id, transaction())
+fun anEntity(id: UUID = uuid, transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) = Entity(id, transaction, now())
 
 fun aDebitTransaction() = Transaction(
     date,
@@ -88,9 +106,9 @@ fun aBankTransferTransaction() = Transaction(
     addedBy
 )
 
-fun aPage(transaction: Transaction) = Page(
+fun aPage(transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) = Page(
     listOf(
-        anEntity { transaction }
+        anEntity(transaction = transaction, now = now)
     ),
     pageNumber,
     pageSize,

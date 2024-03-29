@@ -6,14 +6,17 @@ import http.google.MimeType
 import http.google.Synchronisable
 import java.io.File
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.time.Duration
 
 abstract class CsvDatabase<Domain : Comparable<Domain>>(
     private val syncPeriod: Duration,
-    fileName: String
-) : InMemoryDatabase<Domain>(), Synchronisable {
+    fileName: String,
+    now: () -> LocalDateTime = { LocalDateTime.now() }
+) : InMemoryDatabase<Domain>(now = now), Synchronisable {
 
     private val file = File(fileName)
 
@@ -36,7 +39,7 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
     }
 
     override fun overwrite(data: String) {
-        this.data = data.split("\n").drop(1).map { readRow(it) }.associate { it.id to it.domain }.toMutableMap()
+        this.data = data.split("\n").drop(1).map { readRow(it) }.associateBy { it.id }.toMutableMap()
         flush()
     }
 
@@ -46,8 +49,8 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
         columns.indexOf(column)
 
     fun flush() {
-        val headers = "id,${headers()}"
-        val body = selectAll().joinToString("\n") { "${it.id},${it.domain.toRow()}" }
+        val headers = "id,last_modified,${headers()}"
+        val body = selectAll().joinToString("\n") { "${it.id},${it.lastModified.format(ISO_LOCAL_DATE_TIME)},${it.domain.toRow()}" }
         file.writeText("$headers\n$body")
     }
 
@@ -61,12 +64,12 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
         this.data = lines
             .drop(1)
             .map { readRow(it) }
-            .associate { it.id to it.domain }
+            .associateBy { it.id }
             .toMutableMap()
     }
 
     private fun readRow(row: String): Entity<Domain> = row.split(",").let {
-        Entity(UUID.fromString(it[0]), domainFromCommaSeparatedList(it))
+        Entity(UUID.fromString(it[0]), domainFromCommaSeparatedList(it), LocalDateTime.parse(it[1]))
     }
 
     private fun scheduleFileSync() {
