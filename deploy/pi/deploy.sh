@@ -1,5 +1,8 @@
 #!/bin/bash
 
+log_prefix="Finance Backend:"
+container_name=finance-backend
+
 start_app() {
   container_id=$(docker ps -q -f name=$container_name)
 
@@ -14,9 +17,6 @@ start_app() {
 
   echo "$log_prefix started with container id $container_id"
 }
-
-log_prefix="Finance Backend:"
-container_name=finance-backend
 
 git_pull_output=$(git pull 2>&1)
 
