@@ -19,7 +19,7 @@ start_app() {
 }
 
 # Fetch the latest commits and refs from the remote
-git fetch
+git fetch > /dev/null
 
 # Store the current HEAD commit hash
 OLD_HEAD=$(git rev-parse HEAD)
