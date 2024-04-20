@@ -18,9 +18,20 @@ start_app() {
   echo "$log_prefix started with container id $container_id"
 }
 
-git_pull_output=$(git pull 2>&1)
+# Fetch the latest commits and refs from the remote
+git fetch
 
-if [ $? -eq 0 ] || [ $git_pull_output =~ "Already up-to-date" ]; then
+# Store the current HEAD commit hash
+OLD_HEAD=$(git rev-parse HEAD)
+
+# Merge the fetched commits
+git merge
+
+# Store the new HEAD commit hash
+NEW_HEAD=$(git rev-parse HEAD)
+
+# Compare OLD_HEAD and NEW_HEAD
+if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
   echo "$log_prefix up to date, skipping Docker build..."
 
   start_app
