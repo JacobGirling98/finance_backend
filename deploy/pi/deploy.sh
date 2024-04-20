@@ -25,7 +25,7 @@ git fetch
 OLD_HEAD=$(git rev-parse HEAD)
 
 # Merge the fetched commits
-git merge
+git merge > /dev/null
 
 # Store the new HEAD commit hash
 NEW_HEAD=$(git rev-parse HEAD)
