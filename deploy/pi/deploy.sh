@@ -17,6 +17,8 @@ start_app() {
 
 git_pull_output=$(git pull 2>&1)
 
+echo $git_pull_output
+
 if [ $? -eq 0 ] || [ $git_pull_output =~ "Already up-to-date" ]; then
   echo "Finance Backend: up to date, skipping Docker build..."
 
