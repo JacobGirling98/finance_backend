@@ -24,15 +24,11 @@ git fetch
 # Store the current HEAD commit hash
 OLD_HEAD=$(git rev-parse HEAD)
 
-echo $OLD_HEAD
-
 # Merge the fetched commits
 git merge
 
 # Store the new HEAD commit hash
 NEW_HEAD=$(git rev-parse HEAD)
-
-echo $NEW_HEAD
 
 # Compare OLD_HEAD and NEW_HEAD
 if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
@@ -45,6 +41,6 @@ fi
 
 echo "$log_prefix there are unbuilt changes, starting build now."
 
-docker build -t $container_name ../.
+docker build -t $container_name .
 
 start_app
