@@ -1,4 +1,4 @@
-dataLocation: C:/Users/jakeg/Documents/FinanceV3/data/prod
+dataLocation: C:/Users/jakeg/OneDrive/Documents/FinanceV3/data/prod
 
 csv:
   descriptionMapping:
@@ -23,4 +23,4 @@ csv:
 appMode: PROD
 
 google:
-  credentialsFile: C:\Users\jakeg\Documents\FinanceV3\google-credentials\finance-app-403218-7a3d0a952f8c.json
+  credentialsFile: C:\Users\jakeg\OneDrive\Documents\FinanceV3\google-credentials\finance-app-403218-7a3d0a952f8c.json

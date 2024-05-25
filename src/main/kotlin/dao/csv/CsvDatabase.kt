@@ -11,12 +11,17 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 abstract class CsvDatabase<Domain : Comparable<Domain>>(
     private val syncPeriod: Duration,
     fileName: String,
-    now: () -> LocalDateTime = { LocalDateTime.now() }
+    now: () -> LocalDateTime = { LocalDateTime.now() },
+    private val dataListenerPeriod: Duration = 60.seconds
 ) : InMemoryDatabase<Domain>(now = now), Synchronisable {
+
+    private var flushIsScheduled = false
+    private lateinit var dataListenerTask: TimerTask
 
     private val file = File(fileName)
 
@@ -60,6 +65,9 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
 
     private fun loadDataFromFile() {
         val lines = file.readLines()
+        if (lines.isEmpty()) {
+            return
+        }
         columns = lines.first().split(",")
         this.data = lines
             .drop(1)

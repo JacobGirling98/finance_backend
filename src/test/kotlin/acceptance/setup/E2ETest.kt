@@ -87,7 +87,7 @@ private val files: List<File> =
     listOf(descriptionMappingFile, transactionFile, standingOrderFile, reminderFile, *singleValueFiles.toTypedArray())
 
 private fun createFiles() {
-    testFileDirectory.mkdir()
+    testFileDirectory.mkdirs()
 
     files.forEach { it.createNewFile() }
 

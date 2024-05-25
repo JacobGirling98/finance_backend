@@ -4,6 +4,7 @@ import dao.Entity
 import dao.csv.CsvDatabase
 import helpers.fixtures.Doubles.TestDomain
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSingleElement
 import io.kotest.matchers.shouldBe
 import java.io.File
@@ -32,7 +33,7 @@ class CsvDatabaseTest : FunSpec({
     }
 
     test("can flush changes to a file") {
-        file.writeText("id,name,age")
+        file.writeText("id,last_modified_name,age")
 
         val database = database()
         val newId = database.save(TestDomain("Jacob", 24))
@@ -57,6 +58,12 @@ class CsvDatabaseTest : FunSpec({
         database.overwrite(overwrittenContents)
 
         file.readText() shouldBe overwrittenContents
+    }
+
+    test("database can instantiate against empty file") {
+        val database = database()
+
+        database.selectAll().shouldBeEmpty()
     }
 })
 

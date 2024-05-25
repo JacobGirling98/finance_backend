@@ -47,6 +47,11 @@ class StandingOrderProcessor(
         val now = java.util.Date.from(Instant.now())
         val day = Duration.ofDays(1).toMillis()
 
+        if (transactionsDatabase.selectAll().isEmpty()) {
+            logger.info { "There are no transactions, standing orders won't be scheduled. Restart the app after syncing transactions" }
+            return
+        }
+
         Timer().scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
