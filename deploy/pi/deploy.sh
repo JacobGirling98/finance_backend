@@ -20,24 +20,28 @@ start_app() {
 
 # Fetch the latest commits and refs from the remote
 git fetch > /dev/null
+echo "$log_prefixFetched latest commits"
 
 # Store the current HEAD commit hash
 OLD_HEAD=$(git rev-parse HEAD)
+echo "$log_prefix Previous HEAD: $OLD_HEAD"
 
 # Merge the fetched commits
 git merge > /dev/null
+echo "$log_prefix Merging latest commits"
 
 # Store the new HEAD commit hash
 NEW_HEAD=$(git rev-parse HEAD)
+echo "$log_prefix New HEAD: $NEW_HEAD"
 
-# Compare OLD_HEAD and NEW_HEAD
-if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
-  echo "$log_prefix up to date, skipping Docker build..."
-
-  start_app
-
-  exit 0
-fi
+## Compare OLD_HEAD and NEW_HEAD
+#if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
+#  echo "$log_prefix up to date, skipping Docker build..."
+#
+#  start_app
+#
+#  exit 0
+#fi
 
 echo "$log_prefix there are unbuilt changes, starting build now."
 
