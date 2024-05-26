@@ -1,6 +1,10 @@
 package http.assembler
 
-import domain.*
+import domain.AddedBy
+import domain.Outgoing
+import domain.Quantity
+import domain.Transaction
+import domain.TransactionType
 import domain.TransactionType.*
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
