@@ -1,7 +1,14 @@
 package unit.domain
 
 import domain.totalValue
-import helpers.fixtures.*
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.withACategoryOf
+import helpers.fixtures.withADescriptionOf
+import helpers.fixtures.withARecipientOf
+import helpers.fixtures.withAValueOf
+import helpers.fixtures.withAnInboundAccountOf
+import helpers.fixtures.withAnIncomeSourceOf
+import helpers.fixtures.withAnOutboundAccountOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 

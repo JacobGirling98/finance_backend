@@ -55,7 +55,8 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
 
     fun flush() {
         val headers = "id,last_modified,${headers()}"
-        val body = selectAll().joinToString("\n") { "${it.id},${it.lastModified.format(ISO_LOCAL_DATE_TIME)},${it.domain.toRow()}" }
+        val body =
+            selectAll().joinToString("\n") { "${it.id},${it.lastModified.format(ISO_LOCAL_DATE_TIME)},${it.domain.toRow()}" }
         file.writeText("$headers\n$body")
     }
 

@@ -5,17 +5,18 @@ import domain.Quantity
 import domain.StandingOrder
 import domain.TransactionType
 
-fun standingOrderFrom(transaction: http.model.StandingOrder.CreditDebit, transactionType: TransactionType) = StandingOrder(
-    transaction.date,
-    transaction.frequencyQuantity,
-    transaction.frequencyUnit,
-    transaction.category,
-    transaction.value,
-    transaction.description,
-    transactionType,
-    Outgoing(true),
-    quantity = transaction.quantity
-)
+fun standingOrderFrom(transaction: http.model.StandingOrder.CreditDebit, transactionType: TransactionType) =
+    StandingOrder(
+        transaction.date,
+        transaction.frequencyQuantity,
+        transaction.frequencyUnit,
+        transaction.category,
+        transaction.value,
+        transaction.description,
+        transactionType,
+        Outgoing(true),
+        quantity = transaction.quantity
+    )
 
 fun standingOrderFrom(transaction: http.model.StandingOrder.BankTransfer) = StandingOrder(
     transaction.date,

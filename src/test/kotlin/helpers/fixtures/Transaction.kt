@@ -29,7 +29,8 @@ import java.util.*
 
 val uuid: UUID = UUID.randomUUID()
 
-fun anEntity(id: UUID = uuid, transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) = Entity(id, transaction, now())
+fun anEntity(id: UUID = uuid, transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) =
+    Entity(id, transaction, now())
 
 fun aDebitTransaction() = Transaction(
     date,
