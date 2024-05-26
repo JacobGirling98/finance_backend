@@ -5,7 +5,6 @@ import domain.Outgoing
 import domain.Quantity
 import domain.Transaction
 import domain.TransactionType
-import domain.TransactionType.*
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -27,7 +26,7 @@ fun transactionFrom(transaction: BankTransfer, addedBy: AddedBy) = Transaction(
     transaction.category,
     transaction.value,
     transaction.description,
-    BANK_TRANSFER,
+    TransactionType.BANK_TRANSFER,
     Outgoing(true),
     quantity = transaction.quantity,
     recipient = transaction.recipient,
@@ -39,7 +38,7 @@ fun transactionFrom(transaction: PersonalTransfer, addedBy: AddedBy) = Transacti
     transaction.category,
     transaction.value,
     transaction.description,
-    PERSONAL_TRANSFER,
+    TransactionType.PERSONAL_TRANSFER,
     Outgoing(false),
     quantity = Quantity(1),
     outbound = transaction.outbound,
@@ -52,7 +51,7 @@ fun transactionFrom(transaction: Income, addedBy: AddedBy) = Transaction(
     transaction.category,
     transaction.value,
     transaction.description,
-    INCOME,
+    TransactionType.INCOME,
     Outgoing(false),
     quantity = Quantity(1),
     source = transaction.source,
