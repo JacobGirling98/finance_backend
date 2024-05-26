@@ -3,7 +3,14 @@ package http.lense
 import config.CustomJackson.auto
 import dao.Entity
 import dao.Page
-import domain.*
+import domain.Date
+import domain.DateRange
+import domain.DescriptionMapping
+import domain.Headlines
+import domain.Login
+import domain.Reminder
+import domain.StandingOrder
+import domain.Transaction
 import http.model.ReminderId
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit

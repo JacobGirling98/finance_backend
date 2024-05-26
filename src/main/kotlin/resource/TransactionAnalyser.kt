@@ -1,7 +1,11 @@
 package resource
 
 import dao.Entity
-import domain.*
+import domain.Date
+import domain.DateRange
+import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import java.math.BigDecimal
 
 fun List<Transaction>.spendingBetween(dates: DateRange): Value = valueBetween(dates) { it.outgoing.value }

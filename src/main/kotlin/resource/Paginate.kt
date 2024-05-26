@@ -1,7 +1,12 @@
 package resource
 
 import dao.Page
-import domain.*
+import domain.HasNextPage
+import domain.HasPreviousPage
+import domain.PageNumber
+import domain.PageSize
+import domain.TotalElements
+import domain.TotalPages
 import kotlin.math.ceil
 
 fun <T> paginate(allElements: List<T>, pageNumber: PageNumber, pageSize: PageSize): Page<T> {

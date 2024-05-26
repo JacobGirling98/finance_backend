@@ -6,7 +6,11 @@ import domain.PageNumber
 import domain.PageSize
 import domain.Transaction
 import domain.TransactionType.CREDIT
-import helpers.fixtures.*
+import helpers.fixtures.aCreditTransaction
+import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.addedBy
+import helpers.fixtures.withADateOf
+import helpers.fixtures.withADescriptionOf
 import helpers.matchers.shouldContainDomain
 import helpers.matchers.shouldNotContainDomain
 import io.kotest.core.spec.style.FunSpec
@@ -25,7 +29,7 @@ class TransactionProcessorTest : FunSpec({
         val transactions = listOf(
             entityOf(aDebitTransaction().withADateOf(2022, 3, 1).addedBy("finance-app")),
             entityOf(aDebitTransaction().withADateOf(2022, 2, 1).addedBy("Jacob")),
-            entityOf(aDebitTransaction().withADateOf(2022, 1, 1).addedBy("Jacob")),
+            entityOf(aDebitTransaction().withADateOf(2022, 1, 1).addedBy("Jacob"))
         )
         every { database.selectAll() } returns transactions
 
@@ -35,7 +39,7 @@ class TransactionProcessorTest : FunSpec({
     test("can filter transactions") {
         val transactions = listOf(
             entityOf(aDebitTransaction()),
-            entityOf(aCreditTransaction()),
+            entityOf(aCreditTransaction())
         )
         every { database.selectAll() } returns transactions
 
@@ -49,7 +53,7 @@ class TransactionProcessorTest : FunSpec({
         val transactions = listOf(
             entityOf(aDebitTransaction().withADescriptionOf("Testing")),
             entityOf(aCreditTransaction().withADescriptionOf("Testing")),
-            entityOf(aCreditTransaction().withADescriptionOf("Something else")),
+            entityOf(aCreditTransaction().withADescriptionOf("Something else"))
         )
         every { database.selectAll() } returns transactions
 
@@ -60,4 +64,3 @@ class TransactionProcessorTest : FunSpec({
         filtered.data shouldNotContainDomain aCreditTransaction().withADescriptionOf("Something else")
     }
 })
-

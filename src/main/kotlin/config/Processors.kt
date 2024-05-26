@@ -1,7 +1,11 @@
 package config
 
 import http.google.GoogleDrive
-import resource.*
+import resource.GoogleDriveSynchroniser
+import resource.LoginSynchroniser
+import resource.ReminderProcessor
+import resource.StandingOrderProcessor
+import resource.TransactionProcessor
 import java.time.LocalDate
 
 val transactionsProcessor = TransactionProcessor(transactionDatabase)

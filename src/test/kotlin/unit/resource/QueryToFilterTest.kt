@@ -24,14 +24,13 @@ class QueryToFilterTest : FunSpec({
                 type = null
             )
         }
-
     }
 
     test("only from date provided gives all transactions after it") {
         val transactions = listOf(
             entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
             entityOf(aDebitTransaction().withADateOf(2024, 1, 1)),
-            entityOf(aDebitTransaction().withADateOf(2025, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2025, 1, 1))
         )
 
         val filter = toFilter(from = StartDate(LocalDate.of(2023, 6, 1)))
@@ -40,13 +39,12 @@ class QueryToFilterTest : FunSpec({
             filtered shouldContainDomain aDebitTransaction().withADateOf(2024, 1, 1)
             filtered shouldContainDomain aDebitTransaction().withADateOf(2025, 1, 1)
             filtered shouldNotContainDomain aDebitTransaction().withADateOf(2023, 1, 1)
-
         }
     }
 
     test("from date is inclusive") {
         val transactions = listOf(
-            entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2023, 1, 1))
         )
 
         val filter = toFilter(from = StartDate(LocalDate.of(2023, 1, 1)))
@@ -58,7 +56,7 @@ class QueryToFilterTest : FunSpec({
         val transactions = listOf(
             entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
             entityOf(aDebitTransaction().withADateOf(2024, 1, 1)),
-            entityOf(aDebitTransaction().withADateOf(2025, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2025, 1, 1))
         )
 
         val filter = toFilter(to = EndDate(LocalDate.of(2024, 6, 1)))
@@ -72,7 +70,7 @@ class QueryToFilterTest : FunSpec({
 
     test("from date is exclusive") {
         val transactions = listOf(
-            entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2023, 1, 1))
         )
 
         val filter = toFilter(to = EndDate(LocalDate.of(2023, 1, 1)))
@@ -84,7 +82,7 @@ class QueryToFilterTest : FunSpec({
         val transactions = listOf(
             entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
             entityOf(aDebitTransaction().withADateOf(2024, 1, 1)),
-            entityOf(aDebitTransaction().withADateOf(2025, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2025, 1, 1))
         )
 
         val filter = toFilter(
@@ -102,7 +100,7 @@ class QueryToFilterTest : FunSpec({
     test("can filter by transaction type") {
         val transactions = listOf(
             entityOf(aDebitTransaction()),
-            entityOf(aCreditTransaction()),
+            entityOf(aCreditTransaction())
         )
 
         val filter = toFilter(
@@ -120,7 +118,7 @@ class QueryToFilterTest : FunSpec({
             entityOf(aDebitTransaction().withADateOf(2023, 1, 1)),
             entityOf(aDebitTransaction().withADateOf(2024, 1, 1)),
             entityOf(aCreditTransaction().withADateOf(2024, 1, 1)),
-            entityOf(aDebitTransaction().withADateOf(2025, 1, 1)),
+            entityOf(aDebitTransaction().withADateOf(2025, 1, 1))
         )
 
         val filter = toFilter(

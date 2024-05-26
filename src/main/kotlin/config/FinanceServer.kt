@@ -1,6 +1,23 @@
 package config
 
-import config.contract.*
+import config.contract.addAccountContact
+import config.contract.addCategoryContact
+import config.contract.addDescriptionsContract
+import config.contract.addPayeesContact
+import config.contract.addSourceContact
+import config.contract.dateRangeContracts
+import config.contract.getAccountsContract
+import config.contract.getCategoriesContract
+import config.contract.getDescriptionsContract
+import config.contract.getPayeesContract
+import config.contract.getSourcesContract
+import config.contract.googleBackupContracts
+import config.contract.headlineContracts
+import config.contract.lastTransactionContracts
+import config.contract.loginContracts
+import config.contract.reminderContracts
+import config.contract.standingOrdersContracts
+import config.contract.transactionContracts
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import org.http4k.contract.contract

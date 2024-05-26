@@ -2,8 +2,11 @@ package config.contract
 
 import dao.asEntity
 import dao.entityOf
-import domain.*
 import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Reminder
 import http.asTag
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
@@ -38,16 +41,16 @@ fun getOutstandingReminders(processor: ReminderProcessor) = BASE_URL meta {
     returning(
         Status.OK,
         reminderEntityListLens to
-                listOf(
-                    entityOf(
-                        Reminder(
-                            Date(LocalDate.of(2023, 1, 1)),
-                            Frequency.WEEKLY,
-                            FrequencyQuantity(1),
-                            Description("String"),
-                        )
+            listOf(
+                entityOf(
+                    Reminder(
+                        Date(LocalDate.of(2023, 1, 1)),
+                        Frequency.WEEKLY,
+                        FrequencyQuantity(1),
+                        Description("String")
                     )
                 )
+            )
     )
 } bindContract Method.GET to outstandingRemindersHandler { processor.allRemindersDue() }
 

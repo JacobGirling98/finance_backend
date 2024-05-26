@@ -2,7 +2,11 @@ package acceptance
 
 import acceptance.setup.E2ETest
 import dao.Entity
-import domain.*
+import domain.Date
+import domain.Description
+import domain.Frequency
+import domain.FrequencyQuantity
+import domain.Reminder
 import helpers.fixtures.deserialize
 import helpers.matchers.shouldContainDomain
 import http.model.ReminderId
@@ -54,5 +58,4 @@ class ReminderTest : E2ETest({
         emptyRemindersResponse shouldHaveStatus OK
         emptyRemindersResponse.deserialize<List<Entity<Reminder>>>() shouldHaveSize 0
     }
-
 })

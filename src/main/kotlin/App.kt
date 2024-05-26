@@ -1,5 +1,8 @@
-import config.*
-
+import config.AppMode
+import config.FinanceServer
+import config.logger
+import config.properties
+import config.standingOrderProcessor
 
 fun main() {
     standingOrderProcessor.schedule()

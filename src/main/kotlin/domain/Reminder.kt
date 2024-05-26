@@ -7,5 +7,4 @@ data class Reminder(
     val description: Description
 ) : Comparable<Reminder>, Temporal {
     override fun compareTo(other: Reminder): Int = date.value.compareTo(other.date.value)
-
 }
