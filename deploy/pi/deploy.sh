@@ -13,7 +13,7 @@ start_app() {
 
   docker rm $container_name > /dev/null
 
-  container_id=`docker run -e PROFILE=docker -v /home/jacobg/Programming/finance/finance_data:/app/data -v /home/jacobg/Programming/finance/google-credentials:/app/config -p 9000:9000 -d --name finance-backend -t finance-backend`
+  container_id=`docker run -e PROFILE=docker -v /home/jacobg/Programming/finance/finance_data:/app/data -v /home/jacobg/Programming/finance/google-credentials:/app/config -p 9000:9000 -d --name finance-backend -t finance-backend:latest`
 
   echo "$log_prefix started with container id $container_id"
 }
@@ -34,14 +34,14 @@ echo "$log_prefix Merging latest commits"
 NEW_HEAD=$(git rev-parse HEAD)
 echo "$log_prefix New HEAD: $NEW_HEAD"
 
-## Compare OLD_HEAD and NEW_HEAD
-#if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
-#  echo "$log_prefix up to date, skipping Docker build..."
-#
-#  start_app
-#
-#  exit 0
-#fi
+# Compare OLD_HEAD and NEW_HEAD
+if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
+  echo "$log_prefix up to date, skipping Docker build..."
+
+  start_app
+
+  exit 0
+fi
 
 echo "$log_prefix there are unbuilt changes, starting build now."
 
