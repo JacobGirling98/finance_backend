@@ -19,11 +19,11 @@ data class Transaction(
     fun anyMatch(searchTerm: String): Boolean {
         val loweredSearchTerm = searchTerm.trim().lowercase()
         return description.value.lowercase().contains(loweredSearchTerm) ||
-                category.value.lowercase().contains(loweredSearchTerm) ||
-                recipient?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
-                inbound?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
-                outbound?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
-                source?.value?.lowercase()?.contains(loweredSearchTerm) == true
+            category.value.lowercase().contains(loweredSearchTerm) ||
+            recipient?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
+            inbound?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
+            outbound?.value?.lowercase()?.contains(loweredSearchTerm) == true ||
+            source?.value?.lowercase()?.contains(loweredSearchTerm) == true
     }
 }
 
