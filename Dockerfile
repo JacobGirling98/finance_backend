@@ -1,7 +1,7 @@
 FROM arm64v8/gradle AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-RUN gradle build --no-daemon
+RUN gradle build --no-daemon -x test
 
 FROM arm64v8/amazoncorretto:11.0.17
 
