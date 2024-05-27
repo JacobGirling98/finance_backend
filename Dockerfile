@@ -3,7 +3,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon -x test
 
-FROM arm64v8/amazoncorretto:11.0.17
+FROM arm64v8/amazoncorretto:17
 
 RUN mkdir /app
 EXPOSE 9000
