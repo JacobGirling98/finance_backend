@@ -6,6 +6,7 @@ plugins {
     application
     id("com.github.johnrengelman.shadow") version "6.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
+    id("com.google.cloud.tools.jib") version "3.4.2"
 }
 
 group = "jacob.finance"
@@ -92,5 +93,11 @@ tasks.withType<Jar> {
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
     reporters {
         reporter(ReporterType.HTML)
+    }
+}
+
+jib {
+    to {
+        image = "finance-backend"
     }
 }

@@ -45,6 +45,6 @@ fi
 
 echo "$log_prefix there are unbuilt changes, starting build now."
 
-docker build -t $container_name .
+./gradlew jib jibDockerBuild
 
 start_app
