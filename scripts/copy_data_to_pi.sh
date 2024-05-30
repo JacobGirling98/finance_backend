@@ -1,7 +1,7 @@
 #!/bin/bash
 
 env="prod"
-location=C:/Users/jakeg/OneDrive/Documents/FinanceV3/data/${env}
+location=C:/Users/jakeg/Programming/finance/data/${env}
 
 files=("accounts" "categories" "description_mappings" "income_sources" "logins" "payees" "reminders" "standing_orders" "transactions")
 
