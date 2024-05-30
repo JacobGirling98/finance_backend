@@ -106,7 +106,7 @@ jib {
     extraDirectories {
         paths {
             path {
-                from { "src/resources/properties" }
+                setFrom("src/resources/properties")
                 into = "/app"
             }
         }
