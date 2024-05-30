@@ -103,4 +103,12 @@ jib {
     to {
         image = "finance-backend"
     }
+    extraDirectories {
+        paths {
+            path {
+                from { "src/resources/properties" }
+                into = "/app"
+            }
+        }
+    }
 }
