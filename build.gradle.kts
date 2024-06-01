@@ -4,7 +4,6 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 plugins {
     kotlin("jvm") version "1.9.0"
     application
-    id("com.github.johnrengelman.shadow") version "6.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("com.google.cloud.tools.jib") version "3.4.2"
 }
@@ -31,10 +30,6 @@ dependencies {
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.0")
 
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r")
-
-    implementation("org.mongodb:mongodb-driver-sync:4.9.1")
-
     implementation("com.google.api-client:google-api-client:2.2.0")
     implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
     implementation("com.google.api-client:google-api-client-jackson2:1.20.0")
@@ -47,16 +42,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.5")
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
-    }
-}
-
 tasks.test {
     useJUnitPlatform()
 }
@@ -67,27 +52,6 @@ tasks.withType<KotlinCompile> {
 
 application {
     mainClass.set("AppKt")
-}
-
-// val fatJar = task("fatJar", type = Jar::class) {
-//    manifest {
-//        attributes["Main-Class"] = "AppKt"
-//    }
-//    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-//    with(tasks.jar.get() as CopySpec)
-// }
-
-// tasks {
-//    "build" {
-//        dependsOn(fatJar)
-//    }
-// }
-
-tasks.withType<Jar> {
-
-    manifest {
-        attributes["Main-Class"] = "AppKt"
-    }
 }
 
 configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
