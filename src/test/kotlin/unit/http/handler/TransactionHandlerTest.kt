@@ -1,5 +1,6 @@
 package unit.http.handler
 
+import dao.AuditableEntity
 import dao.Database
 import dao.Entity
 import dao.Page
@@ -692,8 +693,8 @@ class TransactionHandlerTest : FunSpec({
     }
 })
 
-private typealias SelectBy = (PageNumber, PageSize, (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
-private typealias SelectAll = (PageNumber, PageSize) -> Page<Entity<Transaction>>
+private typealias SelectBy = (PageNumber, PageSize, (AuditableEntity<Transaction>) -> Boolean) -> Page<AuditableEntity<Transaction>>
+private typealias SelectAll = (PageNumber, PageSize) -> Page<AuditableEntity<Transaction>>
 
 private fun getRequest() =
     Request(Method.GET, "/").query("pageNumber", "${pageNumber.value}").query("pageSize", "${pageSize.value}")

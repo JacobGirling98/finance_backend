@@ -1,6 +1,7 @@
 package unit.resource
 
 import dao.Database
+import dao.asAuditableEntity
 import dao.asEntity
 import domain.Date
 import domain.Description
@@ -32,7 +33,7 @@ class ReminderProcessorTest : FunSpec({
             Frequency.MONTHLY,
             FrequencyQuantity(1),
             Description("A reminder")
-        ).asEntity(id) { now().atStartOfDay() }
+        ).asAuditableEntity(id)
         every { database.findById(id) } returns reminder
         every { database.update(any()) } returns null
 
@@ -46,7 +47,7 @@ class ReminderProcessorTest : FunSpec({
                     Frequency.MONTHLY,
                     FrequencyQuantity(1),
                     Description("A reminder")
-                ).asEntity(id) { now().atStartOfDay() }
+                ).asEntity(id)
             )
         }
     }
@@ -59,9 +60,9 @@ class ReminderProcessorTest : FunSpec({
         val notDueId = UUID.randomUUID()
 
         every { database.selectAll() } returns listOf(
-            firstReminder.asEntity(id),
-            secondReminder.asEntity(anotherId),
-            notDueReminder.asEntity(notDueId)
+            firstReminder.asAuditableEntity(id),
+            secondReminder.asAuditableEntity(anotherId),
+            notDueReminder.asAuditableEntity(notDueId)
         )
 
         processor.allRemindersDue().map { it.id } shouldContainExactlyInAnyOrder listOf(id, anotherId)

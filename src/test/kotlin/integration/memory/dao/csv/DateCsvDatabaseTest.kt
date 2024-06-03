@@ -1,5 +1,6 @@
 package integration.memory.dao.csv
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.csv.DateCsvDatabase
 import helpers.fixtures.lastModified
@@ -31,7 +32,7 @@ class DateCsvDatabaseTest : FunSpec({
             """.trimIndent()
         )
 
-        database().selectAll() shouldContain Entity(id, LocalDate.of(2020, 1, 1), lastModified)
+        database().selectAll() shouldContain AuditableEntity(id, LocalDate.of(2020, 1, 1), lastModified)
     }
 
     test("can flush a single value to a file") {

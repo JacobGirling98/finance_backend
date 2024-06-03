@@ -1,5 +1,6 @@
 package integration.memory.dao.csv
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.csv.DescriptionMappingCsvDatabase
 import domain.DescriptionMapping
@@ -33,7 +34,7 @@ class DescriptionMappingCsvDatabaseTest : FunSpec({
             """.trimIndent()
         )
 
-        database().selectAll() shouldContain Entity(
+        database().selectAll() shouldContain AuditableEntity(
             id,
             DescriptionMapping(
                 FullDescription("lots of bananas"),

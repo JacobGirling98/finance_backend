@@ -1,5 +1,6 @@
 package helpers.fixtures
 
+import dao.AuditableEntity
 import dao.Entity
 import java.time.LocalDateTime
 import java.util.*
@@ -15,4 +16,4 @@ object Doubles {
     }
 }
 
-fun Doubles.TestDomain.asEntity(id: UUID, now: () -> LocalDateTime = { LocalDateTime.now() }) = Entity(id, this, now())
+fun Doubles.TestDomain.asEntity(id: UUID, now: () -> LocalDateTime = { LocalDateTime.now() }) = AuditableEntity(id, this, now())

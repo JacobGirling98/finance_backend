@@ -1,5 +1,6 @@
 package resource
 
+import dao.AuditableEntity
 import dao.Entity
 import domain.Date
 import domain.DateRange
@@ -20,7 +21,7 @@ fun List<Transaction>.netIncomeBetween(dates: DateRange): Value =
 
 fun List<Transaction>.mostRecent(): Date? = maxByOrNull { it.date.value }?.date
 
-fun List<Entity<Transaction>>.search(term: String): List<Entity<Transaction>> = filter { it.domain.anyMatch(term) }
+fun List<AuditableEntity<Transaction>>.search(term: String): List<AuditableEntity<Transaction>> = filter { it.domain.anyMatch(term) }
 
 private fun List<Transaction>.valueBetween(dates: DateRange, predicate: (_: Transaction) -> Boolean): Value =
     filter(dates).filter { predicate(it) }.map { it.value }.reduceOrNull { acc, value -> acc + value } ?: Value(

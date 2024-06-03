@@ -1,7 +1,7 @@
 package resource
 
 import dao.Database
-import dao.asEntity
+import dao.asAuditableEntity
 import java.time.LocalDate
 import java.util.*
 import java.util.concurrent.locks.ReentrantLock
@@ -16,7 +16,7 @@ class LoginSynchroniser(private val loginDatabase: Database<LocalDate, UUID>) {
             val logins = loginDatabase.selectAll()
             if (logins.none { it.domain == localDate }) {
                 val newId = loginDatabase.save(localDate)
-                val allLogins = (logins + localDate.asEntity(newId)).sortedByDescending { it.domain }
+                val allLogins = (logins + localDate.asAuditableEntity(newId)).sortedByDescending { it.domain }
                 val loginsToRemove = allLogins.drop(3)
                 loginsToRemove.forEach { loginDatabase.delete(it.id) }
             }

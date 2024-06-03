@@ -5,7 +5,7 @@ import domain.EndDate
 import domain.StartDate
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.aWagesIncome
-import helpers.fixtures.anEntity
+import helpers.fixtures.anAuditableEntity
 import helpers.fixtures.withADateOf
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAll
@@ -21,8 +21,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract single date range") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 20))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 20))
                 )
             }
 
@@ -37,8 +37,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range over two months") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20))
                 )
             }
 
@@ -57,8 +57,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range over two years") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 12, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2021, 1, 10))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 12, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2021, 1, 10))
                 )
             }
 
@@ -77,8 +77,8 @@ class DateExtractorTest : DescribeSpec({
         it("can handle same month in different years") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 12, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2021, 12, 10))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 12, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2021, 12, 10))
                 )
             }
 
@@ -99,8 +99,8 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range for single year") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20))
                 )
             }
 
@@ -115,9 +115,9 @@ class DateExtractorTest : DescribeSpec({
         it("can extract date range for multiple years") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2021, 2, 20)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2022, 3, 20))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 10)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2021, 2, 20)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2022, 3, 20))
                 )
             }
 
@@ -142,7 +142,7 @@ class DateExtractorTest : DescribeSpec({
         it("single month with wages paid on the regular day") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15))
                 )
             }
 
@@ -157,8 +157,8 @@ class DateExtractorTest : DescribeSpec({
         it("single month with wages paid on the regular day and other transactions") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 20))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 1, 20))
                 )
             }
 
@@ -173,8 +173,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with wages paid on the regular day") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 2, 15))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 2, 15))
                 )
             }
 
@@ -193,8 +193,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with first wage paid on a different day") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 14)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 2, 15))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 14)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 2, 15))
                 )
             }
 
@@ -213,8 +213,8 @@ class DateExtractorTest : DescribeSpec({
         it("two months with second wage paid on a different day") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 2, 14))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 2, 14))
                 )
             }
 
@@ -233,9 +233,9 @@ class DateExtractorTest : DescribeSpec({
         it("three months with middle wage paid on a different day") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 2, 13)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 3, 14))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 2, 13)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 3, 14))
                 )
             }
 
@@ -258,9 +258,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer next fiscal month if income is missing") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12))
                 )
             }
 
@@ -279,9 +279,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer multiple next fiscal months if incomes are missing") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 20))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 20))
                 )
             }
 
@@ -304,9 +304,9 @@ class DateExtractorTest : DescribeSpec({
         it("can infer previous fiscal month if income is missing") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 3, 15))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 3, 15))
                 )
             }
 
@@ -325,8 +325,8 @@ class DateExtractorTest : DescribeSpec({
         it("can infer fiscal month in-between existing ones") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 14)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 3, 13))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 14)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 3, 13))
                 )
             }
 
@@ -349,8 +349,8 @@ class DateExtractorTest : DescribeSpec({
         it("can infer next fiscal month if transaction is on the 15th") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 15))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 1, 15)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 15))
                 )
             }
 
@@ -369,12 +369,12 @@ class DateExtractorTest : DescribeSpec({
         it("a mega test!") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 3, 14)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 6, 13)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 7, 14)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 7, 15))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 2, 20)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 3, 12)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 3, 14)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 6, 13)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 7, 14)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 7, 15))
                 )
             }
 
@@ -411,7 +411,7 @@ class DateExtractorTest : DescribeSpec({
         it("single year") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 5, 1))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 5, 1))
                 )
             }
 
@@ -426,8 +426,8 @@ class DateExtractorTest : DescribeSpec({
         it("multiple years") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 5, 1)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2021, 6, 10))
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 5, 1)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2021, 6, 10))
                 )
             }
 
@@ -446,8 +446,8 @@ class DateExtractorTest : DescribeSpec({
         it("april transaction on irregular date") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 4, 14)),
-                    anEntity(transaction = aDebitTransaction().withADateOf(2020, 6, 10))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 4, 14)),
+                    anAuditableEntity(transaction = aDebitTransaction().withADateOf(2020, 6, 10))
                 )
             }
 
@@ -462,8 +462,8 @@ class DateExtractorTest : DescribeSpec({
         it("two wages on an irregular date") {
             val transactions = {
                 listOf(
-                    anEntity(transaction = aWagesIncome().withADateOf(2020, 4, 14)),
-                    anEntity(transaction = aWagesIncome().withADateOf(2021, 4, 13))
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2020, 4, 14)),
+                    anAuditableEntity(transaction = aWagesIncome().withADateOf(2021, 4, 13))
                 )
             }
 

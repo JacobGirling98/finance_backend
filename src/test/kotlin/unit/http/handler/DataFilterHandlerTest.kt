@@ -7,7 +7,7 @@ import domain.EndDate
 import domain.StartDate
 import domain.Transaction
 import helpers.fixtures.aDebitTransaction
-import helpers.fixtures.anEntity
+import helpers.fixtures.anAuditableEntity
 import helpers.fixtures.withADateOf
 import http.handler.dateRangeHandler
 import http.handler.transactionsHandler
@@ -32,8 +32,8 @@ class DataFilterHandlerTest : FunSpec({
     test("can use date ranges with filter transactions") {
         val transactions = { dateRange: DateRange ->
             listOf(
-                anEntity(transaction = aDebitTransaction().withADateOf(dateRange.startDate.value), now = now),
-                anEntity(transaction = aDebitTransaction().withADateOf(dateRange.endDate.value), now = now)
+                anAuditableEntity(transaction = aDebitTransaction().withADateOf(dateRange.startDate.value), now = now),
+                anAuditableEntity(transaction = aDebitTransaction().withADateOf(dateRange.endDate.value), now = now)
             )
         }
         val startDate = LocalDate.of(2020, 1, 1)

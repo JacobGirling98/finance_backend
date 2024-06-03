@@ -1,5 +1,6 @@
 package resource
 
+import dao.AuditableEntity
 import dao.Database
 import dao.Entity
 import dao.Page
@@ -17,8 +18,8 @@ class TransactionProcessor(private val transactionDatabase: Database<Transaction
     fun selectBy(
         pageNumber: PageNumber,
         pageSize: PageSize,
-        filter: ((Entity<Transaction>) -> Boolean)
-    ): Page<Entity<Transaction>> = paginate(
+        filter: ((AuditableEntity<Transaction>) -> Boolean)
+    ): Page<AuditableEntity<Transaction>> = paginate(
         transactionDatabase.selectAll().filter(filter),
         pageNumber,
         pageSize

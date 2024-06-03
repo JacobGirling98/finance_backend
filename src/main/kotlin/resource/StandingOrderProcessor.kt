@@ -3,6 +3,7 @@ package resource
 import config.logger
 import dao.Database
 import dao.Entity
+import dao.asAuditableEntity
 import dao.asEntity
 import domain.AddedBy
 import domain.Date
@@ -34,7 +35,7 @@ class StandingOrderProcessor(
                     WEEKLY -> Date(standingOrderToChange.date.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
                 }
             )
-            standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id) { standingOrder.lastModified })
+            standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))
         }
     }
 

@@ -1,5 +1,6 @@
 package config.contract
 
+import dao.AuditableEntity
 import dao.Database
 import dao.Entity
 import dao.Page
@@ -103,8 +104,8 @@ fun transactionContracts(database: Database<Transaction, UUID>, processor: Trans
 )
 
 private fun getPaginatedDataRoute(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>,
-    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<AuditableEntity<Transaction>>,
+    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (AuditableEntity<Transaction>) -> Boolean) -> Page<AuditableEntity<Transaction>>
 ) = BASE_URL meta {
     operationId = BASE_URL
     summary = "Get paginated transactions"
@@ -147,7 +148,7 @@ private fun getPaginatedDataRoute(
 } bindContract GET to paginatedTransactionsHandler(selectAll, selectBy)
 
 private fun getPaginatedSearchDataRoute(
-    search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
+    search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<AuditableEntity<Transaction>>
 ) = "$BASE_URL/search" meta {
     operationId = "$BASE_URL/search"
     summary = "Search for transactions"

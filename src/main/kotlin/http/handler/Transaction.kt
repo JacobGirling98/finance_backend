@@ -1,5 +1,6 @@
 package http.handler
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.Page
 import domain.PageNumber
@@ -117,8 +118,8 @@ fun postIncomeListHandler(
 }
 
 fun paginatedTransactionsHandler(
-    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>,
-    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (Entity<Transaction>) -> Boolean) -> Page<Entity<Transaction>>
+    selectAll: (pageNumber: PageNumber, pageSize: PageSize) -> Page<AuditableEntity<Transaction>>,
+    selectBy: (pageNumber: PageNumber, pageSize: PageSize, filter: (AuditableEntity<Transaction>) -> Boolean) -> Page<AuditableEntity<Transaction>>
 ): HttpHandler = { request ->
     val pageNumber = pageNumberQuery.extract(request)
     val pageSize = pageSizeQuery.extract(request)
@@ -127,7 +128,7 @@ fun paginatedTransactionsHandler(
     val endDate = optionalEndDateQuery.extract(request)
     val type = optionalTransactionTypeStringQuery.extract(request)?.let { transactionTypeFrom(it) }
 
-    val selectFn: () -> Page<Entity<Transaction>> = if (startDate == null && endDate == null && type == null) {
+    val selectFn: () -> Page<AuditableEntity<Transaction>> = if (startDate == null && endDate == null && type == null) {
         { selectAll(pageNumber, pageSize) }
     } else {
         { selectBy(pageNumber, pageSize, toFilter(endDate, startDate, type)) }
@@ -138,7 +139,7 @@ fun paginatedTransactionsHandler(
 }
 
 fun searchTransactionsHandler(
-    search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<Entity<Transaction>>
+    search: (term: String, pageNumber: PageNumber, pageSize: PageSize) -> Page<AuditableEntity<Transaction>>
 ): HttpHandler = { request ->
     val searchTerm = searchTermQuery.extract(request)
     val pageNumber = pageNumberQuery.extract(request)

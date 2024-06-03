@@ -1,6 +1,6 @@
 package dao.csv
 
-import dao.Entity
+import dao.AuditableEntity
 import dao.memory.InMemoryDatabase
 import http.google.MimeType
 import http.google.Synchronisable
@@ -77,8 +77,8 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
             .toMutableMap()
     }
 
-    private fun readRow(row: String): Entity<Domain> = row.split(",").let {
-        Entity(UUID.fromString(it[0]), domainFromCommaSeparatedList(it), LocalDateTime.parse(it[1]))
+    private fun readRow(row: String): AuditableEntity<Domain> = row.split(",").let {
+        AuditableEntity(UUID.fromString(it[0]), domainFromCommaSeparatedList(it), LocalDateTime.parse(it[1]))
     }
 
     private fun scheduleFileSync() {

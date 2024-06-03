@@ -1,5 +1,6 @@
 package unit.dao.memory
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.memory.InMemoryDatabase
 import exceptions.NotFoundException
@@ -47,13 +48,13 @@ class InMemoryDatabaseTest : FunSpec({
         val entity = database.findById(database.save(TestDomain()))!!
         val newDomain = TestDomain("Jake", 25)
 
-        database.update(Entity(entity.id, newDomain, now)) shouldBe null
+        database.update(Entity(entity.id, newDomain)) shouldBe null
         database.findById(entity.id) shouldBe newDomain.asEntity(entity.id) { now }
     }
 
     test("updating an entity that doesn't exist returns a NotFoundException") {
         val id = UUID.randomUUID()
-        database.update(Entity(id, TestDomain(), now)) shouldBe NotFoundException(id)
+        database.update(AuditableEntity(id, TestDomain(), now)) shouldBe NotFoundException(id)
     }
 
     test("can delete an entity") {

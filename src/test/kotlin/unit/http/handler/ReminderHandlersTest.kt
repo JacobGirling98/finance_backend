@@ -1,7 +1,9 @@
 package unit.http.handler
 
 import config.CustomJackson.mapper
+import dao.AuditableEntity
 import dao.Entity
+import dao.asAuditableEntity
 import dao.asEntity
 import domain.Date
 import domain.Description
@@ -53,14 +55,14 @@ class ReminderHandlersTest : FunSpec({
 
     test("can get outstanding reminders") {
         val id = UUID.randomUUID()
-        val outstandingReminders = mockk<() -> List<Entity<Reminder>>>()
+        val outstandingReminders = mockk<() -> List<AuditableEntity<Reminder>>>()
         val request = Request(Method.GET, "/")
-        every { outstandingReminders() } returns listOf(aReminder().asEntity(id, now))
+        every { outstandingReminders() } returns listOf(aReminder().asAuditableEntity(id, now))
 
         val response = outstandingRemindersHandler(outstandingReminders)(request)
 
         response shouldHaveStatus OK
-        response shouldHaveBody mapper.writeValueAsString(listOf(aReminder().asEntity(id, now)))
+        response shouldHaveBody mapper.writeValueAsString(listOf(aReminder().asAuditableEntity(id, now)))
     }
 
     test("can add a reminder") {
@@ -106,8 +108,7 @@ class ReminderHandlersTest : FunSpec({
                     "frequency": "MONTHLY",
                     "frequencyQuantity": 1,
                     "description": "Remind me"
-                },
-                "lastModified": "2024-01-01T00:00:00"
+                }
             }    
             """.trimIndent()
         )
@@ -123,7 +124,7 @@ class ReminderHandlersTest : FunSpec({
                     Frequency.MONTHLY,
                     FrequencyQuantity(1),
                     Description("Remind me")
-                ).asEntity(id, now)
+                ).asEntity(id)
             )
         }
     }

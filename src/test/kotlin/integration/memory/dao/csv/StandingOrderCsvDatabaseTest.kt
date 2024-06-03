@@ -1,6 +1,6 @@
 package integration.memory.dao.csv
 
-import dao.asEntity
+import dao.asAuditableEntity
 import dao.csv.StandingOrderCsvDatabase
 import domain.Category
 import domain.Date
@@ -67,7 +67,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
                 Description("Bananas"),
                 TransactionType.DEBIT,
                 Outgoing(true)
-            ).asEntity(debitUUID) { lastModified },
+            ).asAuditableEntity(debitUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 2)),
                 FrequencyQuantity(1),
@@ -77,7 +77,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
                 Description("Bananas"),
                 TransactionType.CREDIT,
                 Outgoing(true)
-            ).asEntity(creditUUID) { lastModified },
+            ).asAuditableEntity(creditUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 3)),
                 FrequencyQuantity(1),
@@ -88,7 +88,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
                 TransactionType.BANK_TRANSFER,
                 Outgoing(true),
                 recipient = Recipient("Parents")
-            ).asEntity(bankTransferUUID) { lastModified },
+            ).asAuditableEntity(bankTransferUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 4)),
                 FrequencyQuantity(2),
@@ -100,7 +100,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
                 Outgoing(false),
                 inbound = Inbound("Savings"),
                 outbound = Outbound("Current")
-            ).asEntity(personalTransferUUID) { lastModified },
+            ).asAuditableEntity(personalTransferUUID),
             StandingOrder(
                 Date(LocalDate.of(2020, 1, 5)),
                 FrequencyQuantity(1),
@@ -111,7 +111,7 @@ class StandingOrderCsvDatabaseTest : FunSpec({
                 TransactionType.INCOME,
                 Outgoing(false),
                 source = Source("Work")
-            ).asEntity(incomeUUID) { lastModified }
+            ).asAuditableEntity(incomeUUID)
         )
     }
 

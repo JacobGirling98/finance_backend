@@ -1,6 +1,6 @@
 package integration.memory.dao.csv
 
-import dao.asEntity
+import dao.asAuditableEntity
 import dao.csv.TransactionCsvDatabase
 import domain.AddedBy
 import domain.Category
@@ -65,7 +65,7 @@ class TransactionCsvDatabaseTest : FunSpec({
                 type = TransactionType.DEBIT,
                 outgoing = Outgoing(true),
                 addedBy = AddedBy("Jacob")
-            ).asEntity(debitUUID) { lastModified },
+            ).asAuditableEntity(debitUUID),
             Transaction(
                 date = Date(LocalDate.of(2020, 1, 2)),
                 category = Category("Food"),
@@ -74,7 +74,7 @@ class TransactionCsvDatabaseTest : FunSpec({
                 type = TransactionType.CREDIT,
                 outgoing = Outgoing(true),
                 addedBy = AddedBy("Jake")
-            ).asEntity(creditUUID) { lastModified },
+            ).asAuditableEntity(creditUUID),
             Transaction(
                 date = Date(LocalDate.of(2020, 1, 3)),
                 category = Category("Food"),
@@ -84,7 +84,7 @@ class TransactionCsvDatabaseTest : FunSpec({
                 outgoing = Outgoing(true),
                 recipient = Recipient("Parents"),
                 addedBy = AddedBy("Jack")
-            ).asEntity(bankTransferUUID) { lastModified },
+            ).asAuditableEntity(bankTransferUUID),
             Transaction(
                 date = Date(LocalDate.of(2020, 1, 4)),
                 category = Category("Food"),
@@ -95,7 +95,7 @@ class TransactionCsvDatabaseTest : FunSpec({
                 inbound = Inbound("Savings"),
                 outbound = Outbound("Current"),
                 addedBy = AddedBy("Jacob")
-            ).asEntity(personalTransferUUID) { lastModified },
+            ).asAuditableEntity(personalTransferUUID),
             Transaction(
                 date = Date(LocalDate.of(2020, 1, 5)),
                 category = Category("Food"),
@@ -105,7 +105,7 @@ class TransactionCsvDatabaseTest : FunSpec({
                 outgoing = Outgoing(false),
                 source = Source("Work"),
                 addedBy = AddedBy("Jacob")
-            ).asEntity(incomeUUID) { lastModified }
+            ).asAuditableEntity(incomeUUID)
         )
     }
 

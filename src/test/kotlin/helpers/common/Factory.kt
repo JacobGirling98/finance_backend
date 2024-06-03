@@ -56,7 +56,7 @@ class Factory(
         source = source
     )
 
-    fun standingOrderEntity() = Entity(id, standingOrder(), now())
+    fun standingOrderEntity() = Entity(id, standingOrder())
 
     fun transaction() = Transaction(
         date,

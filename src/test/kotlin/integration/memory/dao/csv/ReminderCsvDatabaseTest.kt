@@ -1,6 +1,6 @@
 package integration.memory.dao.csv
 
-import dao.asEntity
+import dao.asAuditableEntity
 import dao.csv.ReminderCsvDatabase
 import domain.Date
 import domain.Description
@@ -40,7 +40,7 @@ class ReminderCsvDatabaseTest : FunSpec({
             Frequency.MONTHLY,
             FrequencyQuantity(1),
             Description("Refresh Standing Orders")
-        ).asEntity(uuid) { lastModified }
+        ).asAuditableEntity(uuid)
     }
 
     test("can flush a standing order reminder to a file") {

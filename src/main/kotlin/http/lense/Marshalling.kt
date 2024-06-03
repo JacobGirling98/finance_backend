@@ -1,6 +1,7 @@
 package http.lense
 
 import config.CustomJackson.auto
+import dao.AuditableEntity
 import dao.Entity
 import dao.Page
 import domain.Date
@@ -74,7 +75,7 @@ val dateLens = biDiBodyLens<Date>()
 
 val stringListLens = biDiBodyLens<List<String>>()
 
-val transactionPageLens = biDiBodyLens<Page<Entity<Transaction>>>()
+val transactionPageLens = biDiBodyLens<Page<AuditableEntity<Transaction>>>()
 
 val entityCreditDebitLens = biDiBodyLens<Entity<CreditDebit>>()
 

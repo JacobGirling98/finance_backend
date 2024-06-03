@@ -1,7 +1,7 @@
 package unit.resource
 
 import dao.Database
-import dao.asEntity
+import dao.asAuditableEntity
 import io.kotest.core.spec.style.FunSpec
 import io.mockk.every
 import io.mockk.mockk
@@ -30,7 +30,7 @@ class LoginSynchroniserTest : FunSpec({
     val synchroniser = LoginSynchroniser(database)
 
     test("if current date is already in database then it is not added again") {
-        every { database.selectAll() } returns listOf(firstDay.asEntity(firstDayId))
+        every { database.selectAll() } returns listOf(firstDay.asAuditableEntity(firstDayId))
 
         synchroniser.addLogin(firstDay)
 
@@ -38,7 +38,7 @@ class LoginSynchroniserTest : FunSpec({
     }
 
     test("new login is added if it doesn't exist in the database") {
-        every { database.selectAll() } returns listOf(secondDay.asEntity(secondDayId))
+        every { database.selectAll() } returns listOf(secondDay.asAuditableEntity(secondDayId))
         every { database.save(any<LocalDate>()) } returns UUID.randomUUID()
 
         synchroniser.addLogin(firstDay)
@@ -47,7 +47,7 @@ class LoginSynchroniserTest : FunSpec({
     }
 
     test("no logins are deleted if there are 3 or less in the database") {
-        every { database.selectAll() } returns listOf(secondDay.asEntity(secondDayId), thirdDay.asEntity(thirdDayId))
+        every { database.selectAll() } returns listOf(secondDay.asAuditableEntity(secondDayId), thirdDay.asAuditableEntity(thirdDayId))
         every { database.save(any<LocalDate>()) } returns UUID.randomUUID()
 
         synchroniser.addLogin(firstDay)
@@ -57,9 +57,9 @@ class LoginSynchroniserTest : FunSpec({
 
     test("the oldest logins are deleted if there are more than 3 in the database") {
         every { database.selectAll() } returns listOf(
-            secondDay.asEntity(secondDayId),
-            thirdDay.asEntity(thirdDayId),
-            fourthDay.asEntity(fourthDayId)
+            secondDay.asAuditableEntity(secondDayId),
+            thirdDay.asAuditableEntity(thirdDayId),
+            fourthDay.asAuditableEntity(fourthDayId)
         )
         every { database.save(any<LocalDate>()) } returns UUID.randomUUID()
         every { database.delete(any()) } returns null

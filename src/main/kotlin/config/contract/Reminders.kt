@@ -1,6 +1,6 @@
 package config.contract
 
-import dao.asEntity
+import dao.asAuditableEntity
 import dao.entityOf
 import domain.Date
 import domain.Description
@@ -87,7 +87,7 @@ fun editReminder(processor: ReminderProcessor) = BASE_URL meta {
             Frequency.MONTHLY,
             FrequencyQuantity(1),
             Description("String")
-        ).asEntity(UUID.randomUUID())
+        ).asAuditableEntity(UUID.randomUUID())
     )
     returning(Status.NO_CONTENT)
 } bindContract Method.PUT to updateReminderHandler { processor.updateReminder(it) }

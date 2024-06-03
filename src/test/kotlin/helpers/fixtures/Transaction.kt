@@ -1,5 +1,6 @@
 package helpers.fixtures
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.Page
 import domain.AddedBy
@@ -29,8 +30,8 @@ import java.util.*
 
 val uuid: UUID = UUID.randomUUID()
 
-fun anEntity(id: UUID = uuid, transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) =
-    Entity(id, transaction, now())
+fun anAuditableEntity(id: UUID = uuid, transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) =
+    AuditableEntity(id, transaction, now())
 
 fun aDebitTransaction() = Transaction(
     date,
@@ -109,7 +110,7 @@ fun aBankTransferTransaction() = Transaction(
 
 fun aPage(transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) = Page(
     listOf(
-        anEntity(transaction = transaction, now = now)
+        anAuditableEntity(transaction = transaction, now = now)
     ),
     pageNumber,
     pageSize,

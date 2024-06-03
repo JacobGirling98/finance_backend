@@ -1,5 +1,6 @@
 package integration.memory.dao.csv
 
+import dao.AuditableEntity
 import dao.Entity
 import dao.csv.CsvDatabase
 import helpers.fixtures.Doubles.TestDomain
@@ -29,7 +30,7 @@ class CsvDatabaseTest : FunSpec({
             """.trimIndent()
         )
 
-        database().selectAll() shouldHaveSingleElement Entity(id, TestDomain("Jacob", 24), lastModified)
+        database().selectAll() shouldHaveSingleElement AuditableEntity(id, TestDomain("Jacob", 24), lastModified)
     }
 
     test("can flush changes to a file") {
