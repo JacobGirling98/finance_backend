@@ -24,9 +24,12 @@ import helpers.fixtures.withADateOf
 import helpers.matchers.shouldContainDomain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
-import org.http4k.core.Status.Companion.NO_CONTENT
+import io.kotest.matchers.string.shouldBeUUID
+import org.http4k.core.Response
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
+import java.util.*
 
 class TransactionsTest : E2ETest({
     beforeEach { transactionDatabase.deleteAll() }
@@ -94,9 +97,12 @@ class TransactionsTest : E2ETest({
             }
         """.trimIndent()
 
-        client.post("/transaction/debit", request) shouldHaveStatus NO_CONTENT
+        val response = client.post("/transaction/debit", request)
 
-        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
+
+        val expectedEntity = matchingEntity(response)
 
         expectedEntity.domain shouldBe Transaction(
             date = Date.of(2020, 1, 1),
@@ -125,11 +131,12 @@ class TransactionsTest : E2ETest({
             }
         """.trimIndent()
 
-        client.post("/transaction/credit", request) shouldHaveStatus NO_CONTENT
+        val response = client.post("/transaction/credit", request)
 
-        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
 
-        expectedEntity.domain shouldBe Transaction(
+        matchingEntity(response).domain shouldBe Transaction(
             date = Date.of(2020, 1, 1),
             category = Category("Food"),
             value = Value.of(1.5),
@@ -157,11 +164,12 @@ class TransactionsTest : E2ETest({
             }
         """.trimIndent()
 
-        client.post("/transaction/bank-transfer", request) shouldHaveStatus NO_CONTENT
+        val response = client.post("/transaction/bank-transfer", request)
 
-        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
 
-        expectedEntity.domain shouldBe Transaction(
+        matchingEntity(response).domain shouldBe Transaction(
             date = Date.of(2020, 1, 1),
             category = Category("Food"),
             value = Value.of(1.5),
@@ -189,11 +197,12 @@ class TransactionsTest : E2ETest({
             }
         """.trimIndent()
 
-        client.post("/transaction/personal-transfer", request) shouldHaveStatus NO_CONTENT
+        val response = client.post("/transaction/personal-transfer", request)
 
-        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
 
-        expectedEntity.domain shouldBe Transaction(
+        matchingEntity(response).domain shouldBe Transaction(
             date = Date.of(2020, 1, 1),
             category = Category("Food"),
             value = Value.of(1.5),
@@ -220,11 +229,11 @@ class TransactionsTest : E2ETest({
             }
         """.trimIndent()
 
-        client.post("/transaction/income", request) shouldHaveStatus NO_CONTENT
+        val response = client.post("/transaction/income", request)
 
-        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+        response shouldHaveStatus CREATED
 
-        expectedEntity.domain shouldBe Transaction(
+        matchingEntity(response).domain shouldBe Transaction(
             date = Date.of(2020, 1, 1),
             category = Category("Food"),
             value = Value.of(1.5),
@@ -240,3 +249,6 @@ class TransactionsTest : E2ETest({
         )
     }
 })
+
+private fun matchingEntity(response: Response) =
+    transactionDatabase.selectAll().first { it.id == UUID.fromString(response.bodyString()) }

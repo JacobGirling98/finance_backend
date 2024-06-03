@@ -40,13 +40,14 @@ import http.handler.postPersonalTransferListHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeUUID
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.http4k.core.Method
 import org.http4k.core.Request
-import org.http4k.core.Status.Companion.NO_CONTENT
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
 import java.math.BigDecimal
@@ -76,7 +77,8 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
         verify {
             database.save(
                 Transaction(
@@ -111,7 +113,8 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
         verify {
             database.save(
                 Transaction(
@@ -147,7 +150,8 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
         verify {
             database.save(
                 Transaction(
@@ -183,7 +187,8 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus NO_CONTENT
+        response shouldHaveStatus CREATED
+        response.bodyString().shouldBeUUID()
         verify {
             database.save(
                 Transaction(
@@ -584,7 +589,6 @@ class TransactionHandlerTest : FunSpec({
             )
         )
 
-        response shouldHaveStatus NO_CONTENT
         verify {
             database.save(
                 Transaction(

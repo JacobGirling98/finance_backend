@@ -70,6 +70,7 @@ import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import resource.TransactionProcessor
@@ -201,7 +202,7 @@ private fun postCreditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit"
             Quantity(1)
         )
     )
-    returning(NO_CONTENT)
+    returning(CREATED to UUID.randomUUID().toString())
 } bindContract POST to postCreditDebitHandler(CREDIT, save)
 
 private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/credit" meta {
@@ -235,6 +236,7 @@ private fun postDebitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" m
             Quantity(1)
         )
     )
+    returning(CREATED to UUID.randomUUID().toString())
 } bindContract POST to postCreditDebitHandler(DEBIT, save)
 
 private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/debit" meta {
@@ -268,6 +270,7 @@ private fun postBankTransferContract(save: (Transaction) -> UUID) = "$BASE_URL/b
             Recipient("String")
         )
     )
+    returning(CREATED to UUID.randomUUID().toString())
 } bindContract POST to postBankTransferHandler(save)
 
 private fun multipleBankTransferContract(save: (List<Transaction>) -> List<UUID>) =
@@ -304,6 +307,7 @@ private fun personalTransferRouteContract(save: (Transaction) -> UUID) =
                 Inbound("String")
             )
         )
+        returning(CREATED to UUID.randomUUID().toString())
     } bindContract POST to postPersonalTransferHandler(save)
 
 private fun multiplePersonalTransferContract(save: (List<Transaction>) -> List<UUID>) =
@@ -355,6 +359,7 @@ private fun multipleIncomeContract(save: (List<Transaction>) -> List<UUID>) = "$
             )
         )
     )
+    returning(CREATED to UUID.randomUUID().toString())
 } bindContract POST to postIncomeListHandler(save)
 
 private fun putCreditContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/credit" meta {

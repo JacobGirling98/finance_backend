@@ -34,6 +34,7 @@ import http.lense.transactionPageLens
 import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
@@ -44,23 +45,23 @@ fun postCreditDebitHandler(
     transactionType: TransactionType,
     save: (transaction: Transaction) -> UUID
 ): HttpHandler = { request ->
-    save(transactionFrom(creditDebitLens.extract(request), transactionType, request.userHeader()))
-    Response(NO_CONTENT)
+    val id = save(transactionFrom(creditDebitLens.extract(request), transactionType, request.userHeader()))
+    Response(CREATED).body(id.toString())
 }
 
 fun postBankTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(bankTransferLens.extract(request), request.userHeader()))
-    Response(NO_CONTENT)
+    val id = save(transactionFrom(bankTransferLens.extract(request), request.userHeader()))
+    Response(CREATED).body(id.toString())
 }
 
 fun postPersonalTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(personalTransferLens.extract(request), request.userHeader()))
-    Response(NO_CONTENT)
+    val id = save(transactionFrom(personalTransferLens.extract(request), request.userHeader()))
+    Response(CREATED).body(id.toString())
 }
 
 fun postIncomeHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    save(transactionFrom(incomeLens.extract(request), request.userHeader()))
-    Response(NO_CONTENT)
+    val id = save(transactionFrom(incomeLens.extract(request), request.userHeader()))
+    Response(CREATED).body(id.toString())
 }
 
 fun postCreditDebitListHandler(
