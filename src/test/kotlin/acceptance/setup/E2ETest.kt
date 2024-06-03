@@ -91,13 +91,13 @@ private fun createFiles() {
 
     files.forEach { it.createNewFile() }
 
-    singleValueFiles.forEach { it.writeText("id,value") }
+    singleValueFiles.forEach { it.writeText("id,last_modified,value") }
 
-    descriptionMappingFile.writeText("id,full_description,short_description")
+    descriptionMappingFile.writeText("id,last_modified,full_description,short_description")
 
-    transactionFile.writeText("id,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,added_by")
+    transactionFile.writeText("id,last_modified,date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,added_by")
 
-    standingOrderFile.writeText("id,next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound,source")
+    standingOrderFile.writeText("id,last_modified,next_date,frequency_quantity,frequency_unit,category,value,description,type,outgoing,quantity,recipient,inbound,outbound,source")
 
-    reminderFile.writeText("id,next_reminder,frequency_unit,frequency_quantity,description")
+    reminderFile.writeText("id,last_modified,next_reminder,frequency_unit,frequency_quantity,description")
 }

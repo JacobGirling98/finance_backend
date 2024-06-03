@@ -4,13 +4,27 @@ import acceptance.setup.E2ETest
 import config.transactionDatabase
 import dao.Entity
 import dao.Page
+import domain.AddedBy
+import domain.Category
+import domain.Date
+import domain.Description
+import domain.Inbound
+import domain.Outbound
+import domain.Outgoing
+import domain.Quantity
+import domain.Recipient
+import domain.Source
 import domain.Transaction
+import domain.TransactionType
+import domain.Value
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.deserialize
 import helpers.fixtures.withADateOf
 import helpers.matchers.shouldContainDomain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
 
@@ -67,5 +81,162 @@ class TransactionsTest : E2ETest({
 
         response shouldHaveStatus OK
         response.deserialize<Page<Entity<Transaction>>>().data shouldHaveSize 6
+    }
+
+    test("can add a debit transaction") {
+        val request = """
+            {
+                "date": "2020-01-01",
+                "category": "Food",
+                "value": 1.5,
+                "description": "Banana",
+                "quantity": 1
+            }
+        """.trimIndent()
+
+        client.post("/transaction/debit", request) shouldHaveStatus NO_CONTENT
+
+        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+
+        expectedEntity.domain shouldBe Transaction(
+            date = Date.of(2020, 1, 1),
+            category = Category("Food"),
+            value = Value.of(1.5),
+            description = Description("Banana"),
+            type = TransactionType.DEBIT,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can add a credit transaction") {
+        val request = """
+            {
+                "date": "2020-01-01",
+                "category": "Food",
+                "value": 1.5,
+                "description": "Banana",
+                "quantity": 1
+            }
+        """.trimIndent()
+
+        client.post("/transaction/credit", request) shouldHaveStatus NO_CONTENT
+
+        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+
+        expectedEntity.domain shouldBe Transaction(
+            date = Date.of(2020, 1, 1),
+            category = Category("Food"),
+            value = Value.of(1.5),
+            description = Description("Banana"),
+            type = TransactionType.CREDIT,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can add a bank transfer transaction") {
+        val request = """
+            {
+                "date": "2020-01-01",
+                "category": "Food",
+                "value": 1.5,
+                "description": "Banana",
+                "quantity": 1,
+                "recipient": "Jacob"
+            }
+        """.trimIndent()
+
+        client.post("/transaction/bank-transfer", request) shouldHaveStatus NO_CONTENT
+
+        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+
+        expectedEntity.domain shouldBe Transaction(
+            date = Date.of(2020, 1, 1),
+            category = Category("Food"),
+            value = Value.of(1.5),
+            description = Description("Banana"),
+            type = TransactionType.BANK_TRANSFER,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = Recipient("Jacob"),
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can add a personal transfer transaction") {
+        val request = """
+            {
+                "date": "2020-01-01",
+                "category": "Food",
+                "value": 1.5,
+                "description": "Banana",
+                "outbound": "Current",
+                "inbound": "Savings"
+            }
+        """.trimIndent()
+
+        client.post("/transaction/personal-transfer", request) shouldHaveStatus NO_CONTENT
+
+        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+
+        expectedEntity.domain shouldBe Transaction(
+            date = Date.of(2020, 1, 1),
+            category = Category("Food"),
+            value = Value.of(1.5),
+            description = Description("Banana"),
+            type = TransactionType.PERSONAL_TRANSFER,
+            outgoing = Outgoing(false),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = Inbound("Savings"),
+            outbound = Outbound("Current"),
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can add an income transaction") {
+        val request = """
+            {
+                "date": "2020-01-01",
+                "category": "Food",
+                "value": 1.5,
+                "description": "Banana",
+                "source": "Work"
+            }
+        """.trimIndent()
+
+        client.post("/transaction/income", request) shouldHaveStatus NO_CONTENT
+
+        val expectedEntity = transactionDatabase.selectAll().first { it.domain.category.value == "Food" }
+
+        expectedEntity.domain shouldBe Transaction(
+            date = Date.of(2020, 1, 1),
+            category = Category("Food"),
+            value = Value.of(1.5),
+            description = Description("Banana"),
+            type = TransactionType.INCOME,
+            outgoing = Outgoing(false),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = Source("Work"),
+            addedBy = AddedBy("finance-app")
+        )
     }
 })

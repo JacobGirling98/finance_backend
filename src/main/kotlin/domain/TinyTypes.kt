@@ -9,6 +9,10 @@ interface TinyType<T> {
 
 data class Date(override val value: LocalDate) : TinyType<LocalDate> {
     fun nextFiscalMonth(): Date = value.plusMonths(1).let { Date(LocalDate.of(it.year, it.monthValue, 15)) }
+
+    companion object {
+        fun of(year: Int, month: Int, day: Int) = Date(LocalDate.of(year, month, day))
+    }
 }
 
 data class Category(override val value: String) : TinyType<String>
