@@ -9,6 +9,7 @@ import domain.Quantity
 import domain.Recipient
 import domain.Source
 import domain.Value
+import java.util.UUID
 
 object Transaction {
     data class CreditDebit(
@@ -47,6 +48,7 @@ object Transaction {
 
     data class TransactionConfirmation(
         val transactionCount: Int,
-        val value: Float
+        val value: Float,
+        val ids: List<UUID>
     )
 }

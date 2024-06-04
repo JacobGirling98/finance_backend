@@ -39,6 +39,7 @@ import http.handler.postPersonalTransferHandler
 import http.handler.postPersonalTransferListHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldBeUUID
 import io.mockk.every
@@ -207,6 +208,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("can post multiple credit-debit transactions") {
+        every { database.save(any<List<Transaction>>()) } returns List(2) { UUID.randomUUID() }
         val handler = postCreditDebitListHandler(TransactionType.CREDIT) { database.save(it) }
 
         val response = handler(
@@ -232,7 +234,12 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus OK
+        response shouldHaveStatus CREATED
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
         verify {
             database.save(
                 listOf(
@@ -466,10 +473,11 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
-            transactionCount = 2,
-            value = 512.50f
-        )
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
     }
 
     test("posting bank transfer transactions returns number saved and total value") {
@@ -500,10 +508,11 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
-            transactionCount = 2,
-            value = 512.50f
-        )
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
     }
 
     test("posting personal transfer transactions returns number saved and total value") {
@@ -534,10 +543,11 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
-            transactionCount = 2,
-            value = 512.50f
-        )
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
     }
 
     test("posting income transactions returns number saved and total value") {
@@ -566,16 +576,17 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response.deserialize<TransactionConfirmation>() shouldBe TransactionConfirmation(
-            transactionCount = 2,
-            value = 512.50f
-        )
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
     }
 
     test("added by defaults if no header given") {
         val handler = postCreditDebitHandler(TransactionType.CREDIT) { database.save(it) }
 
-        val response = handler(
+        handler(
             Request(Method.POST, "/").body(
                 """
                 {

@@ -71,10 +71,11 @@ fun postCreditDebitListHandler(
     val transactions =
         creditDebitListLens.extract(request).map { transactionFrom(it, transactionType, request.userHeader()) }
     val ids = save(transactions)
-    Response(OK).with(
+    Response(CREATED).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
-            transactions.totalValue()
+            transactions.totalValue(),
+            ids
         )
     )
 }
@@ -87,7 +88,8 @@ fun postBankTransferListHandler(
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
-            transactions.totalValue()
+            transactions.totalValue(),
+            ids
         )
     )
 }
@@ -100,7 +102,8 @@ fun postPersonalTransferListHandler(
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
-            transactions.totalValue()
+            transactions.totalValue(),
+            ids
         )
     )
 }
@@ -113,7 +116,8 @@ fun postIncomeListHandler(
     Response(OK).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
-            transactions.totalValue()
+            transactions.totalValue(),
+            ids
         )
     )
 }

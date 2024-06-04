@@ -61,11 +61,13 @@ import http.lense.pageSizeQuery
 import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.searchTermQuery
+import http.lense.transactionConfirmationLens
 import http.lense.transactionPageLens
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
 import http.model.Transaction.PersonalTransfer
+import http.model.Transaction.TransactionConfirmation
 import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Method.GET
@@ -252,6 +254,14 @@ private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$M
                 Description("String"),
                 Quantity(1)
             )
+        )
+    )
+    returning(
+        CREATED,
+        transactionConfirmationLens to TransactionConfirmation(
+            1,
+            10f,
+            listOf(UUID.randomUUID())
         )
     )
 } bindContract POST to postCreditDebitListHandler(DEBIT, save)
