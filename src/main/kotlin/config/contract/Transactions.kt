@@ -29,36 +29,28 @@ import domain.Value
 import http.asTag
 import http.handler.deleteEntityHandler
 import http.handler.paginatedTransactionsHandler
-import http.handler.postBankTransferHandler
 import http.handler.postBankTransferListHandler
-import http.handler.postCreditDebitHandler
 import http.handler.postCreditDebitListHandler
-import http.handler.postIncomeHandler
 import http.handler.postIncomeListHandler
-import http.handler.postPersonalTransferHandler
 import http.handler.postPersonalTransferListHandler
 import http.handler.putBankTransferTransactionHandler
 import http.handler.putCreditDebitTransactionHandler
 import http.handler.putIncomeTransactionHandler
 import http.handler.putPersonalTransferTransactionHandler
 import http.handler.searchTransactionsHandler
-import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
-import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
 import http.lense.entityBankTransferLens
 import http.lense.entityCreditDebitLens
 import http.lense.entityIncomeLens
 import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
-import http.lense.incomeLens
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
 import http.lense.optionalStartDateQuery
 import http.lense.optionalTransactionTypeStringQuery
 import http.lense.pageNumberQuery
 import http.lense.pageSizeQuery
-import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.searchTermQuery
 import http.lense.transactionConfirmationLens
@@ -86,15 +78,10 @@ private val tag = BASE_URL.asTag()
 private val multipleTag = MULTIPLE_URL.asTag()
 
 fun transactionContracts(database: Database<Transaction, UUID>, processor: TransactionProcessor) = listOf(
-    postCreditContract { database.save(it) },
     multipleCreditContract { database.save(it) },
-    postDebitContract { database.save(it) },
     multipleDebitContract { database.save(it) },
-    postBankTransferContract { database.save(it) },
     multipleBankTransferContract { database.save(it) },
-    personalTransferRouteContract { database.save(it) },
     multiplePersonalTransferContract { database.save(it) },
-    postIncomeContract { database.save(it) },
     multipleIncomeContract { database.save(it) },
     getPaginatedDataRoute(processor::selectAll, processor::selectBy),
     getPaginatedSearchDataRoute { term, pageNumber, pageSize -> processor.search(term, pageNumber, pageSize) },
@@ -191,22 +178,6 @@ private fun getPaginatedSearchDataRoute(
     )
 } bindContract GET to searchTransactionsHandler(search)
 
-private fun postCreditContract(save: (Transaction) -> UUID) = "$BASE_URL/credit" meta {
-    operationId = "$BASE_URL/credit"
-    summary = "Post a credit transaction"
-    tags += "$BASE_URL/credit".asTag()
-    receiving(
-        creditDebitLens to CreditDebit(
-            date = Date(LocalDate.of(2020, 1, 1)),
-            Category("String"),
-            Value(BigDecimal.ZERO),
-            Description("String"),
-            Quantity(1)
-        )
-    )
-    returning(CREATED to UUID.randomUUID().toString())
-} bindContract POST to postCreditDebitHandler(CREDIT, save)
-
 private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/credit" meta {
     operationId = "$MULTIPLE_URL/credit"
     summary = "Post multiple credit transactions"
@@ -224,22 +195,6 @@ private fun multipleCreditContract(save: (List<Transaction>) -> List<UUID>) = "$
     )
     returning(NO_CONTENT)
 } bindContract POST to postCreditDebitListHandler(CREDIT, save)
-
-private fun postDebitContract(save: (Transaction) -> UUID) = "$BASE_URL/debit" meta {
-    operationId = "$BASE_URL/debit"
-    summary = "Post a debit transaction"
-    tags += "$BASE_URL/debit".asTag()
-    receiving(
-        creditDebitLens to CreditDebit(
-            date = Date(LocalDate.of(2020, 1, 1)),
-            Category("String"),
-            Value(BigDecimal.ZERO),
-            Description("String"),
-            Quantity(1)
-        )
-    )
-    returning(CREATED to UUID.randomUUID().toString())
-} bindContract POST to postCreditDebitHandler(DEBIT, save)
 
 private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/debit" meta {
     operationId = "$MULTIPLE_URL/debit"
@@ -265,23 +220,6 @@ private fun multipleDebitContract(save: (List<Transaction>) -> List<UUID>) = "$M
         )
     )
 } bindContract POST to postCreditDebitListHandler(DEBIT, save)
-
-private fun postBankTransferContract(save: (Transaction) -> UUID) = "$BASE_URL/bank-transfer" meta {
-    operationId = "$BASE_URL/bank-transfer"
-    summary = "Post a bank transfer transaction"
-    tags += "$BASE_URL/bank-transfer".asTag()
-    receiving(
-        bankTransferLens to BankTransfer(
-            date = Date(LocalDate.of(2020, 1, 1)),
-            Category("String"),
-            Value(BigDecimal.ZERO),
-            Description("String"),
-            Quantity(1),
-            Recipient("String")
-        )
-    )
-    returning(CREATED to UUID.randomUUID().toString())
-} bindContract POST to postBankTransferHandler(save)
 
 private fun multipleBankTransferContract(save: (List<Transaction>) -> List<UUID>) =
     "$MULTIPLE_URL/bank-transfer" meta {
@@ -310,24 +248,6 @@ private fun multipleBankTransferContract(save: (List<Transaction>) -> List<UUID>
         )
     } bindContract POST to postBankTransferListHandler(save)
 
-private fun personalTransferRouteContract(save: (Transaction) -> UUID) =
-    "$BASE_URL/personal-transfer" meta {
-        operationId = "$BASE_URL/personal-transfer"
-        summary = "Post a personal transfer transaction"
-        tags += "$BASE_URL/personal-transfer".asTag()
-        receiving(
-            personalTransferLens to PersonalTransfer(
-                date = Date(LocalDate.of(2020, 1, 1)),
-                Category("String"),
-                Value(BigDecimal.ZERO),
-                Description("String"),
-                Outbound("String"),
-                Inbound("String")
-            )
-        )
-        returning(CREATED to UUID.randomUUID().toString())
-    } bindContract POST to postPersonalTransferHandler(save)
-
 private fun multiplePersonalTransferContract(save: (List<Transaction>) -> List<UUID>) =
     "$MULTIPLE_URL/personal-transfer" meta {
         operationId = "$MULTIPLE_URL/personal-transfer"
@@ -354,21 +274,6 @@ private fun multiplePersonalTransferContract(save: (List<Transaction>) -> List<U
             )
         )
     } bindContract POST to postPersonalTransferListHandler(save)
-
-private fun postIncomeContract(save: (Transaction) -> UUID) = "$BASE_URL/income" meta {
-    operationId = "$BASE_URL/income"
-    summary = "Post an income transaction"
-    tags += "$BASE_URL/income".asTag()
-    receiving(
-        incomeLens to Income(
-            date = Date(LocalDate.of(2020, 1, 1)),
-            Category("String"),
-            Value(BigDecimal.ZERO),
-            Description("String"),
-            Source("String")
-        )
-    )
-} bindContract POST to postIncomeHandler(save)
 
 private fun multipleIncomeContract(save: (List<Transaction>) -> List<UUID>) = "$MULTIPLE_URL/income" meta {
     operationId = "$MULTIPLE_URL/income"

@@ -26,7 +26,6 @@ import http.model.Transaction.TransactionConfirmation
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
-import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
@@ -85,37 +84,6 @@ class TransactionsTest : E2ETest({
 
         response shouldHaveStatus OK
         response.deserialize<Page<Entity<Transaction>>>().data shouldHaveSize 6
-    }
-
-    test("can add a debit transaction") {
-        val request = """
-            {
-                "date": "2020-01-01",
-                "category": "Food",
-                "value": 1.5,
-                "description": "Banana",
-                "quantity": 1
-            }
-        """.trimIndent()
-
-        val response = client.post("/transaction/debit", request)
-
-        response shouldHaveStatus CREATED
-
-        matchingEntity(response).domain shouldBe Transaction(
-            date = Date.of(2020, 1, 1),
-            category = Category("Food"),
-            value = Value.of(1.5),
-            description = Description("Banana"),
-            type = TransactionType.DEBIT,
-            outgoing = Outgoing(true),
-            quantity = Quantity(1),
-            recipient = null,
-            inbound = null,
-            outbound = null,
-            source = null,
-            addedBy = AddedBy("finance-app")
-        )
     }
 
     test("can add multiple debit transactions") {
@@ -182,37 +150,6 @@ class TransactionsTest : E2ETest({
         responseConfirmation.ids.map { matchingEntity(it).domain } shouldContainExactlyInAnyOrder expectedTransactions
     }
 
-    test("can add a credit transaction") {
-        val request = """
-            {
-                "date": "2020-01-01",
-                "category": "Food",
-                "value": 1.5,
-                "description": "Banana",
-                "quantity": 1
-            }
-        """.trimIndent()
-
-        val response = client.post("/transaction/credit", request)
-
-        response shouldHaveStatus CREATED
-
-        matchingEntity(response).domain shouldBe Transaction(
-            date = Date.of(2020, 1, 1),
-            category = Category("Food"),
-            value = Value.of(1.5),
-            description = Description("Banana"),
-            type = TransactionType.CREDIT,
-            outgoing = Outgoing(true),
-            quantity = Quantity(1),
-            recipient = null,
-            inbound = null,
-            outbound = null,
-            source = null,
-            addedBy = AddedBy("finance-app")
-        )
-    }
-
     test("can add multiple credit transactions") {
         val request = """
             [
@@ -275,38 +212,6 @@ class TransactionsTest : E2ETest({
         )
 
         responseConfirmation.ids.map { matchingEntity(it).domain } shouldContainExactlyInAnyOrder expectedTransactions
-    }
-
-    test("can add a bank transfer transaction") {
-        val request = """
-            {
-                "date": "2020-01-01",
-                "category": "Food",
-                "value": 1.5,
-                "description": "Banana",
-                "quantity": 1,
-                "recipient": "Jacob"
-            }
-        """.trimIndent()
-
-        val response = client.post("/transaction/bank-transfer", request)
-
-        response shouldHaveStatus CREATED
-
-        matchingEntity(response).domain shouldBe Transaction(
-            date = Date.of(2020, 1, 1),
-            category = Category("Food"),
-            value = Value.of(1.5),
-            description = Description("Banana"),
-            type = TransactionType.BANK_TRANSFER,
-            outgoing = Outgoing(true),
-            quantity = Quantity(1),
-            recipient = Recipient("Jacob"),
-            inbound = null,
-            outbound = null,
-            source = null,
-            addedBy = AddedBy("finance-app")
-        )
     }
 
     test("can add multiple bank transfer transactions") {
@@ -375,38 +280,6 @@ class TransactionsTest : E2ETest({
         responseConfirmation.ids.map { matchingEntity(it).domain } shouldContainExactlyInAnyOrder expectedTransactions
     }
 
-    test("can add a personal transfer transaction") {
-        val request = """
-            {
-                "date": "2020-01-01",
-                "category": "Food",
-                "value": 1.5,
-                "description": "Banana",
-                "outbound": "Current",
-                "inbound": "Savings"
-            }
-        """.trimIndent()
-
-        val response = client.post("/transaction/personal-transfer", request)
-
-        response shouldHaveStatus CREATED
-
-        matchingEntity(response).domain shouldBe Transaction(
-            date = Date.of(2020, 1, 1),
-            category = Category("Food"),
-            value = Value.of(1.5),
-            description = Description("Banana"),
-            type = TransactionType.PERSONAL_TRANSFER,
-            outgoing = Outgoing(false),
-            quantity = Quantity(1),
-            recipient = null,
-            inbound = Inbound("Savings"),
-            outbound = Outbound("Current"),
-            source = null,
-            addedBy = AddedBy("finance-app")
-        )
-    }
-
     test("can add multiple personal transfer transactions") {
         val request = """
             [
@@ -471,37 +344,6 @@ class TransactionsTest : E2ETest({
         )
 
         responseConfirmation.ids.map { matchingEntity(it).domain } shouldContainExactlyInAnyOrder expectedTransactions
-    }
-
-    test("can add an income transaction") {
-        val request = """
-            {
-                "date": "2020-01-01",
-                "category": "Food",
-                "value": 1.5,
-                "description": "Banana",
-                "source": "Work"
-            }
-        """.trimIndent()
-
-        val response = client.post("/transaction/income", request)
-
-        response shouldHaveStatus CREATED
-
-        matchingEntity(response).domain shouldBe Transaction(
-            date = Date.of(2020, 1, 1),
-            category = Category("Food"),
-            value = Value.of(1.5),
-            description = Description("Banana"),
-            type = TransactionType.INCOME,
-            outgoing = Outgoing(false),
-            quantity = Quantity(1),
-            recipient = null,
-            inbound = null,
-            outbound = null,
-            source = Source("Work"),
-            addedBy = AddedBy("finance-app")
-        )
     }
 
     test("can add multiple income transactions") {
@@ -569,8 +411,4 @@ class TransactionsTest : E2ETest({
     }
 })
 
-private fun matchingEntity(response: Response) =
-    matchingEntity(UUID.fromString(response.bodyString()))
-
-private fun matchingEntity(id: UUID) =
-    transactionDatabase.selectAll().first { it.id == id }
+private fun matchingEntity(id: UUID) = transactionDatabase.selectAll().first { it.id == id }

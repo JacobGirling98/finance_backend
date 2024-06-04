@@ -10,23 +10,19 @@ import domain.TransactionType
 import domain.totalValue
 import domain.transactionTypeFrom
 import http.assembler.transactionFrom
-import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
-import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
 import http.lense.entityBankTransferLens
 import http.lense.entityCreditDebitLens
 import http.lense.entityIncomeLens
 import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
-import http.lense.incomeLens
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
 import http.lense.optionalStartDateQuery
 import http.lense.optionalTransactionTypeStringQuery
 import http.lense.pageNumberQuery
 import http.lense.pageSizeQuery
-import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.searchTermQuery
 import http.lense.transactionConfirmationLens
@@ -40,29 +36,6 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.core.with
 import resource.toFilter
 import java.util.*
-
-fun postCreditDebitHandler(
-    transactionType: TransactionType,
-    save: (transaction: Transaction) -> UUID
-): HttpHandler = { request ->
-    val id = save(transactionFrom(creditDebitLens.extract(request), transactionType, request.userHeader()))
-    Response(CREATED).body(id.toString())
-}
-
-fun postBankTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    val id = save(transactionFrom(bankTransferLens.extract(request), request.userHeader()))
-    Response(CREATED).body(id.toString())
-}
-
-fun postPersonalTransferHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    val id = save(transactionFrom(personalTransferLens.extract(request), request.userHeader()))
-    Response(CREATED).body(id.toString())
-}
-
-fun postIncomeHandler(save: (transaction: Transaction) -> UUID): HttpHandler = { request ->
-    val id = save(transactionFrom(incomeLens.extract(request), request.userHeader()))
-    Response(CREATED).body(id.toString())
-}
 
 fun postCreditDebitListHandler(
     transactionType: TransactionType,
