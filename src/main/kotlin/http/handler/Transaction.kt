@@ -85,7 +85,7 @@ fun postBankTransferListHandler(
 ): HttpHandler = { request ->
     val transactions = bankTransferListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
-    Response(OK).with(
+    Response(CREATED).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
             transactions.totalValue(),
@@ -99,7 +99,7 @@ fun postPersonalTransferListHandler(
 ): HttpHandler = { request ->
     val transactions = personalTransferListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
-    Response(OK).with(
+    Response(CREATED).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
             transactions.totalValue(),
@@ -113,7 +113,7 @@ fun postIncomeListHandler(
 ): HttpHandler = { request ->
     val transactions = incomeListLens.extract(request).map { transactionFrom(it, request.userHeader()) }
     val ids = save(transactions)
-    Response(OK).with(
+    Response(CREATED).with(
         transactionConfirmationLens of TransactionConfirmation(
             ids.size,
             transactions.totalValue(),

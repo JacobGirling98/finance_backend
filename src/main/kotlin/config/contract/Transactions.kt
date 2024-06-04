@@ -300,6 +300,14 @@ private fun multipleBankTransferContract(save: (List<Transaction>) -> List<UUID>
                 )
             )
         )
+        returning(
+            CREATED,
+            transactionConfirmationLens to TransactionConfirmation(
+                1,
+                10f,
+                listOf(UUID.randomUUID())
+            )
+        )
     } bindContract POST to postBankTransferListHandler(save)
 
 private fun personalTransferRouteContract(save: (Transaction) -> UUID) =
@@ -337,6 +345,14 @@ private fun multiplePersonalTransferContract(save: (List<Transaction>) -> List<U
                 )
             )
         )
+        returning(
+            CREATED,
+            transactionConfirmationLens to TransactionConfirmation(
+                1,
+                10f,
+                listOf(UUID.randomUUID())
+            )
+        )
     } bindContract POST to postPersonalTransferListHandler(save)
 
 private fun postIncomeContract(save: (Transaction) -> UUID) = "$BASE_URL/income" meta {
@@ -367,6 +383,14 @@ private fun multipleIncomeContract(save: (List<Transaction>) -> List<UUID>) = "$
                 Description("String"),
                 Source("String")
             )
+        )
+    )
+    returning(
+        CREATED,
+        transactionConfirmationLens to TransactionConfirmation(
+            1,
+            10f,
+            listOf(UUID.randomUUID())
         )
     )
     returning(CREATED to UUID.randomUUID().toString())

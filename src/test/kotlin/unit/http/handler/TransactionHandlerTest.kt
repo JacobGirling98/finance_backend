@@ -49,7 +49,6 @@ import io.mockk.verify
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.CREATED
-import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -269,6 +268,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("can post multiple bank transfer transactions") {
+        every { database.save(any<List<Transaction>>()) } returns List(2) { UUID.randomUUID() }
         val handler = postBankTransferListHandler { database.save(it) }
 
         val response = handler(
@@ -296,7 +296,12 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus OK
+        response shouldHaveStatus CREATED
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
         verify {
             database.save(
                 listOf(
@@ -328,6 +333,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("can post multiple personal transfer transactions") {
+        every { database.save(any<List<Transaction>>()) } returns List(2) { UUID.randomUUID() }
         val handler = postPersonalTransferListHandler { database.save(it) }
 
         val response = handler(
@@ -355,7 +361,12 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus OK
+        response shouldHaveStatus CREATED
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
 
         verify {
             database.save(
@@ -390,6 +401,7 @@ class TransactionHandlerTest : FunSpec({
     }
 
     test("can post multiple income transactions") {
+        every { database.save(any<List<Transaction>>()) } returns List(2) { UUID.randomUUID() }
         val handler = postIncomeListHandler { database.save(it) }
 
         val response = handler(
@@ -415,7 +427,12 @@ class TransactionHandlerTest : FunSpec({
             ).header("user", "Jacob")
         )
 
-        response shouldHaveStatus OK
+        response shouldHaveStatus CREATED
+        response.deserialize<TransactionConfirmation>().let {
+            it.transactionCount shouldBe 2
+            it.value shouldBe 512.50f
+            it.ids shouldHaveSize 2
+        }
         verify {
             database.save(
                 listOf(
