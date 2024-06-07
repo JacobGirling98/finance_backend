@@ -21,7 +21,7 @@ start_app() {
 }
 
 build() {
-  ./gradlew jib jibDockerBuild --no-daemon
+  ./gradlew jibDockerBuild --no-daemon
 }
 
 # Fetch the latest commits and refs from the remote
