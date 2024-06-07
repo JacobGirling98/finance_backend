@@ -4,6 +4,7 @@ import dao.AuditableEntity
 import dao.Entity
 import dao.Page
 import dao.asEntity
+import domain.AddedBy
 import domain.PageNumber
 import domain.PageSize
 import domain.Transaction
@@ -30,6 +31,7 @@ import http.lense.transactionConfirmationLens
 import http.lense.transactionPageLens
 import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.HttpHandler
+import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NO_CONTENT
@@ -131,49 +133,44 @@ fun putCreditDebitTransactionHandler(
     transactionType: TransactionType,
     id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
-): HttpHandler = { request ->
-    val transaction = creditDebitLens(request)
-    val user = request.userHeader()
-    val entity = transactionFrom(transaction, transactionType, user).asEntity(UUID.fromString(id))
-    updateTransaction(entity)
-    Response(NO_CONTENT)
+): HttpHandler = putTransactionHandler(id, updateTransaction, creditDebitLens) { model, user ->
+    transactionFrom(
+        model,
+        transactionType,
+        user
+    )
 }
 
 fun putBankTransferTransactionHandler(
     id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
-): HttpHandler = { request ->
-    val transaction = bankTransferLens(request)
-    val user = request.userHeader()
-    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
-    updateTransaction(entity)
-    Response(NO_CONTENT)
-}
+): HttpHandler = putTransactionHandler(id, updateTransaction, bankTransferLens, ::transactionFrom)
 
 fun putPersonalTransferTransactionHandler(
     id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
-): HttpHandler = { request ->
-    val transaction = personalTransferLens(request)
-    val user = request.userHeader()
-    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
-    updateTransaction(entity)
-    Response(NO_CONTENT)
-}
+): HttpHandler = putTransactionHandler(id, updateTransaction, personalTransferLens, ::transactionFrom)
 
 fun putIncomeTransactionHandler(
     id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
-): HttpHandler = { request ->
-    val transaction = incomeLens(request)
-    val user = request.userHeader()
-    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
-    updateTransaction(entity)
-    Response(NO_CONTENT)
-}
+): HttpHandler = putTransactionHandler(id, updateTransaction, incomeLens, ::transactionFrom)
 
 fun deleteEntityHandler(delete: (UUID) -> Unit): HttpHandler = { request ->
     val id = idQuery.extract(request)
     delete(id)
+    Response(NO_CONTENT)
+}
+
+private fun <T> putTransactionHandler(
+    id: String,
+    updateTransaction: (Entity<Transaction>) -> Unit,
+    lens: (Request) -> T,
+    toDomain: (T, AddedBy) -> Transaction
+): HttpHandler = { request ->
+    val transaction = lens(request)
+    val user = request.userHeader()
+    val entity = toDomain(transaction, user).asEntity(UUID.fromString(id))
+    updateTransaction(entity)
     Response(NO_CONTENT)
 }
