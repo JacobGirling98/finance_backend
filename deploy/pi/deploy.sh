@@ -1,5 +1,7 @@
 #!/bin/bash
 
+force_build=$1
+
 log_prefix="Finance Backend:"
 container_name=finance-backend
 
@@ -16,6 +18,10 @@ start_app() {
   container_id=`docker run -e PROFILE=docker -v /home/jacobg/Programming/finance/finance_data:/app/data -v /home/jacobg/Programming/finance/google-credentials:/app/config -p 9000:9000 -d --name finance-backend -t finance-backend:latest`
 
   echo "$log_prefix started with container id $container_id"
+}
+
+build() {
+  ./gradlew jib jibDockerBuild --no-daemon
 }
 
 # Fetch the latest commits and refs from the remote
@@ -35,16 +41,14 @@ NEW_HEAD=$(git rev-parse HEAD)
 echo "$log_prefix New HEAD: $NEW_HEAD"
 
 # Compare OLD_HEAD and NEW_HEAD
-if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
+if [ -n "$force_build"]; then 
+  echo "$log_prefix flag passed to force Docker build..."
+  build
+elif [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
   echo "$log_prefix up to date, skipping Docker build..."
-
-  start_app
-
-  exit 0
+else
+  echo "$log_prefix there are unbuilt changes, starting build now."
+  build
 fi
-
-echo "$log_prefix there are unbuilt changes, starting build now."
-
-./gradlew jib jibDockerBuild --no-daemon
 
 start_app
