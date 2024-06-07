@@ -2,6 +2,8 @@
 
 force_build=$1
 
+echo $force_build
+
 log_prefix="Finance Backend:"
 container_name=finance-backend
 
@@ -42,7 +44,7 @@ echo "$log_prefix New HEAD: $NEW_HEAD"
 
 # Compare OLD_HEAD and NEW_HEAD
 if [ -n "$force_build"]; then 
-  echo "$log_prefix flag passed to force Docker build..."
+  echo "$log_prefix forcing Docker build..."
   build
 elif [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
   echo "$log_prefix up to date, skipping Docker build..."
