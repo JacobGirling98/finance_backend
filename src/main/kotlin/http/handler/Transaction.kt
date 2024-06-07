@@ -3,6 +3,7 @@ package http.handler
 import dao.AuditableEntity
 import dao.Entity
 import dao.Page
+import dao.asEntity
 import domain.PageNumber
 import domain.PageSize
 import domain.Transaction
@@ -11,9 +12,9 @@ import domain.totalValue
 import domain.transactionTypeFrom
 import http.assembler.transactionFrom
 import http.lense.bankTransferListLens
+import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
 import http.lense.entityBankTransferLens
-import http.lense.entityCreditDebitLens
 import http.lense.entityIncomeLens
 import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
@@ -128,17 +129,13 @@ fun searchTransactionsHandler(
 
 fun putCreditDebitTransactionHandler(
     transactionType: TransactionType,
+    id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
 ): HttpHandler = { request ->
-    updateTransaction(
-        entityCreditDebitLens(request).map { model ->
-            transactionFrom(
-                model,
-                transactionType,
-                request.userHeader()
-            )
-        }
-    )
+    val transaction = creditDebitLens(request)
+    val user = request.userHeader()
+    val entity = transactionFrom(transaction, transactionType, user).asEntity(UUID.fromString(id))
+    updateTransaction(entity)
     Response(NO_CONTENT)
 }
 

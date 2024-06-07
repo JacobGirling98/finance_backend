@@ -16,9 +16,7 @@ open class Entity<T>(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Entity<*>
+        if (other !is Entity<*>) return false
 
         if (id != other.id) return false
         if (domain != other.domain) return false
@@ -32,7 +30,9 @@ open class Entity<T>(
         return result
     }
 
-
+    override fun toString(): String {
+        return "Entity(id=$id, domain=$domain)"
+    }
 }
 
 fun <T> T.asRandomEntity(now: () -> LocalDateTime = { LocalDateTime.now() }) = Entity(UUID.randomUUID(), this)

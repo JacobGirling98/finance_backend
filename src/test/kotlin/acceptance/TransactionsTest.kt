@@ -27,6 +27,7 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.kotest.shouldHaveStatus
 import java.util.*
@@ -408,6 +409,72 @@ class TransactionsTest : E2ETest({
         )
 
         responseConfirmation.ids.map { matchingEntity(it).domain } shouldContainExactlyInAnyOrder expectedTransactions
+    }
+
+    test("can update a debit transaction") {
+        val oldTransaction = aDebitTransaction()
+        val id = transactionDatabase.save(oldTransaction)
+
+        val request = """
+            {
+                "date": "2024-01-01",
+                "category": "Gaming",
+                "value": 50.0,
+                "description": "PC",
+                "quantity": 1
+            }
+        """.trimIndent()
+
+        val response = client.put("/transaction/debit/$id", request)
+
+        response shouldHaveStatus NO_CONTENT
+        matchingEntity(id).domain shouldBe Transaction(
+            date = Date.of(2024, 1, 1),
+            category = Category("Gaming"),
+            value = Value.of(50.0),
+            description = Description("PC"),
+            type = TransactionType.DEBIT,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can update a credit transaction") {
+        val oldTransaction = aCreditTransaction()
+        val id = transactionDatabase.save(oldTransaction)
+
+        val request = """
+            {
+                "date": "2024-01-01",
+                "category": "Gaming",
+                "value": 50.0,
+                "description": "PC",
+                "quantity": 1
+            }
+        """.trimIndent()
+
+        val response = client.put("/transaction/credit/$id", request)
+
+        response shouldHaveStatus NO_CONTENT
+        matchingEntity(id).domain shouldBe Transaction(
+            date = Date.of(2024, 1, 1),
+            category = Category("Gaming"),
+            value = Value.of(50.0),
+            description = Description("PC"),
+            type = TransactionType.CREDIT,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
     }
 })
 

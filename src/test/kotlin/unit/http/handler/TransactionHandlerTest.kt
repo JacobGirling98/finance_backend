@@ -4,6 +4,7 @@ import dao.AuditableEntity
 import dao.Database
 import dao.Entity
 import dao.Page
+import dao.asEntity
 import dao.entityOf
 import domain.AddedBy
 import domain.Category
@@ -23,15 +24,20 @@ import domain.Value
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.aPage
+import helpers.fixtures.addedBy
 import helpers.fixtures.deserialize
 import helpers.fixtures.pageNumber
 import helpers.fixtures.pageSize
+import helpers.fixtures.withACategoryOf
 import helpers.fixtures.withADateOf
+import helpers.fixtures.withADescriptionOf
+import helpers.fixtures.withAValueOf
 import http.handler.paginatedTransactionsHandler
 import http.handler.postBankTransferListHandler
 import http.handler.postCreditDebitListHandler
 import http.handler.postIncomeListHandler
 import http.handler.postPersonalTransferListHandler
+import http.handler.putCreditDebitTransactionHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
@@ -43,6 +49,7 @@ import io.mockk.verify
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.kotest.shouldHaveStatus
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -50,15 +57,17 @@ import java.util.*
 
 class TransactionHandlerTest : FunSpec({
     val database = mockk<Database<Transaction, UUID>>(relaxed = true)
+    val id = UUID.randomUUID()
 
     every { database.save(any<List<Transaction>>()) } returns List(2) { UUID.randomUUID() }
 
-    test("can post multiple credit-debit transactions") {
-        val handler = postCreditDebitListHandler(TransactionType.CREDIT) { database.save(it) }
+    context("posting") {
+        test("can post multiple credit-debit transactions") {
+            val handler = postCreditDebitListHandler(TransactionType.CREDIT) { database.save(it) }
 
-        val response = handler(
-            Request(Method.POST, "/").body(
-                """
+            val response = handler(
+                Request(Method.POST, "/").body(
+                    """
                 [
                     {
                         "date": "2020-10-12",
@@ -76,49 +85,49 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            ).header("user", "Jacob")
-        )
+                ).header("user", "Jacob")
+            )
 
-        response shouldHaveStatus CREATED
-        response.deserialize<TransactionConfirmation>().let {
-            it.transactionCount shouldBe 2
-            it.value shouldBe 512.50f
-            it.ids shouldHaveSize 2
-        }
-        verify {
-            database.save(
-                listOf(
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 12)),
-                        Category("Food"),
-                        Value(BigDecimal("12.50")),
-                        Description("Cake"),
-                        TransactionType.CREDIT,
-                        Outgoing(true),
-                        Quantity(2),
-                        addedBy = AddedBy("Jacob")
-                    ),
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 15)),
-                        Category("Tech"),
-                        Value(BigDecimal("500.00")),
-                        Description("Speaker"),
-                        TransactionType.CREDIT,
-                        Outgoing(true),
-                        Quantity(1),
-                        addedBy = AddedBy("Jacob")
+            response shouldHaveStatus CREATED
+            response.deserialize<TransactionConfirmation>().let {
+                it.transactionCount shouldBe 2
+                it.value shouldBe 512.50f
+                it.ids shouldHaveSize 2
+            }
+            verify {
+                database.save(
+                    listOf(
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 12)),
+                            Category("Food"),
+                            Value(BigDecimal("12.50")),
+                            Description("Cake"),
+                            TransactionType.CREDIT,
+                            Outgoing(true),
+                            Quantity(2),
+                            addedBy = AddedBy("Jacob")
+                        ),
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 15)),
+                            Category("Tech"),
+                            Value(BigDecimal("500.00")),
+                            Description("Speaker"),
+                            TransactionType.CREDIT,
+                            Outgoing(true),
+                            Quantity(1),
+                            addedBy = AddedBy("Jacob")
+                        )
                     )
                 )
-            )
+            }
         }
-    }
 
-    test("can post multiple bank transfer transactions") {
-        val handler = postBankTransferListHandler { database.save(it) }
+        test("can post multiple bank transfer transactions") {
+            val handler = postBankTransferListHandler { database.save(it) }
 
-        val response = handler(
-            Request(Method.POST, "/").body(
-                """
+            val response = handler(
+                Request(Method.POST, "/").body(
+                    """
                 [
                     {
                         "date": "2020-10-12",
@@ -138,51 +147,51 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            ).header("user", "Jacob")
-        )
+                ).header("user", "Jacob")
+            )
 
-        response shouldHaveStatus CREATED
-        response.deserialize<TransactionConfirmation>().let {
-            it.transactionCount shouldBe 2
-            it.value shouldBe 512.50f
-            it.ids shouldHaveSize 2
-        }
-        verify {
-            database.save(
-                listOf(
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 12)),
-                        Category("Food"),
-                        Value(BigDecimal("12.50")),
-                        Description("Cake"),
-                        TransactionType.BANK_TRANSFER,
-                        Outgoing(true),
-                        Quantity(1),
-                        Recipient("Friend"),
-                        addedBy = AddedBy("Jacob")
-                    ),
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 15)),
-                        Category("Tech"),
-                        Value(BigDecimal("500.00")),
-                        Description("Speaker"),
-                        TransactionType.BANK_TRANSFER,
-                        Outgoing(true),
-                        Quantity(1),
-                        Recipient("Family"),
-                        addedBy = AddedBy("Jacob")
+            response shouldHaveStatus CREATED
+            response.deserialize<TransactionConfirmation>().let {
+                it.transactionCount shouldBe 2
+                it.value shouldBe 512.50f
+                it.ids shouldHaveSize 2
+            }
+            verify {
+                database.save(
+                    listOf(
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 12)),
+                            Category("Food"),
+                            Value(BigDecimal("12.50")),
+                            Description("Cake"),
+                            TransactionType.BANK_TRANSFER,
+                            Outgoing(true),
+                            Quantity(1),
+                            Recipient("Friend"),
+                            addedBy = AddedBy("Jacob")
+                        ),
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 15)),
+                            Category("Tech"),
+                            Value(BigDecimal("500.00")),
+                            Description("Speaker"),
+                            TransactionType.BANK_TRANSFER,
+                            Outgoing(true),
+                            Quantity(1),
+                            Recipient("Family"),
+                            addedBy = AddedBy("Jacob")
+                        )
                     )
                 )
-            )
+            }
         }
-    }
 
-    test("can post multiple personal transfer transactions") {
-        val handler = postPersonalTransferListHandler { database.save(it) }
+        test("can post multiple personal transfer transactions") {
+            val handler = postPersonalTransferListHandler { database.save(it) }
 
-        val response = handler(
-            Request(Method.POST, "/").body(
-                """
+            val response = handler(
+                Request(Method.POST, "/").body(
+                    """
                 [
                     {
                         "date": "2020-10-12",
@@ -202,54 +211,54 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            ).header("user", "Jacob")
-        )
+                ).header("user", "Jacob")
+            )
 
-        response shouldHaveStatus CREATED
-        response.deserialize<TransactionConfirmation>().let {
-            it.transactionCount shouldBe 2
-            it.value shouldBe 512.50f
-            it.ids shouldHaveSize 2
-        }
+            response shouldHaveStatus CREATED
+            response.deserialize<TransactionConfirmation>().let {
+                it.transactionCount shouldBe 2
+                it.value shouldBe 512.50f
+                it.ids shouldHaveSize 2
+            }
 
-        verify {
-            database.save(
-                listOf(
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 12)),
-                        Category("Food"),
-                        Value(BigDecimal("12.50")),
-                        Description("Cake"),
-                        TransactionType.PERSONAL_TRANSFER,
-                        Outgoing(false),
-                        Quantity(1),
-                        outbound = Outbound("Current"),
-                        inbound = Inbound("Savings"),
-                        addedBy = AddedBy("Jacob")
-                    ),
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 15)),
-                        Category("Tech"),
-                        Value(BigDecimal("500.00")),
-                        Description("Speaker"),
-                        TransactionType.PERSONAL_TRANSFER,
-                        Outgoing(false),
-                        Quantity(1),
-                        outbound = Outbound("Current"),
-                        inbound = Inbound("Credit"),
-                        addedBy = AddedBy("Jacob")
+            verify {
+                database.save(
+                    listOf(
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 12)),
+                            Category("Food"),
+                            Value(BigDecimal("12.50")),
+                            Description("Cake"),
+                            TransactionType.PERSONAL_TRANSFER,
+                            Outgoing(false),
+                            Quantity(1),
+                            outbound = Outbound("Current"),
+                            inbound = Inbound("Savings"),
+                            addedBy = AddedBy("Jacob")
+                        ),
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 15)),
+                            Category("Tech"),
+                            Value(BigDecimal("500.00")),
+                            Description("Speaker"),
+                            TransactionType.PERSONAL_TRANSFER,
+                            Outgoing(false),
+                            Quantity(1),
+                            outbound = Outbound("Current"),
+                            inbound = Inbound("Credit"),
+                            addedBy = AddedBy("Jacob")
+                        )
                     )
                 )
-            )
+            }
         }
-    }
 
-    test("can post multiple income transactions") {
-        val handler = postIncomeListHandler { database.save(it) }
+        test("can post multiple income transactions") {
+            val handler = postIncomeListHandler { database.save(it) }
 
-        val response = handler(
-            Request(Method.POST, "/").body(
-                """
+            val response = handler(
+                Request(Method.POST, "/").body(
+                    """
                 [
                     {
                         "date": "2020-10-12",
@@ -267,42 +276,77 @@ class TransactionHandlerTest : FunSpec({
                     }
                 ]
                 """.trimIndent()
-            ).header("user", "Jacob")
-        )
+                ).header("user", "Jacob")
+            )
 
-        response shouldHaveStatus CREATED
-        response.deserialize<TransactionConfirmation>().let {
-            it.transactionCount shouldBe 2
-            it.value shouldBe 512.50f
-            it.ids shouldHaveSize 2
-        }
-        verify {
-            database.save(
-                listOf(
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 12)),
-                        Category("Food"),
-                        Value(BigDecimal("12.50")),
-                        Description("Cake"),
-                        TransactionType.INCOME,
-                        Outgoing(false),
-                        Quantity(1),
-                        source = Source("Work"),
-                        addedBy = AddedBy("Jacob")
-                    ),
-                    Transaction(
-                        Date(LocalDate.of(2020, 10, 15)),
-                        Category("Wages"),
-                        Value(BigDecimal("500.00")),
-                        Description("Wages"),
-                        TransactionType.INCOME,
-                        Outgoing(false),
-                        Quantity(1),
-                        source = Source("Work"),
-                        addedBy = AddedBy("Jacob")
+            response shouldHaveStatus CREATED
+            response.deserialize<TransactionConfirmation>().let {
+                it.transactionCount shouldBe 2
+                it.value shouldBe 512.50f
+                it.ids shouldHaveSize 2
+            }
+            verify {
+                database.save(
+                    listOf(
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 12)),
+                            Category("Food"),
+                            Value(BigDecimal("12.50")),
+                            Description("Cake"),
+                            TransactionType.INCOME,
+                            Outgoing(false),
+                            Quantity(1),
+                            source = Source("Work"),
+                            addedBy = AddedBy("Jacob")
+                        ),
+                        Transaction(
+                            Date(LocalDate.of(2020, 10, 15)),
+                            Category("Wages"),
+                            Value(BigDecimal("500.00")),
+                            Description("Wages"),
+                            TransactionType.INCOME,
+                            Outgoing(false),
+                            Quantity(1),
+                            source = Source("Work"),
+                            addedBy = AddedBy("Jacob")
+                        )
                     )
                 )
+            }
+        }
+    }
+
+    context("put") {
+        test("can update a debit transaction") {
+            every { database.update(any()) } returns null
+            val handler = putCreditDebitTransactionHandler(TransactionType.DEBIT, id.toString()) { database.update(it) }
+
+            val request = Request(Method.PUT, "/").body(
+                """
+                {
+                    "date": "2024-01-01",
+                    "category": "Food",
+                    "value": 1.0,
+                    "description": "Banana",
+                    "quantity": 1
+                }
+            """.trimIndent()
             )
+
+            val response = handler(request)
+
+            response shouldHaveStatus NO_CONTENT
+            verify {
+                database.update(
+                    aDebitTransaction()
+                        .withADateOf(2024, 1, 1)
+                        .withACategoryOf("Food")
+                        .withAValueOf(1.0)
+                        .withADescriptionOf("Banana")
+                        .addedBy("finance-app")
+                        .asEntity(id)
+                )
+            }
         }
     }
 

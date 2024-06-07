@@ -39,9 +39,9 @@ import http.handler.putIncomeTransactionHandler
 import http.handler.putPersonalTransferTransactionHandler
 import http.handler.searchTransactionsHandler
 import http.lense.bankTransferListLens
+import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
 import http.lense.entityBankTransferLens
-import http.lense.entityCreditDebitLens
 import http.lense.entityIncomeLens
 import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
@@ -60,6 +60,7 @@ import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
 import http.model.Transaction.PersonalTransfer
 import http.model.Transaction.TransactionConfirmation
+import org.http4k.contract.div
 import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Method.GET
@@ -67,6 +68,7 @@ import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
+import org.http4k.lens.Path
 import resource.TransactionProcessor
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -301,37 +303,37 @@ private fun multipleIncomeContract(save: (List<Transaction>) -> List<UUID>) = "$
     returning(CREATED to UUID.randomUUID().toString())
 } bindContract POST to postIncomeListHandler(save)
 
-private fun putCreditContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/credit" meta {
+private fun putCreditContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/credit" / Path.of("id") meta {
     operationId = "$BASE_URL/credit/put"
     summary = "Update a credit transaction"
     tags += "$BASE_URL/credit".asTag()
     receiving(
-        entityCreditDebitLens to CreditDebit(
+        creditDebitLens to CreditDebit(
             Date(LocalDate.of(2020, 1, 1)),
             Category("String"),
             Value(BigDecimal.ZERO),
             Description("String"),
             Quantity(1)
-        ).asRandomEntity()
+        )
     )
     returning(NO_CONTENT)
-} bindContract Method.PUT to putCreditDebitTransactionHandler(CREDIT, save)
+} bindContract Method.PUT to { id -> putCreditDebitTransactionHandler(CREDIT, id, save) }
 
-private fun putDebitContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/debit" meta {
+private fun putDebitContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/debit" / Path.of("id") meta {
     operationId = "$BASE_URL/debit/put"
     summary = "Update a debit transaction"
     tags += "$BASE_URL/debit".asTag()
     receiving(
-        entityCreditDebitLens to CreditDebit(
+        creditDebitLens to CreditDebit(
             Date(LocalDate.of(2020, 1, 1)),
             Category("String"),
             Value(BigDecimal.ZERO),
             Description("String"),
             Quantity(1)
-        ).asRandomEntity()
+        )
     )
     returning(NO_CONTENT)
-} bindContract Method.PUT to putCreditDebitTransactionHandler(DEBIT, save)
+} bindContract Method.PUT to { id -> putCreditDebitTransactionHandler(DEBIT, id, save) }
 
 private fun putBankTransferContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/bank-transfer" meta {
     operationId = "$BASE_URL/bank-transfer/put"
