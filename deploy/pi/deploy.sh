@@ -45,6 +45,6 @@ fi
 
 echo "$log_prefix there are unbuilt changes, starting build now."
 
-./gradlew jib jibDockerBuild
+./gradlew jib jibDockerBuild --no-daemon
 
 start_app
