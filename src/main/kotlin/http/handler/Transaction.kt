@@ -11,12 +11,11 @@ import domain.TransactionType
 import domain.totalValue
 import domain.transactionTypeFrom
 import http.assembler.transactionFrom
+import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
 import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
-import http.lense.entityBankTransferLens
 import http.lense.entityIncomeLens
-import http.lense.entityPersonalTransferLens
 import http.lense.idQuery
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
@@ -24,6 +23,7 @@ import http.lense.optionalStartDateQuery
 import http.lense.optionalTransactionTypeStringQuery
 import http.lense.pageNumberQuery
 import http.lense.pageSizeQuery
+import http.lense.personalTransferLens
 import http.lense.personalTransferListLens
 import http.lense.searchTermQuery
 import http.lense.transactionConfirmationLens
@@ -140,24 +140,24 @@ fun putCreditDebitTransactionHandler(
 }
 
 fun putBankTransferTransactionHandler(
+    id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
 ): HttpHandler = { request ->
-    updateTransaction(
-        entityBankTransferLens(request).map { model ->
-            transactionFrom(model, request.userHeader())
-        }
-    )
+    val transaction = bankTransferLens(request)
+    val user = request.userHeader()
+    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
+    updateTransaction(entity)
     Response(NO_CONTENT)
 }
 
 fun putPersonalTransferTransactionHandler(
+    id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
 ): HttpHandler = { request ->
-    updateTransaction(
-        entityPersonalTransferLens(request).map { model ->
-            transactionFrom(model, request.userHeader())
-        }
-    )
+    val transaction = personalTransferLens(request)
+    val user = request.userHeader()
+    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
+    updateTransaction(entity)
     Response(NO_CONTENT)
 }
 

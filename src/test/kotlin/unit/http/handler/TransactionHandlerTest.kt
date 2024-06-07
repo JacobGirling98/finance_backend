@@ -21,9 +21,11 @@ import domain.Source
 import domain.Transaction
 import domain.TransactionType
 import domain.Value
+import helpers.fixtures.aBankTransferTransaction
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.aPage
+import helpers.fixtures.aPersonalTransferTransaction
 import helpers.fixtures.addedBy
 import helpers.fixtures.deserialize
 import helpers.fixtures.pageNumber
@@ -31,13 +33,18 @@ import helpers.fixtures.pageSize
 import helpers.fixtures.withACategoryOf
 import helpers.fixtures.withADateOf
 import helpers.fixtures.withADescriptionOf
+import helpers.fixtures.withARecipientOf
 import helpers.fixtures.withAValueOf
+import helpers.fixtures.withAnInboundAccountOf
+import helpers.fixtures.withAnOutboundAccountOf
 import http.handler.paginatedTransactionsHandler
 import http.handler.postBankTransferListHandler
 import http.handler.postCreditDebitListHandler
 import http.handler.postIncomeListHandler
 import http.handler.postPersonalTransferListHandler
+import http.handler.putBankTransferTransactionHandler
 import http.handler.putCreditDebitTransactionHandler
+import http.handler.putPersonalTransferTransactionHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.collections.shouldHaveSize
@@ -343,6 +350,108 @@ class TransactionHandlerTest : FunSpec({
                         .withACategoryOf("Food")
                         .withAValueOf(1.0)
                         .withADescriptionOf("Banana")
+                        .addedBy("finance-app")
+                        .asEntity(id)
+                )
+            }
+        }
+
+        test("can update a credit transaction") {
+            every { database.update(any()) } returns null
+            val handler = putCreditDebitTransactionHandler(TransactionType.CREDIT, id.toString()) { database.update(it) }
+
+            val request = Request(Method.PUT, "/").body(
+                """
+                {
+                    "date": "2024-01-01",
+                    "category": "Food",
+                    "value": 1.0,
+                    "description": "Banana",
+                    "quantity": 1
+                }
+            """.trimIndent()
+            )
+
+            val response = handler(request)
+
+            response shouldHaveStatus NO_CONTENT
+            verify {
+                database.update(
+                    aCreditTransaction()
+                        .withADateOf(2024, 1, 1)
+                        .withACategoryOf("Food")
+                        .withAValueOf(1.0)
+                        .withADescriptionOf("Banana")
+                        .addedBy("finance-app")
+                        .asEntity(id)
+                )
+            }
+        }
+
+        test("can update a bank transfer transaction") {
+            every { database.update(any()) } returns null
+            val handler = putBankTransferTransactionHandler(id.toString()) { database.update(it) }
+
+            val request = Request(Method.PUT, "/").body(
+                """
+                    {
+                        "date": "2024-01-01",
+                        "category": "Food",
+                        "value": 1.0,
+                        "description": "Banana",
+                        "quantity": 1,
+                        "recipient": "Friend"
+                    }
+                """.trimIndent()
+            )
+
+            val response = handler(request)
+
+            response shouldHaveStatus NO_CONTENT
+            verify {
+                database.update(
+                    aBankTransferTransaction()
+                        .withADateOf(2024, 1, 1)
+                        .withACategoryOf("Food")
+                        .withAValueOf(1.0)
+                        .withADescriptionOf("Banana")
+                        .withARecipientOf("Friend")
+                        .addedBy("finance-app")
+                        .asEntity(id)
+                )
+            }
+        }
+
+        test("can update a personal transfer transaction") {
+            every { database.update(any()) } returns null
+            val handler = putPersonalTransferTransactionHandler(id.toString()) { database.update(it) }
+
+            val request = Request(Method.PUT, "/").body(
+                """
+                    {
+                        "date": "2024-01-01",
+                        "category": "Food",
+                        "value": 1.0,
+                        "description": "Banana",
+                        "quantity": 1,
+                        "inbound": "In",
+                        "outbound": "Out"
+                    }
+                """.trimIndent()
+            )
+
+            val response = handler(request)
+
+            response shouldHaveStatus NO_CONTENT
+            verify {
+                database.update(
+                    aPersonalTransferTransaction()
+                        .withADateOf(2024, 1, 1)
+                        .withACategoryOf("Food")
+                        .withAValueOf(1.0)
+                        .withADescriptionOf("Banana")
+                        .withAnInboundAccountOf("In")
+                        .withAnOutboundAccountOf("Out")
                         .addedBy("finance-app")
                         .asEntity(id)
                 )

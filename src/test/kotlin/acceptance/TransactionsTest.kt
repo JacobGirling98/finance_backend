@@ -17,8 +17,10 @@ import domain.Source
 import domain.Transaction
 import domain.TransactionType
 import domain.Value
+import helpers.fixtures.aBankTransferTransaction
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
+import helpers.fixtures.aPersonalTransferTransaction
 import helpers.fixtures.deserialize
 import helpers.fixtures.withADateOf
 import helpers.matchers.shouldContainDomain
@@ -472,6 +474,74 @@ class TransactionsTest : E2ETest({
             recipient = null,
             inbound = null,
             outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can update a bank transfer transaction") {
+        val oldTransaction = aBankTransferTransaction()
+        val id = transactionDatabase.save(oldTransaction)
+
+        val request = """
+            {
+                "date": "2024-01-01",
+                "category": "Gaming",
+                "value": 50.0,
+                "description": "PC",
+                "quantity": 1,
+                "recipient": "Friend"
+            }
+        """.trimIndent()
+
+        val response = client.put("/transaction/bank-transfer/$id", request)
+
+        response shouldHaveStatus NO_CONTENT
+        matchingEntity(id).domain shouldBe Transaction(
+            date = Date.of(2024, 1, 1),
+            category = Category("Gaming"),
+            value = Value.of(50.0),
+            description = Description("PC"),
+            type = TransactionType.BANK_TRANSFER,
+            outgoing = Outgoing(true),
+            quantity = Quantity(1),
+            recipient = Recipient("Friend"),
+            inbound = null,
+            outbound = null,
+            source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can update a personal transfer transaction") {
+        val oldTransaction = aPersonalTransferTransaction()
+        val id = transactionDatabase.save(oldTransaction)
+
+        val request = """
+            {
+                "date": "2024-01-01",
+                "category": "Gaming",
+                "value": 50.0,
+                "description": "PC",
+                "outbound": "Current",
+                "inbound": "Savings"
+            }
+        """.trimIndent()
+
+        val response = client.put("/transaction/personal-transfer/$id", request)
+
+        response shouldHaveStatus NO_CONTENT
+        matchingEntity(id).domain shouldBe Transaction(
+            date = Date.of(2024, 1, 1),
+            category = Category("Gaming"),
+            value = Value.of(50.0),
+            description = Description("PC"),
+            type = TransactionType.PERSONAL_TRANSFER,
+            outgoing = Outgoing(false),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = Inbound("Savings"),
+            outbound = Outbound("Current"),
             source = null,
             addedBy = AddedBy("finance-app")
         )
