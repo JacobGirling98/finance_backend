@@ -64,6 +64,9 @@ jib {
     from {
         image = "arm64v8/amazoncorretto:17"
     }
+    to {
+        image = "not.a.host.finance-backend"
+    }
     extraDirectories {
         paths {
             path {
