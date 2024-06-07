@@ -7,7 +7,7 @@ files=("accounts" "categories" "description_mappings" "income_sources" "logins" 
 
 copy_to_pi() {
     local filename="$1.csv"
-    scp "$location/$filename" pi:/home/jacobg/Programming/finance/finance_data/prod/$filename
+    scp "$location/$filename" pi:/home/Jacob/programming/finance/finance_data/prod/$filename
     echo "Copied $filename to pi."
 }
 

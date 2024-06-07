@@ -15,7 +15,7 @@ start_app() {
 
   docker rm $container_name > /dev/null
 
-  container_id=`docker run -e PROFILE=docker -v /home/jacobg/Programming/finance/finance_data:/app/data -v /home/jacobg/Programming/finance/google-credentials:/app/config -p 9000:9000 -d --name finance-backend -t finance-backend:latest`
+  container_id=`docker run -e PROFILE=docker -v /home/Jacob/programming/finance/finance_data:/app/data -v /home/Jacob/programming/finance/google-credentials:/app/config -p 9000:9000 -d --name finance-backend -t finance-backend:latest`
 
   echo "$log_prefix Started with container id $container_id"
 }
@@ -26,7 +26,6 @@ build() {
 
 # Fetch the latest commits and refs from the remote
 git fetch > /dev/null
-echo "$log_prefix Fetched latest commits"
 
 # Store the current HEAD commit hash
 OLD_HEAD=$(git rev-parse HEAD)
