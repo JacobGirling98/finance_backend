@@ -1,7 +1,6 @@
 package resource
 
 import dao.AuditableEntity
-import dao.Entity
 import domain.Date
 import domain.DateRange
 import domain.Transaction

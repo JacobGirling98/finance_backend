@@ -94,7 +94,7 @@ class TransactionHandlerTest : FunSpec({
                         "quantity": 1
                     }
                 ]
-                """.trimIndent()
+                    """.trimIndent()
                 ).header("user", "Jacob")
             )
 
@@ -156,7 +156,7 @@ class TransactionHandlerTest : FunSpec({
                         "recipient": "Family"
                     }
                 ]
-                """.trimIndent()
+                    """.trimIndent()
                 ).header("user", "Jacob")
             )
 
@@ -220,7 +220,7 @@ class TransactionHandlerTest : FunSpec({
                         "inbound": "Credit"
                     }
                 ]
-                """.trimIndent()
+                    """.trimIndent()
                 ).header("user", "Jacob")
             )
 
@@ -285,7 +285,7 @@ class TransactionHandlerTest : FunSpec({
                         "source": "Work"
                     }
                 ]
-                """.trimIndent()
+                    """.trimIndent()
                 ).header("user", "Jacob")
             )
 
@@ -340,7 +340,7 @@ class TransactionHandlerTest : FunSpec({
                     "description": "Banana",
                     "quantity": 1
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
 
             val response = handler(request)
@@ -372,7 +372,7 @@ class TransactionHandlerTest : FunSpec({
                     "description": "Banana",
                     "quantity": 1
                 }
-            """.trimIndent()
+                """.trimIndent()
             )
 
             val response = handler(request)

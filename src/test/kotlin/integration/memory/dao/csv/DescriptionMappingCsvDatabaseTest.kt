@@ -1,7 +1,6 @@
 package integration.memory.dao.csv
 
 import dao.AuditableEntity
-import dao.Entity
 import dao.csv.DescriptionMappingCsvDatabase
 import domain.DescriptionMapping
 import domain.FullDescription

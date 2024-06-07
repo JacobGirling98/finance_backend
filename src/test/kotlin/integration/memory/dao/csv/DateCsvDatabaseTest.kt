@@ -1,7 +1,6 @@
 package integration.memory.dao.csv
 
 import dao.AuditableEntity
-import dao.Entity
 import dao.csv.DateCsvDatabase
 import helpers.fixtures.lastModified
 import helpers.fixtures.lastModifiedString

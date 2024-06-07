@@ -1,7 +1,6 @@
 package helpers.fixtures
 
 import dao.AuditableEntity
-import dao.Entity
 import java.time.LocalDateTime
 import java.util.*
 

@@ -1,7 +1,6 @@
 package integration.memory.dao.csv
 
 import dao.AuditableEntity
-import dao.Entity
 import dao.csv.CsvDatabase
 import helpers.fixtures.Doubles.TestDomain
 import io.kotest.core.spec.style.FunSpec

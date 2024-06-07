@@ -1,7 +1,6 @@
 package helpers.fixtures
 
 import dao.AuditableEntity
-import dao.Entity
 import dao.Page
 import domain.AddedBy
 import domain.Category
