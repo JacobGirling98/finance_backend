@@ -42,7 +42,6 @@ echo "$log_prefix Merging latest commits"
 NEW_HEAD=$(git rev-parse HEAD)
 echo "$log_prefix New HEAD: $NEW_HEAD"
 
-# Compare OLD_HEAD and NEW_HEAD
 if [ -n "$force_build" ]; then
   echo "$log_prefix forcing Docker build..."
   build
