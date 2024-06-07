@@ -43,8 +43,7 @@ NEW_HEAD=$(git rev-parse HEAD)
 echo "$log_prefix New HEAD: $NEW_HEAD"
 
 # Compare OLD_HEAD and NEW_HEAD
-if [ -n $force_build]; then
-  echo $force_build
+if [ -n "$force_build" ]; then
   echo "$log_prefix forcing Docker build..."
   build
 elif [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
