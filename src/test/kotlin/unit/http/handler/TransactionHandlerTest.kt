@@ -27,6 +27,7 @@ import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.aPage
 import helpers.fixtures.aPersonalTransferTransaction
 import helpers.fixtures.addedBy
+import helpers.fixtures.anIncomeTransaction
 import helpers.fixtures.deserialize
 import helpers.fixtures.pageNumber
 import helpers.fixtures.pageSize
@@ -36,6 +37,7 @@ import helpers.fixtures.withADescriptionOf
 import helpers.fixtures.withARecipientOf
 import helpers.fixtures.withAValueOf
 import helpers.fixtures.withAnInboundAccountOf
+import helpers.fixtures.withAnIncomeSourceOf
 import helpers.fixtures.withAnOutboundAccountOf
 import http.handler.paginatedTransactionsHandler
 import http.handler.postBankTransferListHandler
@@ -44,6 +46,7 @@ import http.handler.postIncomeListHandler
 import http.handler.postPersonalTransferListHandler
 import http.handler.putBankTransferTransactionHandler
 import http.handler.putCreditDebitTransactionHandler
+import http.handler.putIncomeTransactionHandler
 import http.handler.putPersonalTransferTransactionHandler
 import http.model.Transaction.TransactionConfirmation
 import io.kotest.core.spec.style.FunSpec
@@ -452,6 +455,39 @@ class TransactionHandlerTest : FunSpec({
                         .withADescriptionOf("Banana")
                         .withAnInboundAccountOf("In")
                         .withAnOutboundAccountOf("Out")
+                        .addedBy("finance-app")
+                        .asEntity(id)
+                )
+            }
+        }
+        test("can update an income transaction") {
+            every { database.update(any()) } returns null
+            val handler = putIncomeTransactionHandler(id.toString()) { database.update(it) }
+
+            val request = Request(Method.PUT, "/").body(
+                """
+                    {
+                        "date": "2024-01-01",
+                        "category": "Food",
+                        "value": 1.0,
+                        "description": "Banana",
+                        "quantity": 1,
+                        "source": "Work"
+                    }
+                """.trimIndent()
+            )
+
+            val response = handler(request)
+
+            response shouldHaveStatus NO_CONTENT
+            verify {
+                database.update(
+                    anIncomeTransaction()
+                        .withADateOf(2024, 1, 1)
+                        .withACategoryOf("Food")
+                        .withAValueOf(1.0)
+                        .withADescriptionOf("Banana")
+                        .withAnIncomeSourceOf("Work")
                         .addedBy("finance-app")
                         .asEntity(id)
                 )

@@ -108,6 +108,21 @@ fun aBankTransferTransaction() = Transaction(
     addedBy
 )
 
+fun anIncomeTransaction() = Transaction(
+    date,
+    category,
+    value,
+    description,
+    INCOME,
+    Outgoing(false),
+    quantity,
+    null,
+    null,
+    null,
+    source,
+    addedBy
+)
+
 fun aPage(transaction: Transaction, now: () -> LocalDateTime = { LocalDateTime.now() }) = Page(
     listOf(
         anAuditableEntity(transaction = transaction, now = now)

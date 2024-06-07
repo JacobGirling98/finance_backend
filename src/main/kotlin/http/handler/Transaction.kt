@@ -15,8 +15,8 @@ import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
 import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
-import http.lense.entityIncomeLens
 import http.lense.idQuery
+import http.lense.incomeLens
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
 import http.lense.optionalStartDateQuery
@@ -162,13 +162,13 @@ fun putPersonalTransferTransactionHandler(
 }
 
 fun putIncomeTransactionHandler(
+    id: String,
     updateTransaction: (Entity<Transaction>) -> Unit
 ): HttpHandler = { request ->
-    updateTransaction(
-        entityIncomeLens(request).map { model ->
-            transactionFrom(model, request.userHeader())
-        }
-    )
+    val transaction = incomeLens(request)
+    val user = request.userHeader()
+    val entity = transactionFrom(transaction, user).asEntity(UUID.fromString(id))
+    updateTransaction(entity)
     Response(NO_CONTENT)
 }
 

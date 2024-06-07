@@ -21,6 +21,7 @@ import helpers.fixtures.aBankTransferTransaction
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.aPersonalTransferTransaction
+import helpers.fixtures.anIncomeTransaction
 import helpers.fixtures.deserialize
 import helpers.fixtures.withADateOf
 import helpers.matchers.shouldContainDomain
@@ -543,6 +544,39 @@ class TransactionsTest : E2ETest({
             inbound = Inbound("Savings"),
             outbound = Outbound("Current"),
             source = null,
+            addedBy = AddedBy("finance-app")
+        )
+    }
+
+    test("can update an income transaction") {
+        val oldTransaction = anIncomeTransaction()
+        val id = transactionDatabase.save(oldTransaction)
+
+        val request = """
+            {
+                "date": "2024-01-01",
+                "category": "Gaming",
+                "value": 50.0,
+                "description": "PC",
+                "source": "Work"
+            }
+        """.trimIndent()
+
+        val response = client.put("/transaction/income/$id", request)
+
+        response shouldHaveStatus NO_CONTENT
+        matchingEntity(id).domain shouldBe Transaction(
+            date = Date.of(2024, 1, 1),
+            category = Category("Gaming"),
+            value = Value.of(50.0),
+            description = Description("PC"),
+            type = TransactionType.INCOME,
+            outgoing = Outgoing(false),
+            quantity = Quantity(1),
+            recipient = null,
+            inbound = null,
+            outbound = null,
+            source = Source("Work"),
             addedBy = AddedBy("finance-app")
         )
     }

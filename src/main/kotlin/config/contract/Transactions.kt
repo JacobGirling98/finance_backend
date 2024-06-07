@@ -4,7 +4,6 @@ import dao.AuditableEntity
 import dao.Database
 import dao.Entity
 import dao.Page
-import dao.asRandomEntity
 import dao.entityOf
 import domain.AddedBy
 import domain.Category
@@ -42,8 +41,8 @@ import http.lense.bankTransferLens
 import http.lense.bankTransferListLens
 import http.lense.creditDebitLens
 import http.lense.creditDebitListLens
-import http.lense.entityIncomeLens
 import http.lense.idQuery
+import http.lense.incomeLens
 import http.lense.incomeListLens
 import http.lense.optionalEndDateQuery
 import http.lense.optionalStartDateQuery
@@ -370,21 +369,21 @@ private fun putPersonalTransferContract(save: (Entity<Transaction>) -> Unit) =
         returning(NO_CONTENT)
     } bindContract Method.PUT to { id -> putPersonalTransferTransactionHandler(id, save) }
 
-private fun putIncomeContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/income" meta {
+private fun putIncomeContract(save: (Entity<Transaction>) -> Unit) = "$BASE_URL/income" / idPath meta {
     operationId = "$BASE_URL/income/put"
     summary = "Update an income transaction"
     tags += "$BASE_URL/income".asTag()
     receiving(
-        entityIncomeLens to Income(
+        incomeLens to Income(
             Date(LocalDate.of(2020, 1, 1)),
             Category("String"),
             Value(BigDecimal.ZERO),
             Description("String"),
             Source("String")
-        ).asRandomEntity()
+        )
     )
     returning(NO_CONTENT)
-} bindContract Method.PUT to putIncomeTransactionHandler(save)
+} bindContract Method.PUT to { id -> putIncomeTransactionHandler(id, save) }
 
 private fun deleteContract(delete: (UUID) -> Unit) = BASE_URL meta {
     operationId = "$BASE_URL/delete"
