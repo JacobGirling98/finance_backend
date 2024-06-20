@@ -2,7 +2,7 @@ package config.contract
 
 import http.asTag
 import http.google.Synchronisable
-import http.handler.backupHandler
+import http.handler.unitHandlerFor
 import org.http4k.contract.meta
 import org.http4k.core.Method.POST
 import org.http4k.core.Status.Companion.NO_CONTENT
@@ -20,11 +20,11 @@ private fun pushToGoogle(push: () -> Unit) = "$URL/push" meta {
     summary = "Push files to Google Drive"
     tags += URL.asTag()
     returning(NO_CONTENT)
-} bindContract POST to backupHandler(push)
+} bindContract POST to unitHandlerFor(push)
 
 private fun pullFromGoogle(pull: () -> Unit) = "$URL/pull" meta {
     operationId = "$URL/pull"
     summary = "Pull files from Google Drive"
     tags += URL.asTag()
     returning(NO_CONTENT)
-} bindContract POST to backupHandler(pull)
+} bindContract POST to unitHandlerFor(pull)
