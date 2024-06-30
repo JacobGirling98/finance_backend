@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.9.0"
     application
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
-    id("com.google.cloud.tools.jib") version "3.4.2"
+    id("com.google.cloud.tools.jib") version "3.4.3"
 }
 
 group = "jacob.finance"
@@ -34,6 +34,8 @@ dependencies {
     implementation("com.google.apis:google-api-services-drive:v3-rev20220815-2.0.0")
     implementation("com.google.api-client:google-api-client-jackson2:1.20.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
+
+    implementation("io.arrow-kt:arrow-core:1.2.4")
 
     testImplementation(kotlin("test"))
     testImplementation("org.http4k:http4k-testing-kotest")
