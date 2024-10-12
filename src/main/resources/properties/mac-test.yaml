@@ -19,6 +19,8 @@ csv:
     sync: 0
   reminder:
     sync: 0
+  budget:
+    sync: 0
 
 appMode: TEST
 

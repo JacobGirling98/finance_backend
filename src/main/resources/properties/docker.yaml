@@ -19,6 +19,8 @@ csv:
     sync: 3600000
   reminder:
     sync: 3600000
+  budget:
+    sync: 3600000
 
 appMode: PROD
 

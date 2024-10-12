@@ -19,6 +19,8 @@ csv:
     sync: 10000
   reminder:
     sync: 10000
+  budget:
+    sync: 10000
 
 appMode: DEV
 

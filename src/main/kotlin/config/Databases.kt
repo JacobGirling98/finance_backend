@@ -1,11 +1,6 @@
 package config
 
-import dao.csv.DescriptionMappingCsvDatabase
-import dao.csv.LoginCsvDatabase
-import dao.csv.ReminderCsvDatabase
-import dao.csv.StandingOrderCsvDatabase
-import dao.csv.StringCsvDatabase
-import dao.csv.TransactionCsvDatabase
+import dao.csv.*
 import http.google.Synchronisable
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -39,6 +34,9 @@ val loginDatabase = LoginCsvDatabase(properties.csv.login.sync.milliseconds, "${
 val reminderDatabase =
     ReminderCsvDatabase(properties.csv.reminder.sync.milliseconds, "${properties.dataLocation}/reminders.csv")
 
+val budgetDatabase =
+    BudgetCsvDatabase(properties.csv.budget.sync.milliseconds, "${properties.dataLocation}/budgets.csv")
+
 val synchronisableDatabases: List<Synchronisable> = listOf(
     descriptionMappingDatabase,
     transactionDatabase,
@@ -48,5 +46,6 @@ val synchronisableDatabases: List<Synchronisable> = listOf(
     categoryDatabase,
     payeeDatabase,
     incomeSourceDatabase,
-    reminderDatabase
+    reminderDatabase,
+    budgetDatabase
 )
