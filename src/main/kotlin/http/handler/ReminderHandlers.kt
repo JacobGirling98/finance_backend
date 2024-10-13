@@ -2,11 +2,11 @@ package http.handler
 
 import dao.Entity
 import domain.Reminder
+import http.lense.createdIdLens
 import http.lense.reminderEntityLens
 import http.lense.reminderEntityListLens
-import http.lense.reminderIdLens
 import http.lense.reminderLens
-import http.model.ReminderId
+import http.model.CreatedId
 import org.http4k.core.HttpHandler
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -15,7 +15,7 @@ import org.http4k.core.with
 import java.util.*
 
 fun advanceReminderHandler(advanceReminder: (UUID) -> Unit): HttpHandler = { request ->
-    val id = reminderIdLens.extract(request).id
+    val id = createdIdLens.extract(request).id
     advanceReminder(id)
     Response(NO_CONTENT)
 }
@@ -27,7 +27,7 @@ fun outstandingRemindersHandler(outstandingReminders: () -> List<Entity<Reminder
 fun addReminderHandler(addReminder: (Reminder) -> UUID): HttpHandler = {
     val reminder = reminderLens.extract(it)
     val id = addReminder(reminder)
-    Response(Status.OK).with(reminderIdLens of ReminderId(id))
+    Response(Status.OK).with(createdIdLens of CreatedId(id))
 }
 
 fun updateReminderHandler(updateReminder: (Entity<Reminder>) -> Unit): HttpHandler = {

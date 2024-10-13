@@ -2,21 +2,18 @@ package config.contract
 
 import dao.asAuditableEntity
 import dao.entityOf
+import domain.*
 import domain.Date
-import domain.Description
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Reminder
 import http.asTag
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
 import http.handler.updateReminderHandler
+import http.lense.createdIdLens
 import http.lense.reminderEntityLens
 import http.lense.reminderEntityListLens
-import http.lense.reminderIdLens
 import http.lense.reminderLens
-import http.model.ReminderId
+import http.model.CreatedId
 import org.http4k.contract.meta
 import org.http4k.core.Method
 import org.http4k.core.Status
@@ -66,14 +63,14 @@ fun addReminder(processor: ReminderProcessor) = BASE_URL meta {
             Description("String")
         )
     )
-    returning(Status.OK, reminderIdLens to ReminderId(UUID.randomUUID()))
+    returning(Status.OK, createdIdLens to CreatedId(UUID.randomUUID()))
 } bindContract Method.POST to addReminderHandler { processor.addReminder(it) }
 
 fun advanceReminder(processor: ReminderProcessor) = "$BASE_URL/advance" meta {
     operationId = "$BASE_URL/advance"
     summary = "Advance a reminder"
     tags += tag
-    receiving(reminderIdLens to ReminderId(UUID.randomUUID()))
+    receiving(createdIdLens to CreatedId(UUID.randomUUID()))
     returning(Status.NO_CONTENT)
 } bindContract Method.POST to advanceReminderHandler { processor.markAsRead(it) }
 

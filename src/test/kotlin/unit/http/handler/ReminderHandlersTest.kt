@@ -5,25 +5,18 @@ import dao.AuditableEntity
 import dao.Entity
 import dao.asAuditableEntity
 import dao.asEntity
+import domain.*
 import domain.Date
-import domain.Description
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Reminder
 import helpers.fixtures.aReminder
 import helpers.fixtures.deserialize
 import http.handler.addReminderHandler
 import http.handler.advanceReminderHandler
 import http.handler.outstandingRemindersHandler
 import http.handler.updateReminderHandler
-import http.model.ReminderId
+import http.model.CreatedId
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.runs
-import io.mockk.verify
+import io.mockk.*
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.NO_CONTENT
@@ -83,7 +76,7 @@ class ReminderHandlersTest : FunSpec({
         val response = addReminderHandler(addReminder)(request)
 
         response shouldHaveStatus OK
-        response.deserialize<ReminderId>().id shouldBe id
+        response.deserialize<CreatedId>().id shouldBe id
         verify {
             addReminder(
                 Reminder(

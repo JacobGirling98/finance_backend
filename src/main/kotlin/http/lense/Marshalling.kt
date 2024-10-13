@@ -4,15 +4,9 @@ import config.CustomJackson.auto
 import dao.AuditableEntity
 import dao.Entity
 import dao.Page
+import domain.*
 import domain.Date
-import domain.DateRange
-import domain.DescriptionMapping
-import domain.Headlines
-import domain.Login
-import domain.Reminder
-import domain.StandingOrder
-import domain.Transaction
-import http.model.ReminderId
+import http.model.CreatedId
 import http.model.Transaction.BankTransfer
 import http.model.Transaction.CreditDebit
 import http.model.Transaction.Income
@@ -20,6 +14,7 @@ import http.model.Transaction.PersonalTransfer
 import http.model.Transaction.TransactionConfirmation
 import org.http4k.core.Body
 import org.http4k.lens.BiDiBodyLens
+import java.util.*
 
 inline fun <reified T : Any> biDiBodyLens(): BiDiBodyLens<T> = Body.auto<T>().toLens()
 
@@ -85,10 +80,14 @@ val entityPersonalTransferLens = biDiBodyLens<Entity<PersonalTransfer>>()
 
 val entityIncomeLens = biDiBodyLens<Entity<Income>>()
 
-val reminderIdLens = biDiBodyLens<ReminderId>()
+val createdIdLens = biDiBodyLens<CreatedId>()
 
 val reminderLens = biDiBodyLens<Reminder>()
 
 val reminderEntityListLens = biDiBodyLens<List<Entity<Reminder>>>()
 
 val reminderEntityLens = biDiBodyLens<Entity<Reminder>>()
+
+val budgetLens = biDiBodyLens<Budget>()
+
+val uuidLens = biDiBodyLens<UUID>()

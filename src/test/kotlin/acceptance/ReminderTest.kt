@@ -2,14 +2,10 @@ package acceptance
 
 import acceptance.setup.E2ETest
 import dao.Entity
-import domain.Date
-import domain.Description
-import domain.Frequency
-import domain.FrequencyQuantity
-import domain.Reminder
+import domain.*
 import helpers.fixtures.deserialize
 import helpers.matchers.shouldContainDomain
-import http.model.ReminderId
+import http.model.CreatedId
 import io.kotest.matchers.collections.shouldHaveSize
 import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
@@ -34,7 +30,7 @@ class ReminderTest : E2ETest({
         )
 
         addReminderResponse shouldHaveStatus OK
-        val id = addReminderResponse.deserialize<ReminderId>()
+        val id = addReminderResponse.deserialize<CreatedId>()
 
         val outstandingRemindersResponse = client.get("/reminders")
 

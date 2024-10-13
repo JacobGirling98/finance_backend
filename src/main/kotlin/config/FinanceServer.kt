@@ -1,23 +1,6 @@
 package config
 
-import config.contract.addAccountContact
-import config.contract.addCategoryContact
-import config.contract.addDescriptionsContract
-import config.contract.addPayeesContact
-import config.contract.addSourceContact
-import config.contract.dateRangeContracts
-import config.contract.getAccountsContract
-import config.contract.getCategoriesContract
-import config.contract.getDescriptionsContract
-import config.contract.getPayeesContract
-import config.contract.getSourcesContract
-import config.contract.googleBackupContracts
-import config.contract.headlineContracts
-import config.contract.lastTransactionContracts
-import config.contract.loginContracts
-import config.contract.reminderContracts
-import config.contract.standingOrdersContracts
-import config.contract.transactionContracts
+import config.contract.*
 import http.filter.lastLoginFilter
 import http.filter.logResponseFilter
 import org.http4k.contract.contract
@@ -69,7 +52,8 @@ class FinanceServer(port: Int) {
         standingOrdersContracts(standingOrderDatabase),
         lastTransactionContracts { transactionsProcessor.mostRecentUserTransaction() },
         googleBackupContracts(synchronisableDatabases, googleDriveSynchroniser),
-        reminderContracts(reminderProcessor)
+        reminderContracts(reminderProcessor),
+        budgetContracts(budgetDatabase)
     )
 
     private val swaggerUi = swaggerUi(
@@ -89,7 +73,7 @@ class FinanceServer(port: Int) {
         CorsPolicy(
             OriginPolicy.AllowAll(),
             listOf("Authorization", "Accept", "content-type", "Access-Control-Allow-Origin"),
-            Method.values().toList(),
+            Method.entries,
             true
         )
     )

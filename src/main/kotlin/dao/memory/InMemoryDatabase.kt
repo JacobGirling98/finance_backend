@@ -1,10 +1,6 @@
 package dao.memory
 
-import dao.AuditableEntity
-import dao.Database
-import dao.Entity
-import dao.asOf
-import dao.entityOf
+import dao.*
 import exceptions.NotFoundException
 import java.time.LocalDateTime
 import java.util.*
@@ -12,7 +8,7 @@ import java.util.*
 open class InMemoryDatabase<Domain : Comparable<Domain>>(
     initialData: List<AuditableEntity<Domain>> = emptyList(),
     private val now: () -> LocalDateTime = { LocalDateTime.now() }
-) : Database<Domain, UUID> {
+) : UUIDDatabase<Domain> {
 
     protected var data: MutableMap<UUID, AuditableEntity<Domain>> = initialData.associateBy { it.id }.toMutableMap()
 
