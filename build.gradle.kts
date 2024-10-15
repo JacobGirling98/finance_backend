@@ -64,7 +64,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 
 jib {
     from {
-        image = "arm64v8/amazoncorretto:17"
+        image = "arm64v8/openjdk:17-alpine"
         platforms {
             platform {
                 architecture = "amd64"
