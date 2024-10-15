@@ -67,7 +67,7 @@ jib {
         image = "openjdk:17-alpine"
         platforms {
             platform {
-                architecture = "amd64"
+                architecture = "arm64"
                 os = "linux"
             }
         }
