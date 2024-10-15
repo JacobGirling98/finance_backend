@@ -64,7 +64,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 
 jib {
     from {
-        image = "arm64v8/amazoncorretto:17-alpine"
+        image = "arm64v8/amazoncorretto:17"
     }
     to {
         image = "finance-backend"
