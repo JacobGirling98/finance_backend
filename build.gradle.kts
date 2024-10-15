@@ -64,7 +64,7 @@ configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
 
 jib {
     from {
-        image = "openjdk:17-jdk-slim"
+        image = "linux/arm64@openjdk:17-jdk-slim"
     }
     to {
         image = "finance-backend"
