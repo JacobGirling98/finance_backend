@@ -83,4 +83,7 @@ jib {
             }
         }
     }
+    container {
+        mainClass = "App.kt"
+    }
 }
