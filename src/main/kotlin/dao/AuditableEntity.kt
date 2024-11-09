@@ -19,4 +19,4 @@ fun <T> Entity<T>.asOf(lastModified: () -> LocalDateTime = { LocalDateTime.now()
 fun <T> entityOf(domain: T, now: () -> LocalDateTime = { LocalDateTime.now() }) =
     AuditableEntity(UUID.randomUUID(), domain, now())
 
-fun <T> T.asAuditableEntity(id: UUID, now: () -> LocalDateTime = { LocalDateTime.now() }) = AuditableEntity(id, this, now())
+fun <T> T.asAuditableEntity(id: UUID = UUID.randomUUID(), now: () -> LocalDateTime = { LocalDateTime.now() }) = AuditableEntity(id, this, now())

@@ -1,6 +1,7 @@
 package config
 
 import http.google.GoogleDrive
+import resource.BudgetCalculator
 import resource.GoogleDriveSynchroniser
 import resource.LoginSynchroniser
 import resource.ReminderProcessor
@@ -19,3 +20,5 @@ val googleDrive = GoogleDrive(properties.google.credentialsFile)
 val googleDriveSynchroniser = GoogleDriveSynchroniser(googleDrive)
 
 val reminderProcessor = ReminderProcessor(reminderDatabase, LocalDate::now)
+
+val budgetCalculator = BudgetCalculator(transactionsProcessor, budgetDatabase)

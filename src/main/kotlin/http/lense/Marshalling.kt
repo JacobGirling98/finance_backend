@@ -91,3 +91,5 @@ val reminderEntityLens = biDiBodyLens<Entity<Reminder>>()
 val budgetLens = biDiBodyLens<Budget>()
 
 val uuidLens = biDiBodyLens<UUID>()
+
+val budgetReportListLens = biDiBodyLens<List<BudgetReport>>()

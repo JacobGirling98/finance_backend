@@ -1,14 +1,19 @@
 package unit.resource
 
-import dao.Database
+import dao.UUIDDatabase
 import dao.entityOf
+import domain.Category
+import domain.DateRange
+import domain.EndDate
 import domain.PageNumber
 import domain.PageSize
+import domain.StartDate
 import domain.Transaction
 import domain.TransactionType.CREDIT
 import helpers.fixtures.aCreditTransaction
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.addedBy
+import helpers.fixtures.withACategoryOf
 import helpers.fixtures.withADateOf
 import helpers.fixtures.withADescriptionOf
 import helpers.matchers.shouldContainDomain
@@ -19,10 +24,9 @@ import io.mockk.every
 import io.mockk.mockk
 import resource.TransactionProcessor
 import java.time.LocalDate
-import java.util.*
 
 class TransactionProcessorTest : FunSpec({
-    val database = mockk<Database<Transaction, UUID>>()
+    val database = mockk<UUIDDatabase<Transaction>>()
     val processor = TransactionProcessor(database)
 
     test("can get most recent transaction by me") {
@@ -62,5 +66,21 @@ class TransactionProcessorTest : FunSpec({
         filtered.data shouldContainDomain aCreditTransaction().withADescriptionOf("Testing")
         filtered.data shouldNotContainDomain aDebitTransaction().withADescriptionOf("Testing")
         filtered.data shouldNotContainDomain aCreditTransaction().withADescriptionOf("Something else")
+    }
+
+    test("can get transactions by categories and date") {
+        val wantedTransactions = listOf(entityOf(aDebitTransaction().withACategoryOf("Food").withADateOf(2024, 1, 1)))
+        val unwantedTransactions = listOf(
+            entityOf(aDebitTransaction().withACategoryOf("Food").withADateOf(2024, 2, 1)),
+            entityOf(aDebitTransaction().withACategoryOf("Tech").withADateOf(2024, 1, 1))
+        )
+        every { database.selectAll() } returns wantedTransactions + unwantedTransactions
+
+        val transactions = processor.transactionsBy(
+            Category("Food"),
+            DateRange(StartDate.of(2024, 1, 1), EndDate.of(2024, 2, 1))
+        )
+
+        transactions shouldBe wantedTransactions
     }
 })

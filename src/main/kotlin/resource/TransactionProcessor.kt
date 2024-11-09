@@ -1,16 +1,17 @@
 package resource
 
 import dao.AuditableEntity
-import dao.Database
 import dao.Entity
 import dao.Page
+import dao.UUIDDatabase
+import domain.Category
 import domain.Date
+import domain.DateRange
 import domain.PageNumber
 import domain.PageSize
 import domain.Transaction
-import java.util.*
 
-class TransactionProcessor(private val transactionDatabase: Database<Transaction, UUID>) {
+class TransactionProcessor(private val transactionDatabase: UUIDDatabase<Transaction>) {
 
     fun selectAll(pageNumber: PageNumber, pageSize: PageSize) =
         paginate(transactionDatabase.selectAll(), pageNumber, pageSize)
@@ -36,4 +37,7 @@ class TransactionProcessor(private val transactionDatabase: Database<Transaction
         .filter { it.domain.addedBy.value == "Jacob" }
         .map { it.domain }
         .mostRecent()
+
+    fun transactionsBy(category: Category, dateRange: DateRange): List<AuditableEntity<Transaction>> =
+        transactionDatabase.selectAll().filterEntities(dateRange).filter { it.domain.category == category }
 }

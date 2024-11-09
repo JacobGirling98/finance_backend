@@ -53,7 +53,7 @@ class FinanceServer(port: Int) {
         lastTransactionContracts { transactionsProcessor.mostRecentUserTransaction() },
         googleBackupContracts(synchronisableDatabases, googleDriveSynchroniser),
         reminderContracts(reminderProcessor),
-        budgetContracts(budgetDatabase)
+        budgetContracts(budgetDatabase, budgetCalculator)
     )
 
     private val swaggerUi = swaggerUi(
