@@ -6,8 +6,9 @@ import kotlin.time.Duration
 open class StringCsvDatabase(
     syncPeriod: Duration,
     fileLoc: String,
+    lazyDataLoad: Boolean = false,
     now: () -> LocalDateTime = { LocalDateTime.now() }
-) : SingleValueCsvDatabase<String>(syncPeriod, fileLoc, now) {
+) : SingleValueCsvDatabase<String>(syncPeriod, fileLoc, lazyDataLoad, now) {
 
     override fun domainFromCommaSeparatedList(row: List<String>): String = row[indexOfColumn("value")]
 

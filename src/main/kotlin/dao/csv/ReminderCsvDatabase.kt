@@ -11,8 +11,9 @@ import kotlin.time.Duration
 class ReminderCsvDatabase(
     syncPeriod: Duration,
     fileName: String,
+    lazyDataLoad: Boolean = false,
     now: () -> LocalDateTime = { LocalDateTime.now() }
-) : CsvDatabase<Reminder>(syncPeriod, fileName, now) {
+) : CsvDatabase<Reminder>(syncPeriod, fileName, lazyDataLoad, now) {
     override fun headers(): String =
         "next_reminder,frequency_unit,frequency_quantity,description"
 

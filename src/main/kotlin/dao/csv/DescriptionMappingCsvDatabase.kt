@@ -9,8 +9,9 @@ import kotlin.time.Duration
 class DescriptionMappingCsvDatabase(
     syncPeriod: Duration,
     fileLoc: String,
+    lazyDataLoad: Boolean = false,
     now: () -> LocalDateTime = { LocalDateTime.now() }
-) : CsvDatabase<DescriptionMapping>(syncPeriod, fileLoc, now) {
+) : CsvDatabase<DescriptionMapping>(syncPeriod, fileLoc, lazyDataLoad, now) {
     override fun headers(): String = "full_description,short_description"
 
     override fun domainFromCommaSeparatedList(row: List<String>): DescriptionMapping = DescriptionMapping(

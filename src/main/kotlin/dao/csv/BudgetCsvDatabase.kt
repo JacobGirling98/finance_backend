@@ -9,8 +9,9 @@ import kotlin.time.Duration
 class BudgetCsvDatabase(
     syncPeriod: Duration,
     fileName: String,
+    lazyDataLoad: Boolean = false,
     now: () -> LocalDateTime = { LocalDateTime.now() }
-) : CsvDatabase<Budget>(syncPeriod, fileName, now) {
+) : CsvDatabase<Budget>(syncPeriod, fileName, lazyDataLoad, now) {
     override fun headers(): String = "category,value"
 
     override fun Budget.toRow(): String = "${category.value},${value.value}"

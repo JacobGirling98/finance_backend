@@ -19,8 +19,9 @@ import kotlin.time.Duration
 class TransactionCsvDatabase(
     syncPeriod: Duration,
     fileLoc: String,
+    lazyDataLoad: Boolean = false,
     now: () -> LocalDateTime = { LocalDateTime.now() }
-) : CsvDatabase<Transaction>(syncPeriod, fileLoc, now) {
+) : CsvDatabase<Transaction>(syncPeriod, fileLoc, lazyDataLoad, now) {
     override fun headers(): String =
         "date,outgoing,value,transaction_type,outbound_account,inbound_account,destination,source,description,category,quantity,added_by"
 

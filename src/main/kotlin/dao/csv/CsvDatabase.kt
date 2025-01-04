@@ -11,13 +11,12 @@ import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 abstract class CsvDatabase<Domain : Comparable<Domain>>(
     private val syncPeriod: Duration,
     fileName: String,
-    now: () -> LocalDateTime = { LocalDateTime.now() },
-    private val dataListenerPeriod: Duration = 60.seconds
+    lazyDataLoad: Boolean = false,
+    now: () -> LocalDateTime = { LocalDateTime.now() }
 ) : InMemoryDatabase<Domain>(now = now), Synchronisable {
 
     private var flushIsScheduled = false
@@ -28,7 +27,9 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
     private lateinit var columns: List<String>
 
     init {
-        loadDataFromFile()
+        if (!lazyDataLoad) {
+            loadDataFromFile()
+        }
         scheduleFileSync()
     }
 
@@ -44,7 +45,8 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
     }
 
     override fun overwrite(data: String) {
-        this.data = data.split("\n").drop(1).map { readRow(it) }.associateBy { it.id }.toMutableMap()
+        val lines = data.split("\n")
+        loadData(lines)
         flush()
     }
 
@@ -65,13 +67,21 @@ abstract class CsvDatabase<Domain : Comparable<Domain>>(
     fun <T> String.toValueOrNull(fn: (String) -> T): T? = if (isBlank()) null else fn(this)
 
     private fun loadDataFromFile() {
-        val lines = file.readLines()
-        if (lines.isEmpty()) {
-            return
-        }
-        columns = lines.first().split(",")
-        this.data = lines
-            .drop(1)
+        loadData(file.readLines())
+    }
+
+    private fun loadData(linesWithHeader: List<String>) {
+        if (linesWithHeader.isEmpty()) return
+        setColumns(linesWithHeader.first())
+        setData(linesWithHeader.drop(1))
+    }
+
+    private fun setColumns(headersString: String) {
+        columns = headersString.split(",")
+    }
+
+    private fun setData(fileLines: List<String>) {
+        this.data = fileLines
             .map { readRow(it) }
             .associateBy { it.id }
             .toMutableMap()
