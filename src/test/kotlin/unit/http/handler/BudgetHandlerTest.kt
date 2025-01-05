@@ -1,12 +1,6 @@
 package unit.http.handler
 
-import domain.Budget
-import domain.BudgetReport
-import domain.Category
-import domain.DateRange
-import domain.EndDate
-import domain.StartDate
-import domain.Value
+import domain.*
 import helpers.fixtures.aBudgetReport
 import helpers.fixtures.deserialize
 import http.handler.budgetReportsHandler
@@ -35,7 +29,8 @@ class BudgetHandlerTest : FunSpec({
             """
                 {
                     "category": "Food",
-                    "value": 200.0
+                    "value": 200.0,
+                    "frequency": "MONTHLY"
                 }
             """.trimIndent()
         )
@@ -44,7 +39,7 @@ class BudgetHandlerTest : FunSpec({
 
         response shouldHaveStatus CREATED
         response.deserialize<CreatedId>().id shouldBe uuid
-        verify { saveBudget(Budget(Category("Food"), Value.of(200.00))) }
+        verify { saveBudget(Budget(Category("Food"), Value.of(200.00), Frequency.MONTHLY)) }
     }
 
     test("can get budget reports") {

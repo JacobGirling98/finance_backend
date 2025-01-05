@@ -4,6 +4,7 @@ import dao.asAuditableEntity
 import dao.csv.BudgetCsvDatabase
 import domain.Budget
 import domain.Category
+import domain.Frequency
 import domain.Value
 import helpers.fixtures.lastModifiedString
 import io.kotest.core.spec.style.FunSpec
@@ -26,32 +27,34 @@ class BudgetCsvDatabaseTest : FunSpec({
 
         file.writeText(
             """
-            id,last_modified,category,value
-            $uuid,$lastModifiedString,Food,200.00
+            id,last_modified,category,value,frequency
+            $uuid,$lastModifiedString,Food,200.00,monthly
             """.trimIndent()
         )
 
         database().selectAll() shouldHaveSingleElement Budget(
             Category("Food"),
-            Value.of(200.0)
+            Value.of(200.0),
+            Frequency.MONTHLY
         ).asAuditableEntity(uuid)
     }
 
     test("can flush a standing order reminder to a file") {
-        file.writeText("id,last_modified,category,value")
+        file.writeText("id,last_modified,category,value,frequency")
         val database = database()
         val id = database.save(
             Budget(
                 Category("Food"),
-                Value.of(200.0)
+                Value.of(200.0),
+                Frequency.YEARLY
             )
         )
 
         database.flush()
 
         file.readText() shouldBe """
-            id,last_modified,category,value
-            $id,$lastModifiedString,Food,200.0
+            id,last_modified,category,value,frequency
+            $id,$lastModifiedString,Food,200.0,yearly
         """.trimIndent()
     }
 })

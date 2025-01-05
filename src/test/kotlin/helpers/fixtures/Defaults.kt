@@ -1,17 +1,6 @@
 package helpers.fixtures
 
-import domain.AddedBy
-import domain.Category
-import domain.Date
-import domain.Description
-import domain.Inbound
-import domain.Outbound
-import domain.PageNumber
-import domain.PageSize
-import domain.Quantity
-import domain.Recipient
-import domain.Source
-import domain.Value
+import domain.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -27,6 +16,7 @@ val inbound = Inbound("inbound")
 val recipient = Recipient("Parents")
 val addedBy = AddedBy("Jacob")
 val source = Source("Work")
+val frequency = Frequency.MONTHLY
 
 val pageNumber = PageNumber(1)
 val pageSize = PageSize(5)

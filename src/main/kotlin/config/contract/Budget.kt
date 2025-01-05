@@ -1,21 +1,11 @@
 package config.contract
 
 import dao.UUIDDatabase
-import domain.Budget
-import domain.BudgetReport
-import domain.Category
-import domain.DateRange
-import domain.EndDate
-import domain.StartDate
-import domain.Value
+import domain.*
 import http.asTag
 import http.handler.budgetReportsHandler
 import http.handler.postBudgetHandler
-import http.lense.budgetLens
-import http.lense.budgetReportListLens
-import http.lense.createdIdLens
-import http.lense.endDateQuery
-import http.lense.startDateQuery
+import http.lense.*
 import http.model.CreatedId
 import org.http4k.contract.meta
 import org.http4k.core.Method.GET
@@ -39,7 +29,8 @@ private fun addBudget(save: (Budget) -> UUID) = BASE_URL meta {
     receiving(
         budgetLens to Budget(
             Category("String"),
-            Value.of(1.0)
+            Value.of(1.0),
+            Frequency.MONTHLY
         )
     )
     returning(Status.CREATED, createdIdLens to CreatedId.random())
@@ -54,7 +45,7 @@ private fun budgetReport(createReport: (DateRange) -> List<BudgetReport>) = "$BA
     returning(
         Status.OK, budgetReportListLens to listOf(
             BudgetReport(
-                Budget(Category("String"), Value.of(0.0)), DateRange(
+                Budget(Category("String"), Value.of(0.0), Frequency.MONTHLY), DateRange(
                     StartDate.of(2024, 1, 1), EndDate.of(2024, 2, 1)
                 ),
                 Value.of(0.0)

@@ -5,9 +5,6 @@ import dao.Database
 import dao.Entity
 import dao.asEntity
 import domain.AddedBy
-import domain.Date
-import domain.Frequency.MONTHLY
-import domain.Frequency.WEEKLY
 import domain.StandingOrder
 import domain.Transaction
 import java.time.Duration
@@ -28,12 +25,7 @@ class StandingOrderProcessor(
         while (standingOrderToChange.date.value <= now()) {
             logger.info { "Standing Order: ${standingOrderToChange.description.value} - ${standingOrderToChange.date.value}" }
             transactionsDatabase.save(standingOrderToChange.toTransaction())
-            standingOrderToChange = standingOrderToChange.copy(
-                date = when (standingOrderToChange.frequency) {
-                    MONTHLY -> Date(standingOrderToChange.date.value.plusMonths(standingOrderToChange.frequencyQuantity.value.toLong()))
-                    WEEKLY -> Date(standingOrderToChange.date.value.plusWeeks(standingOrderToChange.frequencyQuantity.value.toLong()))
-                }
-            )
+            standingOrderToChange = standingOrderToChange.copy(date = standingOrderToChange.nextDate())
             standingOrderDatabase.update(standingOrderToChange.asEntity(standingOrder.id))
         }
     }
@@ -44,7 +36,7 @@ class StandingOrderProcessor(
     }
 
     fun schedule() {
-        val now = java.util.Date.from(Instant.now())
+        val now = Date.from(Instant.now())
         val day = Duration.ofDays(1).toMillis()
 
         if (transactionsDatabase.selectAll().isEmpty()) {

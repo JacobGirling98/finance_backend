@@ -1,7 +1,6 @@
 package domain
 
-import domain.Frequency.MONTHLY
-import domain.Frequency.WEEKLY
+import domain.Frequency.*
 
 interface Temporal {
     val date: Date
@@ -11,5 +10,6 @@ interface Temporal {
     fun nextDate(): Date = when (frequency) {
         MONTHLY -> Date(date.value.plusMonths(frequencyQuantity.value.toLong()))
         WEEKLY -> Date(date.value.plusWeeks(frequencyQuantity.value.toLong()))
+        YEARLY -> Date(date.value.plusYears(frequencyQuantity.value.toLong()))
     }
 }

@@ -3,13 +3,7 @@ package unit.resource
 import dao.UUIDDatabase
 import dao.asAuditableEntity
 import dao.entityOf
-import domain.Budget
-import domain.BudgetReport
-import domain.Category
-import domain.DateRange
-import domain.EndDate
-import domain.StartDate
-import domain.Value
+import domain.*
 import helpers.fixtures.aDebitTransaction
 import helpers.fixtures.withACategoryOf
 import helpers.fixtures.withAValueOf
@@ -29,7 +23,7 @@ class BudgetCalculatorTest : FunSpec({
     val budgetCalculator = spyk(BudgetCalculator(transactionsProcessor, budgetDatabase))
 
     test("creates report from transactions for given budget and date range") {
-        val budget = Budget(Category("Food"), Value.of(50.0))
+        val budget = Budget(Category("Food"), Value.of(50.0), Frequency.MONTHLY)
         val dateRange = DateRange(StartDate.of(2024, 1, 1), EndDate.of(2024, 2, 1))
         val transactions = listOf(entityOf(aDebitTransaction().withAValueOf(5.0).withACategoryOf("Food")))
         every { transactionsProcessor.transactionsBy(any(), any()) } returns transactions
@@ -41,7 +35,7 @@ class BudgetCalculatorTest : FunSpec({
     }
 
     test("creates reports for all budgets for given date range") {
-        val budget = Budget(Category("Food"), Value.of(50.0))
+        val budget = Budget(Category("Food"), Value.of(50.0), Frequency.MONTHLY)
         val dateRange = DateRange(StartDate.of(2024, 1, 1), EndDate.of(2024, 2, 1))
         val report = BudgetReport(budget, dateRange, Value.of(5.0))
         every { budgetDatabase.selectAll() } returns listOf(budget.asAuditableEntity())
